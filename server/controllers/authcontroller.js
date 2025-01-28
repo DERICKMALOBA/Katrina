@@ -1,4 +1,5 @@
-import userModel from '../models/usermodels.js';
+import createUser from '../models/usermodels.js';
+import getUserByEmail from '../models/usermodels.js';
 import bcrypt from 'bcryptjs';
 
 // Sign-up function
@@ -9,7 +10,7 @@ const signUp = async (req, res) => {
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    userModel.createUser(phone, name, email, hashedPassword, (error, result) => {
+   createUser(phone, name, email, hashedPassword, (error, result) => {
       if (error) return res.status(500).json({ message: 'Error creating user' });
       return res.status(201).json({ message: 'User created successfully' });
     });
@@ -22,7 +23,7 @@ const signUp = async (req, res) => {
 const signIn = (req, res) => {
   const { email, password } = req.body;
 
-  userModel.getUserByEmail(email, (err, results) => {
+  getUserByEmail(email, (err, results) => {
     if (err) return res.status(500).json({ message: 'Error finding user' });
     if (results.length === 0) return res.status(404).json({ message: 'User not found' });
 

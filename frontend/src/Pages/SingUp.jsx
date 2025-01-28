@@ -81,7 +81,7 @@ const navigate = useNavigate();
             type="text"
             placeholder="Enter your name"
             className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
-            id="username"
+            id="name"
             name="name"
             onChange={handleChange}
           />
