@@ -1,10 +1,18 @@
-
-
+import { BrowserRouter as Router,Routes,Route } from "react-router-dom";
+import SignIn from "./Pages/SingIn";
+import SignUp from "./Pages/SingUp";
+import Header from "./components/Header";
+import Nav from "./components/Navbar";
 function App() {
   return (
-    <div>
-      <h1 className="text-red-700  from-neutral-950  bg-orange-800">hellow </h1>
-    </div>
+    <Router>
+      <Header/>
+      <Nav/>
+      <Routes>
+        <Route path='/sign-in' element={<SignIn/>}/>
+        <Route path='/sign-up' element={<SignUp/>}/>
+      </Routes>
+    </Router>
   )
 }
 

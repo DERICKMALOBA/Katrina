@@ -74,7 +74,7 @@ console.log('Access Token:', data.user.token);
     >
       <div
         style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.85)',
+          backgroundColor: 'whitesmoke',
           padding: '40px',
           borderRadius: '15px',
           boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
@@ -82,8 +82,8 @@ console.log('Access Token:', data.user.token);
           maxWidth: '400px',
         }}
       >
-        <h1 className="text-4xl text-center font-bold text-green-800 my-7">
-          🌾 AgriMarket Sign In
+        <h1 className="text-4xl text-center font-bold text-blue-800 my-7">
+          Katrina Children Closets
         </h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
@@ -102,16 +102,16 @@ console.log('Access Token:', data.user.token);
           />
           <button
             type="submit"
-            className="w-full bg-green-600 text-white font-semibold p-3 rounded-lg hover:bg-green-700 transition duration-300"
+            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-100 transition duration-300"
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-gray-700">Don’t have an account?</p>
+          <p className="text-blue-700">Don’t have an account?</p>
           <Link to="/sign-up">
-            <span className="text-green-600 font-medium hover:underline cursor-pointer">
+            <span className="text-blue-600 font-medium hover:underline cursor-pointer">
               Create an Account
             </span>
           </Link>
