@@ -41,7 +41,7 @@ const navigate = useNavigate();
       setLoading(false);
       setError(null);
       setSuccess(success.message);
-    navigate('/sign-in');
+      navigate('/sign-in');
     } catch (error) {
       setLoading(false);
       setError(error.message);

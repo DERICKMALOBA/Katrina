@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const authRoutes = require('./routes/authroutes.js');
+const productRoutes = require('./routes/productsroute.js');
 const db = require('./config/db.js');
 
 // Load environment variables
@@ -13,7 +14,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-
+app.use('/api/products', productRoutes);
 // Test DB connection
 db.connect((err) => {
   if (err) {

@@ -14,7 +14,6 @@ function SignIn() {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -28,18 +27,13 @@ function SignIn() {
   
     try {
        // Optional: Set loading state
-      const res = await fetch('/api/auth/', {
+      const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-  
-      if (!res.ok) {
-        throw new Error('user not found.');
-      }
-  
       const data = await res.json();
   
       if (!data.success || !data.user || !data.user.token) {
@@ -54,9 +48,7 @@ console.log('Access Token:', data.user.token);
     } catch (error) {
       dispatch(signInFailure(error.message));
       console.error(error.message);
-    } finally {
-      
-    }
+    } 
   };
   
 
