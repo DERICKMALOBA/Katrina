@@ -5,7 +5,6 @@ export default function ProductList() {
   const [products, setProducts] = useState([]); // State to hold products
   const [loading, setLoading] = useState(true); // State for loading state
   const [error, setError] = useState(null); // State for error handling
-
   // Fetch data from API
   useEffect(() => {
     const fetchProducts = async () => {
@@ -16,7 +15,6 @@ export default function ProductList() {
         }
         const data = await response.json();
         setProducts(data); // Set products to state
-        console.log(data);
       } catch (err) {
         setError(err.message); // Handle errors
       } finally {
@@ -26,22 +24,34 @@ export default function ProductList() {
 
     fetchProducts();
   }, []);
-
   const addToCart = (product) => {
     setCart([...cart, product]);
   };
-
   if (loading) return <div>Loading...</div>; // Display loading state
   if (error) return <div>Error: {error}</div>; // Display error message if fetch fails
-
+  var x;
+var j;
+  function image(h){
+  x=JSON.parse(h);
+  j=x[0];
+  return j;
+  }
+  var g;
+  var imp;
+  function arri(w){
+    g=JSON.parse(w);
+  imp=g;
+  const ei=encodeURIComponent(JSON.stringify(imp));
+    return ei;
+  }
   return (
     <div className="p-4">
        {/* Product List */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
         {products.map((product) => (
           <div key={product.id} className="bg-white shadow-md p-4 rounded-xl">
-             <Link to={`/productdet?name=${product.name}&description=${product.description}&price=${product.price}`} className="text-customGray font-thin text-sm sm:text-base">
-             <img src={product.image1} alt={product.name} className="w-full h-32 object-cover rounded" />    
+             <Link to={`/productdet/${product.name}/${product.description}/${arri(product.image1)}`}>
+             <img src={image(product.image1)} alt={product.name} className="w-full h-32 object-cover rounded" />    
                       </Link>
             <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
             <p className="text-gray-600">{product.description}</p>

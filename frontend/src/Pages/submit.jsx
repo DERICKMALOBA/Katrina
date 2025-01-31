@@ -7,7 +7,7 @@ const ProductForm = () => {
     price: "",
     stock: "",
     category: "tops",
-    image: null,
+    images: [], // Use array to store multiple images
   });
 
   const handleChange = (e) => {
@@ -16,14 +16,22 @@ const ProductForm = () => {
   };
 
   const handleFileChange = (e) => {
-    setProduct({ ...product, image: e.target.files[0] });
+    const files = Array.from(e.target.files); // Convert FileList to Array
+    setProduct({ ...product, images: files });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
+
     Object.keys(product).forEach((key) => {
-      formData.append(key, product[key]);
+      if (key === "images") {
+        product.images.forEach((image) => {
+          formData.append(`images`, image); // Append each image
+        });
+      } else {
+        formData.append(key, product[key]);
+      }
     });
 
     try {
@@ -52,7 +60,7 @@ const ProductForm = () => {
           <option value="bottoms">Bottoms</option>
           <option value="sportswear">Sportswear</option>
         </select>
-        <input type="file" onChange={handleFileChange} className="w-full p-2 border rounded" required />
+        <input type="file" multiple onChange={handleFileChange} className="w-full p-2 border rounded" required />
         <button type="submit" className="w-full p-2 bg-blue-500 text-white rounded">Submit</button>
       </form>
     </div>
@@ -60,3 +68,4 @@ const ProductForm = () => {
 };
 
 export default ProductForm;
+
