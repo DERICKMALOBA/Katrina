@@ -18,12 +18,12 @@ function Header() {
     }
   };
   return (
-    <header className="bg-pink-100 sticky top-0 z-10 shadow-md">
+    <header className="bg-primaryOrange sticky top-0 z-10 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3 gap-10">
         {/* Logo Section - Left */}
         <Link to='/'>
           <h1 className="font-bold text-sm sm:text-xl flex gap-2">
-            <span className="text-cyan-200">Katrina Children Closets</span>
+            <span className="text-white">Katrina Children's Closet</span>
           </h1>
         </Link>
 
