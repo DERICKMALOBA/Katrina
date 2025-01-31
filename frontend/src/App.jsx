@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom"; 
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom"; 
 import Sidebar from "./AdminComponents/Sidebar";
 
 import OverviewPage from "./AdminPages/OverviewPage";
@@ -14,6 +14,9 @@ import SignUp from "./Pages/SingUp";
 import Nav from "./components/Navbar";
 import Home from "./Pages/home";
 import ProductList from "./Pages/ProductsListing";
+import ProductInfo from "./Pages/Productdetails";
+import ProductForm from "./Pages/submit";
+
 import Header from "./components/Header";
 
 // Component to conditionally render the layout
@@ -39,7 +42,7 @@ const Layout = ({ children }) => {
       {/* Show Header and Nav only if NOT on an admin route */}
       {!isAdminRoute && (
         <>
-          <Header/>
+          <Header />
           <Nav />
         </>
       )}
@@ -47,31 +50,6 @@ const Layout = ({ children }) => {
     </>
   );
 };
-
-function App() {
-  return (
-    <BrowserRouter>
-      <Layout>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/" element={<Home />} />
-          <Route path="/product" element={<ProductList />} />
-
-          {/* Admin Routes */}
-          <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
-          <Route path="/products" element={<AdminLayout><ProductPage /></AdminLayout>} />
-          <Route path="/customers" element={<AdminLayout><Customers /></AdminLayout>} />
-          <Route path="/sales" element={<AdminLayout><SalesPage /></AdminLayout>} />
-          <Route path="/orders" element={<AdminLayout><OrdersPage /></AdminLayout>} />
-          <Route path="/offers" element={<AdminLayout><OffersPage /></AdminLayout>} />
-          <Route path="/analytics" element={<AdminLayout><AnalyticsPage /></AdminLayout>} />
-        </Routes>
-      </Layout>
-    </BrowserRouter>
-  );
-}
 
 // Separate layout for admin pages
 const AdminLayout = ({ children }) => {
@@ -104,5 +82,32 @@ const AdminLayout = ({ children }) => {
     </div>
   );
 };
+
+function App() {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/product" element={<ProductList />} />
+          <Route path="/productdet/:name/:description/:price" element={<ProductInfo />} />
+          <Route path="/productform" element={<ProductForm />} />
+
+          {/* Admin Routes */}
+          <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
+          <Route path="/products" element={<AdminLayout><ProductPage /></AdminLayout>} />
+          <Route path="/customers" element={<AdminLayout><Customers /></AdminLayout>} />
+          <Route path="/sales" element={<AdminLayout><SalesPage /></AdminLayout>} />
+          <Route path="/orders" element={<AdminLayout><OrdersPage /></AdminLayout>} />
+          <Route path="/offers" element={<AdminLayout><OffersPage /></AdminLayout>} />
+          <Route path="/analytics" element={<AdminLayout><AnalyticsPage /></AdminLayout>} />
+        </Routes>
+      </Layout>
+    </Router>
+  );
+}
 
 export default App;

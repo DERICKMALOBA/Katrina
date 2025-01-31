@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 export default function ProductList() {
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]); // State to hold products
@@ -39,7 +40,9 @@ export default function ProductList() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
         {products.map((product) => (
           <div key={product.id} className="bg-white shadow-md p-4 rounded-xl">
-            <img src={product.image} alt={product.name} className="w-full h-32 object-cover rounded" />
+             <Link to={`/productdet?name=${product.name}&description=${product.description}&price=${product.price}`} className="text-customGray font-thin text-sm sm:text-base">
+             <img src={product.image1} alt={product.name} className="w-full h-32 object-cover rounded" />    
+                      </Link>
             <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
             <p className="text-gray-600">{product.description}</p>
             <p className="text-gray-600">Kshs.{product.price}</p>
