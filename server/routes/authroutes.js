@@ -8,11 +8,6 @@ const router = express.Router();
 // Sign Up Route
 router.post('/signup', async (req, res) => {
   const { name, email, phone, password } = req.body;
-  console.log(name);
-  console.log(phone);
-  console.log(email);
-  console.log(password);
-
   // Validate input
   if (!name || !email || !phone || !password) {
     return res.status(400).json({ message: 'All fields (name, email, phone, password) are required' });
@@ -31,10 +26,11 @@ router.post('/signup', async (req, res) => {
 
     // Hash the password before saving to the database
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    const insertQuery = 'INSERT INTO customers (name, email, phone, password) VALUES (?, ?, ?, ?)';
-
-    db.query(insertQuery, [name, email, phone, hashedPassword], (err, result) => {
+    const m= new Date().getMonth() + 1; 
+    const y = new Date().getFullYear();
+    const fq=[name, email, phone, hashedPassword,m,y]
+    const insertQuery = 'INSERT INTO customers (name, email, phone, password,month,year) VALUES (?, ?, ?, ?,?,?)';
+    db.query(insertQuery,fq,(err, result) => {
       if (err) {
         return res.status(500).json({ message: 'Database error', error: err });
       }

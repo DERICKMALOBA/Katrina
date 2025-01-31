@@ -21,7 +21,7 @@ const EditProduct = () => {
     price: "",
     stock: "",
     category: "",
-    imageUrls: [],
+    image:[],
   });
 
   const handleSearch = (e) => {
@@ -254,8 +254,8 @@ const EditProduct = () => {
     <option value="">Select Category</option>
     <option value="Tops">Tops</option>
     <option value="Bottoms">Bottoms</option>
-    <option value="Special Occasion Wear">Special Occasion Wear</option>
-    <option value="Everyday Wear">Everyday Wear</option>
+    <option value="Special">Special Occasion Wear</option>
+    <option value="Everyday">Everyday Wear</option>
     <option value="Casuals">Casuals</option>
   </select>
   <input

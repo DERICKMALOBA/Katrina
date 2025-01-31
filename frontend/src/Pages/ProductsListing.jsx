@@ -50,8 +50,8 @@ var j;
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
         {products.map((product) => (
           <div key={product.id} className="bg-white shadow-md p-4 rounded-xl">
-             <Link to={`/productdet/${product.name}/${product.description}/${arri(product.image1)}`}>
-             <img src={image(product.image1)} alt={product.name} className="w-full h-32 object-cover rounded" />    
+             <Link to={`/productdet/${product.name}/${product.description}/${arri(product.image)}`}>
+             <img src={image(product.image)} alt={product.name} className="w-full h-32 object-cover rounded" />    
                       </Link>
             <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
             <p className="text-gray-600">{product.description}</p>

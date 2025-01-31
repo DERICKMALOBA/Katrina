@@ -18,6 +18,7 @@ import ProductInfo from "./Pages/Productdetails";
 import ProductForm from "./Pages/submit";
 
 import Header from "./components/Header";
+import AdmiHeader from "./AdminComponents/AdminHeader";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -71,7 +72,7 @@ const AdminLayout = ({ children }) => {
         {/* Admin Panel Content */}
         <div className="relative z-10 flex-grow flex flex-col">
           {/* Admin Header */}
-          <Header />
+          <AdmiHeader/>
 
           {/* Page Content */}
           <div className="flex-grow bg-primaryBlack p-6 overflow-auto">
@@ -86,16 +87,6 @@ const AdminLayout = ({ children }) => {
 function App() {
   return (
     <Router>
-      <Header/>
-      <Nav/>
-      <Routes>
-        <Route path='/sign-in' element={<SignIn/>}/>
-        <Route path='/sign-up' element={<SignUp/>}/>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/product' element={<ProductList/>}/>
-        <Route path="/productdet/:name/:description/:price/:image1" element={<ProductInfo/>} />
-        <Route path='/productform' element={<ProductForm/>}/>
-      </Routes>
       <Layout>
         <Routes>
           {/* Public Routes */}
