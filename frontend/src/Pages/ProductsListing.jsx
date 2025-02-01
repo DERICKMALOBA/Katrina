@@ -1,29 +1,44 @@
+
+
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
+<<<<<<< HEAD
 export default function ProductList() {
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]); // State to hold products
   const [loading, setLoading] = useState(true); // State for loading state
   const [error, setError] = useState(null); // State for error handling
   // Fetch data from API
+=======
+
+export default function ProductList() {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+>>>>>>> 266b9febe4548e9f96ef89abe84e45ff18fe400a
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products/productslist"); // Change this to your actual API endpoint
+        const response = await fetch("/api/products/productslist");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
+<<<<<<< HEAD
         setProducts(data); // Set products to state
+=======
+        setProducts(data);
+>>>>>>> 266b9febe4548e9f96ef89abe84e45ff18fe400a
       } catch (err) {
-        setError(err.message); // Handle errors
+        setError(err.message);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
+<<<<<<< HEAD
   const addToCart = (product) => {
     setCart([...cart, product]);
   };
@@ -44,28 +59,62 @@ var j;
   const ei=encodeURIComponent(JSON.stringify(imp));
     return ei;
   }
+=======
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
+>>>>>>> 266b9febe4548e9f96ef89abe84e45ff18fe400a
   return (
     <div className="p-4">
-       {/* Product List */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
         {products.map((product) => (
           <div key={product.id} className="bg-white shadow-md p-4 rounded-xl">
+<<<<<<< HEAD
              <Link to={`/productdet/${product.name}/${product.description}/${arri(product.image)}`}>
              <img src={image(product.image)} alt={product.name} className="w-full h-32 object-cover rounded" />    
                       </Link>
+=======
+            <Link to={`/product/${product.id}`} className="text-customGray font-thin text-sm sm:text-base">
+              {product.imageUrls && product.imageUrls.length > 0 ? (
+                <img src={`http://localhost:5000${product.imageUrls[0]}`} alt={product.name} className="w-full h-32 object-cover rounded" />
+              ) : (
+                <img src="/default-image.jpg" alt="default" className="w-full h-32 object-cover rounded" />
+              )}
+            </Link>
+>>>>>>> 266b9febe4548e9f96ef89abe84e45ff18fe400a
             <h2 className="text-lg font-semibold mt-2">{product.name}</h2>
             <p className="text-gray-600">{product.description}</p>
             <p className="text-gray-600">Kshs.{product.price}</p>
-            <button
-              onClick={() => addToCart(product)}
-              className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-lg w-full hover:bg-blue-700"
-            >
-              Add to Cart
-            </button>
+            <button className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg shadow-md transition duration-300 hover:opacity-80 hover:shadow-lg">
+  Add to Cart
+</button>
           </div>
         ))}
+       
       </div>
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

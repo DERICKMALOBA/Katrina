@@ -19,7 +19,7 @@ import ProductForm from "./Pages/submit";
 
 import Header from "./components/Header";
 import AdmiHeader from "./AdminComponents/AdminHeader";
-
+import ProductDetail from "./Pages/Productdetails";
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -105,6 +105,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/product" element={<ProductList />} />
           <Route path="/productdet/:name/:description/:price" element={<ProductInfo />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/productform" element={<ProductForm />} />
 
           {/* Admin Routes */}
