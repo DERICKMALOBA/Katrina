@@ -13,18 +13,10 @@ const ProductDetails = () => {
     price: "",
     stock: "",
     category: "",
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 0ae8896bd62a27f6305d4f55d336089534ce05b6
-    image:[],
-  });
-=======
     imageUrls: [],
   }); // Set initial state for a new product
   const [editProduct, setEditProduct] = useState(null); // State for editing a product
   const [showAddForm, setShowAddForm] = useState(false); // Show add form
->>>>>>> 266b9febe4548e9f96ef89abe84e45ff18fe400a
 
   // Fetch the products when the component mounts
   useEffect(() => {
@@ -118,20 +110,6 @@ const ProductDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    const newId = filteredProducts.length + 1;
-    setFilteredProducts([...filteredProducts, { id: newId, ...newProduct }]);
-    setShowAddForm(false);
-    setNewProduct({
-      name: "",
-      description: "",
-      price: "",
-      stock: "",
-      category: "",
-      imageU: "",
-<<<<<<< HEAD
-=======
-=======
   
     // Create FormData object to handle image files
     const formData = new FormData();
@@ -144,8 +122,6 @@ const ProductDetails = () => {
     // Append each image file to the FormData object
     newProduct.imageUrls.forEach((file) => {
       formData.append('images', file);
->>>>>>> 266b9febe4548e9f96ef89abe84e45ff18fe400a
->>>>>>> 0ae8896bd62a27f6305d4f55d336089534ce05b6
     });
   
     try {
@@ -190,86 +166,6 @@ const ProductDetails = () => {
           onClick={handleAddProduct}
           className="bg-primaryBlue hover:bg-blue-500 text-white font-medium rounded-lg px-10 py-2 flex items-center justify-center gap-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
         >
-<<<<<<< HEAD
-          <motion.div
-            className="bg-gray-800 p-6 rounded-lg shadow-lg w-96"
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-          >
-            <div className="flex justify-between mb-4">
-              <h3 className="text-white text-lg font-semibold">Edit Product</h3>
-              <button
-                onClick={() => setEditProduct(null)}
-                className="text-gray-400 hover:text-gray-200"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <form onSubmit={handleEditSubmit}>
-  <input
-    name="name"
-    placeholder="Product Name"
-    className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-    onChange={handleEditChange}
-    value={editProduct.name}
-  />
-  <textarea
-    name="description"
-    placeholder="Description"
-    className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-    onChange={handleEditChange}
-    value={editProduct.description}
-  />
-  <input
-    name="price"
-    type="number"
-    placeholder="Price"
-    className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-    onChange={handleEditChange}
-    value={editProduct.price}
-  />
-  <input
-    name="stock"
-    type="number"
-    placeholder="Stock"
-    className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-    onChange={handleEditChange}
-    value={editProduct.stock}
-  />
-  <select
-    name="category"
-    className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-    onChange={handleEditChange}
-    value={editProduct.category}
-  >
-    <option value="">Select Category</option>
-    <option value="Tops">Tops</option>
-    <option value="Bottoms">Bottoms</option>
-    <option value="Special">Special Occasion Wear</option>
-    <option value="Everyday">Everyday Wear</option>
-    <option value="Casuals">Casuals</option>
-  </select>
-  <input
-    type="file"
-    multiple
-    className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-    onChange={handleImageUpload}
-  />
-  <input
-    name="imageUrl"
-    placeholder="Image URL"
-    className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-    onChange={handleEditChange}
-    value={editProduct.imageUrl}
-  />
-  <button type="submit" className="w-full bg-blue-500 px-4 py-2 text-white rounded">
-    Save
-  </button>
-</form>
-
-          </motion.div>
-=======
           <Plus size={35} /> Add a Product
         </button>
         <div className="relative w-full">
@@ -408,7 +304,6 @@ const ProductDetails = () => {
               Save
             </button>
           </form>
->>>>>>> 266b9febe4548e9f96ef89abe84e45ff18fe400a
         </motion.div>
       </motion.div>
     )}

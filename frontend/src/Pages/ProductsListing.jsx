@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 export default function ProductList() {
@@ -23,27 +21,8 @@ export default function ProductList() {
     };
     fetchProducts();
   }, []);
-  const addToCart = (product) => {
-    setCart([...cart, product]);
-  };
   if (loading) return <div>Loading...</div>; // Display loading state
   if (error) return <div>Error: {error}</div>; // Display error message if fetch fails
-  var x;
-var j;
-  function image(h){
-  x=JSON.parse(h);
-  j=x[0];
-  return j;
-  }
-  var g;
-  var imp;
-  function arri(w){
-    g=JSON.parse(w);
-  imp=g;
-  const ei=encodeURIComponent(JSON.stringify(imp));
-    return ei;
-  }
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
   return (

@@ -20,6 +20,7 @@ import ProductForm from "./Pages/submit";
 import Header from "./components/Header";
 import AdmiHeader from "./AdminComponents/AdminHeader";
 import ProductDetail from "./Pages/Productdetails";
+
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -87,16 +88,6 @@ const AdminLayout = ({ children }) => {
 function App() {
   return (
     <Router>
-      <Header/>
-      <Nav/>
-      <Routes>
-        <Route path='/sign-in' element={<SignIn/>}/>
-        <Route path='/sign-up' element={<SignUp/>}/>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/product' element={<ProductList/>}/>
-        <Route path="/productdet/:name/:description/:price/:image1" element={<ProductInfo/>} />
-        <Route path='/productform' element={<ProductForm/>}/>
-      </Routes>
       <Layout>
         <Routes>
           {/* Public Routes */}
