@@ -18,6 +18,7 @@ import ProductInfo from "./Pages/Productdetails";
 import ProductForm from "./Pages/submit";
 
 import Header from "./components/Header";
+import AdmiHeader from "./AdminComponents/AdminHeader";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -71,7 +72,7 @@ const AdminLayout = ({ children }) => {
         {/* Admin Panel Content */}
         <div className="relative z-10 flex-grow flex flex-col">
           {/* Admin Header */}
-          <Header />
+          <AdmiHeader/>
 
           {/* Page Content */}
           <div className="flex-grow bg-primaryBlack p-6 overflow-auto">

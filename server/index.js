@@ -5,6 +5,7 @@ const path = require('path');
 const authRoutes = require('./routes/authroutes.js');
 const productRoutes = require('./routes/productsroute.js');
 const itemRoutes = require('./routes/itemroute.js');
+const usersRoutes = require('./routes/usersroute.js');
 const db = require('./config/db.js');
 
 // Load environment variables
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/items', itemRoutes);
+app.use('/api/users', usersRoutes);
 // Test DB connection
 db.connect((err) => {
   if (err) {
