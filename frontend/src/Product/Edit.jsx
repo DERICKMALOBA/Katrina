@@ -95,7 +95,7 @@ const EditProduct = () => {
       price: "",
       stock: "",
       category: "",
-      imageUrls: "",
+      imageU: "",
     });
   };
 
