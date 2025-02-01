@@ -1,8 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
 import { useState,useEffect} from "react";
-
-
 const UserGrowthChart = () => {
 	const [error, setError] = useState(null);
 	const [jan, setJan] = useState(null);
