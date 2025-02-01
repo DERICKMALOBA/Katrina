@@ -1,13 +1,9 @@
-
-
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-
 export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -16,7 +12,7 @@ export default function ProductList() {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
-        setProducts(data);
+        setProducts(data); // Set products to stat
       } catch (err) {
         setError(err.message);
       } finally {
@@ -25,10 +21,10 @@ export default function ProductList() {
     };
     fetchProducts();
   }, []);
-
+  if (loading) return <div>Loading...</div>; // Display loading state
+  if (error) return <div>Error: {error}</div>; // Display error message if fetch fails
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-
   return (
     <div className="p-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
