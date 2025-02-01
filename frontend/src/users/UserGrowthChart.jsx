@@ -23,6 +23,7 @@ const UserGrowthChart = () => {
 		{ month: "Mar", users: mar },
 		{ month: "Apr", users: apr },
 		{ month: "May", users: may},
+		{ month: "May", users: may },
 		{ month: "Jun", users: jun },
 		{ month: "Jul", users: jul },
 		{ month: "Aug", users: aug },
