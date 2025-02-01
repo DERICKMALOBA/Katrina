@@ -1,4 +1,5 @@
 import {  ShoppingBag, Users, Zap } from "lucide-react";
+import  { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import StatCard from "../SharedComponent/StatCard";
 import EditProduct from "../Product/Edit";
@@ -6,6 +7,51 @@ import SalesTrendChart from "../Product/SalesTrendChart";
 import CategoryDistributionChart from "../overview/CategoryDistributionChart";
 
 function ProductPage() {
+  const [productCount, setProductCount] = useState(null);
+  const [userCount, setUserCount] = useState(null);  
+
+  useEffect(() => {
+    // Simulate fetching the product count (replace with an actual API call)
+    const fetchProductCount = async () => {
+      try {
+        // Example fetch call (replace with your actual API)
+        const response = await fetch('/api/products/products/count');
+        const data = await response.json();
+        
+        // Set the fetched product count to state
+        setProductCount(data.count);  // Assume data.count contains the product count
+      } catch (error) {
+        console.error('Error fetching product count:', error);
+      }
+    };
+
+    fetchProductCount();
+  }, []);
+
+
+
+
+
+
+  const fetchUserCount = async () => {
+    try {
+      const response = await fetch('/api/users/userstotal');  // Make a GET request to the endpoint
+      const data = await response.json();  // Parse the JSON response
+      setUserCount(data.size);  // Set the number of users in the state
+    } catch (error) {
+      console.error('Error fetching user count:', error);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch the user count when the component mounts
+    fetchUserCount();
+  }, []);
+
+
+
+
+
   const colors = {
     primaryOrange: "#fc8414",
     primaryBlue: "#307bb5",
@@ -34,13 +80,13 @@ function ProductPage() {
   <StatCard
     name="Customers"
     icon={Users}
-    value="1,234"
+    value={userCount}
     color={colors.primaryBlue}
   />
   <StatCard
     name="Total Products"
     icon={ShoppingBag}
-    value="567"
+    value={productCount}
     color={colors.primaryGreen}
   />
 </motion.div>

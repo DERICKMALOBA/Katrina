@@ -25,6 +25,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', usersRoutes);
+
 // Test DB connection
 db.connect((err) => {
   if (err) {

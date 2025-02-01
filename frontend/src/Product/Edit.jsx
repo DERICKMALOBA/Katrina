@@ -1,11 +1,16 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Edit, Search, Trash2, X, Plus } from "lucide-react";
-import { useState } from "react";
 
-import {  useEffect } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProductDetails = () => {
-  const [filteredProducts, setFilteredProducts] = useState([]); // Set initial state for products
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [displayedProducts, setDisplayedProducts] = useState(filteredProducts.slice(0, 10)); // Initially, show 10 products
+  const [showAll, setShowAll] = useState(false);
+  
+  // Set initial state for products
   const [searchTerm, setSearchTerm] = useState(""); // Set initial search term
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -18,31 +23,32 @@ const ProductDetails = () => {
   const [editProduct, setEditProduct] = useState(null); // State for editing a product
   const [showAddForm, setShowAddForm] = useState(false); // Show add form
 
-  // Fetch the products when the component mounts
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("/api/products/products");
-        const data = await response.json();
-        if (response.ok) {
-          setFilteredProducts(data.products); // Assuming products are in data.products
-        } else {
-          alert(data.error);
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
+  // Fetch products function
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("/api/products/products");
+      const data = await response.json();
+      if (response.ok) {
+        setFilteredProducts(data.products);
+      } else {
+        alert(data.error);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  // Fetch products when the component mounts
+  useEffect(() => {
     fetchProducts();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
 
   // Handle search functionality
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
-    // Filter products based on search term (name or category)
-    setFilteredProducts(
-      filteredProducts.filter(
+    setFilteredProducts((prev) =>
+      prev.filter(
         (product) =>
           product.name.toLowerCase().includes(term) ||
           product.category.toLowerCase().includes(term)
@@ -57,13 +63,12 @@ const ProductDetails = () => {
 
   const handleImageUpload = (e) => {
     const files = e.target.files;
-    const fileArray = Array.from(files); // Convert FileList to an array
+    const fileArray = Array.from(files);
     setNewProduct((prev) => ({
       ...prev,
       imageUrls: fileArray,
     }));
   };
-
 
   // Handle delete product
   const handleDelete = async (id) => {
@@ -77,8 +82,7 @@ const ProductDetails = () => {
       });
 
       if (response.ok) {
-        alert("Product deleted successfully");
-        setFilteredProducts(filteredProducts.filter((product) => product.id !== id));
+        fetchProducts(); // Refetch products after deletion
       } else {
         const data = await response.json();
         alert(data.error);
@@ -107,33 +111,31 @@ const ProductDetails = () => {
   };
 
   // Handle submit for adding a new product
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Create FormData object to handle image files
     const formData = new FormData();
-    formData.append('description', newProduct.description);
-    formData.append('name', newProduct.name);
-    formData.append('price', newProduct.price);
-    formData.append('stock', newProduct.stock);
-    formData.append('category', newProduct.category);
-  
+    formData.append("description", newProduct.description);
+    formData.append("name", newProduct.name);
+    formData.append("price", newProduct.price);
+    formData.append("stock", newProduct.stock);
+    formData.append("category", newProduct.category);
+
     // Append each image file to the FormData object
     newProduct.imageUrls.forEach((file) => {
-      formData.append('images', file);
+      formData.append("images", file);
     });
-  
+
     try {
       const response = await fetch("/api/products/add-product", {
         method: "POST",
         body: formData,
       });
-  
+
       const data = await response.json();
       if (response.ok) {
-        alert("Product added successfully");
-        setFilteredProducts([...filteredProducts, { id: data.productId, ...newProduct }]);
+        toast.success("Product added successfully!");
         setShowAddForm(false);
         setNewProduct({
           name: "",
@@ -141,15 +143,96 @@ const ProductDetails = () => {
           price: "",
           stock: "",
           category: "",
-          imageUrls: [],
+          image: [],
         });
+
+        // Refetch the products after adding
+        fetchProducts();
       } else {
-        alert(data.error);
+        toast.error(data.error || "Failed to add product.");
       }
     } catch (error) {
-      console.error("Error adding product:", error);
+       toast.error("Failed to add product. Please try again.");
     }
   };
+
+ 
+  
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+  
+    if (!editProduct) return;
+  
+    try {
+      const response = await fetch(`/api/products/edit-product/${editProduct.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editProduct),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        toast.success("Product updated successfully!", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+  
+        // Update the product list in the UI
+        setFilteredProducts((prevProducts) =>
+          prevProducts.map((product) =>
+            product.id === editProduct.id ? { ...product, ...editProduct } : product
+          )
+        );
+  
+        setEditProduct(null); // Clear edit form
+      } else {
+        toast.error(data.error || "Failed to update product.", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast.error("Failed to update product. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+  
+
+
+
+
+  useEffect(() => {
+    if (showAll) {
+      setDisplayedProducts(filteredProducts); // Show all products
+    } else {
+      setDisplayedProducts(filteredProducts.slice(0, 10)); // Show only first 10 products
+    }
+  }, [showAll, filteredProducts]);
+
+  const handleShowAll = () => {
+    setShowAll(!showAll);  // Toggle between showing all or just 10 products
+  };
+
 
 
   return (
@@ -185,20 +268,20 @@ const ProductDetails = () => {
       <table className="min-w-full divide-y divide-gray-700">
         <thead>
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Name</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Category</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Description</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Price</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Stock</th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase">Actions</th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-primaryOrange uppercase ">Name</th>
+            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Category</th>
+            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Description</th>
+            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Price</th>
+            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Stock</th>
+            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-700">
-          {filteredProducts.map((product) => (
+          {displayedProducts.map((product) => (
             <tr key={product.id}>
               <td className="px-6 py-4 text-sm text-gray-300">{product.name}</td>
               <td className="px-6 py-4 text-sm text-gray-300">{product.category}</td>
-              <td className="px-6 py-4 text-sm text-gray-300">{product.descption}</td>
+              <td className="px-6 py-4 text-sm text-gray-300">{product.description}</td>
               <td className="px-6 py-4 text-sm text-gray-300">ksh {product.price.toFixed(2)}</td>
               <td className="px-6 py-4 text-sm text-gray-300">{product.stock}</td>
               <td className="px-6 py-4 text-sm">
@@ -218,6 +301,16 @@ const ProductDetails = () => {
             </tr>
           ))}
         </tbody>
+
+        <div className="mt-4 items-center">
+        <button
+          onClick={handleShowAll}
+          className="text-primaryGreen font-bold hover:text-indigo-400"
+        >
+          {showAll ? 'Show Less' : 'Show All Products'}
+        </button>
+      </div>
+
       </table>
     </div>
   
@@ -243,7 +336,7 @@ const ProductDetails = () => {
             </button>
           </div>
   
-          <form onSubmit={handleEdit}>
+          <form onSubmit={handleEditSubmit}>
             <input
               name="name"
               placeholder="Product Name"
@@ -293,13 +386,7 @@ const ProductDetails = () => {
               className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
               onChange={handleImageUpload}
             />
-            <input
-              name="imageUrl"
-              placeholder="Image URL"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleEditChange}
-              value={editProduct.imageUrl}
-            />
+           
             <button type="submit" className="w-full bg-blue-500 px-4 py-2 text-white rounded">
               Save
             </button>
@@ -374,13 +461,8 @@ const ProductDetails = () => {
               className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
               onChange={handleImageUpload}
             />
-            <input
-              name="imageUrl"
-              placeholder="Image URL"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleInputChange}
-              value={newProduct.imageUrl}
-            />
+           
+           
             <button type="submit" className="w-full bg-blue-500 px-4 py-2 text-white rounded">
               Add Product
             </button>

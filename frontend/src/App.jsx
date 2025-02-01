@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom"; 
+import { ToastContainer } from "react-toastify";
 import Sidebar from "./AdminComponents/Sidebar";
 
 import OverviewPage from "./AdminPages/OverviewPage";
@@ -88,6 +89,7 @@ const AdminLayout = ({ children }) => {
 function App() {
   return (
     <Router>
+          <ToastContainer />
       <Layout>
         <Routes>
           {/* Public Routes */}

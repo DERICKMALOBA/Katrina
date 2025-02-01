@@ -10,6 +10,8 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 export default function ProductDetail() {
+  const [selectedImage, setSelectedImage] = useState(null);
+
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -81,7 +83,7 @@ export default function ProductDetail() {
             <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
             <p className="text-gray-600 mt-2">Discount: 10%</p>
             <p className="text-gray-800 font-semibold text-lg mt-2"> {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'KES' }).format(product.price)}</p>
-
+            <p className="text-primaryOrange mt-2">in stock {product.stock}</p>
             {/* Rating Section */}
             <div className="flex items-center space-x-2 mt-2">
               {/* Render Rating Stars */}
@@ -115,20 +117,34 @@ export default function ProductDetail() {
         </div>
 
         <div className="mt-6 bg-white shadow-lg rounded-lg p-6">
-  <h2 className="text-2xl font-bold mb-3">Product Images</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-    {product.imageUrls.map((image, index) => (
-      <div key={index} className="w-full">
-        <img
-          src={`http://localhost:5000${image}`}
-          alt={`Product image ${index}`}
-          className="w-full h-32 object-cover rounded-lg"
-        />
+      <h2 className="text-2xl font-bold mb-3">Product Images</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {product.imageUrls.map((image, index) => (
+          <div key={index} className="w-full">
+            <img
+              src={`http://localhost:5000${image}`}
+              alt={`Product image ${index}`}
+              className="w-full h-32 object-cover rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+              onClick={() => setSelectedImage(`http://localhost:5000${image}`)}
+            />
+          </div>
+        ))}
       </div>
-    ))}
-  </div>
-</div>
 
+      {/* Zoomed Image Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50"
+          onClick={() => setSelectedImage(null)}
+        >
+          <img
+            src={selectedImage}
+            alt="Zoomed product"
+            className="max-w-[90%] max-h-[90%] rounded-lg shadow-lg"
+          />
+        </div>
+      )}
+    </div>
 
         {/*  Customer Feedback */}
         <div className="bg-white shadow-lg rounded-lg p-6">
@@ -145,28 +161,72 @@ export default function ProductDetail() {
           <div className="mb-4">
             <label className="block text-gray-700 font-semibold">Select County:</label>
             <select
-              value={county}
-              onChange={(e) => setCounty(e.target.value)}
-              className="w-full p-2 border rounded-lg mt-2"
-            >
-              <option value="">-- Choose County --</option>
-              <option value="Nairobi">Nairobi</option>
-              <option value="Mombasa">Mombasa</option>
-              <option value="Kisumu">Kisumu</option>
-            </select>
+  value={county}
+  onChange={(e) => setCounty(e.target.value)}
+  className="w-full p-2 border rounded-lg mt-2"
+>
+  <option value="">-- Choose County --</option>
+  <option value="Baringo">Baringo</option>
+  <option value="Bomet">Bomet</option>
+  <option value="Bungoma">Bungoma</option>
+  <option value="Busia">Busia</option>
+  <option value="Elgeyo Marakwet">Elgeyo Marakwet</option>
+  <option value="Embu">Embu</option>
+  <option value="Garissa">Garissa</option>
+  <option value="Homa Bay">Homa Bay</option>
+  <option value="Isiolo">Isiolo</option>
+  <option value="Kajiado">Kajiado</option>
+  <option value="Kakamega">Kakamega</option>
+  <option value="Kericho">Kericho</option>
+  <option value="Kiambu">Kiambu</option>
+  <option value="Kilifi">Kilifi</option>
+  <option value="Kirinyaga">Kirinyaga</option>
+  <option value="Kisii">Kisii</option>
+  <option value="Kisumu">Kisumu</option>
+  <option value="Kitui">Kitui</option>
+  <option value="Kwale">Kwale</option>
+  <option value="Laikipia">Laikipia</option>
+  <option value="Lamu">Lamu</option>
+  <option value="Machakos">Machakos</option>
+  <option value="Makueni">Makueni</option>
+  <option value="Mandera">Mandera</option>
+  <option value="Marsabit">Marsabit</option>
+  <option value="Meru">Meru</option>
+  <option value="Migori">Migori</option>
+  <option value="Mombasa">Mombasa</option>
+  <option value="Murang'a">Murang a</option>
+  <option value="Nairobi">Nairobi</option>
+  <option value="Nakuru">Nakuru</option>
+  <option value="Nandi">Nandi</option>
+  <option value="Narok">Narok</option>
+  <option value="Nyamira">Nyamira</option>
+  <option value="Nyandarua">Nyandarua</option>
+  <option value="Nyeri">Nyeri</option>
+  <option value="Samburu">Samburu</option>
+  <option value="Siaya">Siaya</option>
+  <option value="Taita Taveta">Taita Taveta</option>
+  <option value="Tana River">Tana River</option>
+  <option value="Tharaka Nithi">Tharaka Nithi</option>
+  <option value="Trans Nzoia">Trans Nzoia</option>
+  <option value="Turkana">Turkana</option>
+  <option value="Uasin Gishu">Uasin Gishu</option>
+  <option value="Vihiga">Vihiga</option>
+  <option value="Wajir">Wajir</option>
+  <option value="West Pokot">West Pokot</option>
+</select>
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold">Pickup Station:</label>
+            <label className="block text-gray-700 font-semibold">Select a Vehicle For Delivery</label>
             <select
               value={pickupStation}
               onChange={(e) => setPickupStation(e.target.value)}
               className="w-full p-2 border rounded-lg mt-2"
             >
-              <option value="">-- Choose Pickup Station --</option>
-              <option value="CBD">CBD</option>
-              <option value="Westlands">Westlands</option>
-              <option value="Thika Road">Thika Road</option>
+              <option value="">Choose a Vehicle from Your Preferred Sacco</option>
+              <option value="CBD">Kangaroo Shutle </option>
+              <option value="Westlands">North Rifth</option>
+              <option value="Thika Road">North Ways</option>
             </select>
           </div>
         </div>

@@ -3,6 +3,7 @@ const db = require('../config/db.js');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
+const { count } = require('console');
 
 // Set up static file serving
 const app = express();
@@ -51,11 +52,11 @@ router.post('/add-product', upload.array('images', 10), (req, res) => {
 // Edit Product Route
 router.put('/edit-product/:id', (req, res) => {
     const { id } = req.params;
-    const { name, description, price, stock, category, imageUrls } = req.body;
+    const { name, description, price, stock, category, image } = req.body;
     
     // Update product in the database
-    const query = `UPDATE products SET name=?, description=?, price=?, stock=?, category=?, imageUrls=? WHERE id=?`;
-    db.query(query, [name, description, price, stock, category, JSON.stringify(imageUrls), id], (err) => {
+    const query = `UPDATE products SET name=?, description=?, price=?, stock=?, category=?, image=? WHERE id=?`;
+    db.query(query, [name, description, price, stock, category, JSON.stringify(image), id], (err) => {
         if (err) {
             console.error('Error updating product:', err);
             return res.status(500).json({ error: 'Database error' });
@@ -65,22 +66,42 @@ router.put('/edit-product/:id', (req, res) => {
 });
 
 router.get('/productslist', (req, res) => {
-  const query = 'SELECT * FROM products';
+    const query = 'SELECT * FROM products';
 
-  db.query(query, (err, results) => {
-    if (err) return res.status(500).json({ message: 'Database error', error: err });
+    db.query(query, (err, results) => {
+        if (err) return res.status(500).json({ message: 'Database error', error: err });
 
-    if (results.length >= 1) {
-      const productsWithFullImageUrls = results.map((product) => {
-        const imageUrls = JSON.parse(product.image); // assuming image is an array
-        const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
-        return { ...product, imageUrls: fullImageUrls };
-      });
+        if (results.length >= 1) {
+            const productsWithFullImageUrls = results.map((product) => {
+                let imageUrls = [];
 
-      res.json(productsWithFullImageUrls); // Return products with full image URLs
-    }
-  });
+                try {
+                    // Ensure image data is not null/undefined before parsing
+                    if (product.image) {
+                        // Try parsing the image field
+                        const parsedImage = JSON.parse(product.image);
+                        
+                        // If parsed data is not an array, convert it to an array
+                        imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                    }
+                } catch (parseError) {
+                    console.error('Error parsing product image data:', parseError);
+                    imageUrls = []; // Default to an empty array if parsing fails
+                }
+
+                // Construct full image URLs
+                const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
+                return { ...product, imageUrls: fullImageUrls };
+            });
+
+            return res.json(productsWithFullImageUrls); // Return modified product list
+        }
+
+        res.json([]); // Return an empty array if no products found
+    });
 });
+
 
 // Delete Product Route
 router.delete('/delete-product/:id', (req, res) => {
@@ -121,7 +142,8 @@ router.get('/product/:id', (req, res) => {
         const product = results[0];
 
         // Debugging: Check if the image is stored correctly before parsing
-        console.log("Raw Image Data:", product.image);
+      
+        
         
         try {
             product.imageUrls = JSON.parse(product.image).map((img) => `/uploads/${img}`);
@@ -130,11 +152,27 @@ router.get('/product/:id', (req, res) => {
             return res.status(500).json({ error: "Invalid image format in database" });
         }
 
-        console.log('Product details:', product);
+        
         res.json(product);
     });
 });
 
+
+
+router.get('/products/count', (req, res) => {
+    const query = 'SELECT COUNT(*) AS count FROM products'; // Query to count products
+  
+    db.query(query, (err, result) => {
+      if (err) {
+        console.error('Error fetching product count:', err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+  
+      // Send back the count as JSON
+      res.status(200).json({ count: result[0].count });
+      console.log(count)
+    });
+  });
 
 
 // Fetch All Products Route
