@@ -49,11 +49,11 @@ function ProductPage() {
         <EditProduct/>
 
         {/* CHARTS */}
-        <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
+        <motion.div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
           <SalesTrendChart/>
           <CategoryDistributionChart/>
 					
-				</div>
+				</motion.div>
 
       </main>
     </div>
