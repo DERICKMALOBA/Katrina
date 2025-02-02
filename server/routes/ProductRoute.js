@@ -28,13 +28,13 @@ router.post('/add-product', upload.array('images', 10), (req, res) => {
         return res.status(400).json({ message: "No files uploaded" });
     }
 
-    const { description, name, price, stock, category } = req.body;
+    const { description, name, price, stock, category,discount } = req.body;
     // Create an array of filenames for uploaded images
     const fileNames = req.files.map((file) => file.filename);
 
     // Create a SQL query to insert product details and image filenames into the database
-    const query = "INSERT INTO products (description, name, price, stock, category, image) VALUES(?,?,?,?,?,?)";
-    const values = [description, name, price, stock, category, JSON.stringify(fileNames)];
+    const query = "INSERT INTO products (description, name, price, stock, category,discount, image) VALUES(?,?,?,?,?,?,?)";
+    const values = [description, name, price, stock, category,discount, JSON.stringify(fileNames)];
 
     db.query(query, values, (err, results) => {
         if (err) {
@@ -52,11 +52,11 @@ router.post('/add-product', upload.array('images', 10), (req, res) => {
 // Edit Product Route
 router.put('/edit-product/:id', (req, res) => {
     const { id } = req.params;
-    const { name, description, price, stock, category, image } = req.body;
+    const { name, description, price, stock, category, discount, image } = req.body;
+
+    const query = `UPDATE products SET name=?, description=?, price=?, stock=?, category=?, discount=?, image=? WHERE id=?`;
     
-    // Update product in the database
-    const query = `UPDATE products SET name=?, description=?, price=?, stock=?, category=?, image=? WHERE id=?`;
-    db.query(query, [name, description, price, stock, category, JSON.stringify(image), id], (err) => {
+    db.query(query, [name, description, price, stock, category, discount, JSON.stringify(image), id], (err) => {
         if (err) {
             console.error('Error updating product:', err);
             return res.status(500).json({ error: 'Database error' });
@@ -72,35 +72,51 @@ router.get('/productslist', (req, res) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err });
 
         if (results.length >= 1) {
-            const productsWithFullImageUrls = results.map((product) => {
+            let totalDiscountAmount = 0;
+
+            const productsWithDiscount = results.map((product) => {
                 let imageUrls = [];
 
                 try {
-                    // Ensure image data is not null/undefined before parsing
                     if (product.image) {
-                        // Try parsing the image field
                         const parsedImage = JSON.parse(product.image);
-                        
-                        // If parsed data is not an array, convert it to an array
+                        // Ensure imageUrls is always an array
                         imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
                     }
                 } catch (parseError) {
                     console.error('Error parsing product image data:', parseError);
-                    imageUrls = []; // Default to an empty array if parsing fails
+                    imageUrls = [];
                 }
 
-                // Construct full image URLs
                 const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
 
-                return { ...product, imageUrls: fullImageUrls };
+                // Calculate discount
+                const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                const originalPrice = parseFloat(product.price) || 0;
+                const discountAmount = (discountPercentage / 100) * originalPrice;
+                const discountedPrice = originalPrice - discountAmount;
+
+                totalDiscountAmount += discountAmount;
+
+                return {
+                    ...product,
+                    originalPrice: originalPrice.toFixed(2), // Keep original price
+                    discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                    discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                    imageUrls: fullImageUrls,
+                };
             });
 
-            return res.json(productsWithFullImageUrls); // Return modified product list
+            return res.json({
+                products: productsWithDiscount,
+                totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+            });
         }
 
-        res.json([]); // Return an empty array if no products found
+        res.json({ products: [], totalDiscountAmount: "0.00" });
     });
 });
+
 
 
 // Delete Product Route
@@ -123,9 +139,6 @@ router.delete('/delete-product/:id', (req, res) => {
 
 router.get('/product/:id', (req, res) => {
     const { id } = req.params;
-    
-    // console.log("GET /product/:id route hit"); // Check if this logs
-    // console.log(`Fetching product with ID: ${id}`); // Check if ID logs
 
     const query = 'SELECT * FROM products WHERE id = ?';
 
@@ -141,21 +154,18 @@ router.get('/product/:id', (req, res) => {
 
         const product = results[0];
 
-        // Debugging: Check if the image is stored correctly before parsing
-      
-        
-        
         try {
-            product.imageUrls = JSON.parse(product.image).map((img) => `/uploads/${img}`);
+            const parsedImage = JSON.parse(product.image);
+            product.imageUrls = Array.isArray(parsedImage) ? parsedImage.map((img) => `/uploads/${img}`) : [`/uploads/${parsedImage}`];
         } catch (parseError) {
             console.error("Error parsing image data:", parseError);
-            return res.status(500).json({ error: "Invalid image format in database" });
+            product.imageUrls = [];
         }
 
-        
         res.json(product);
     });
 });
+
 
 
 

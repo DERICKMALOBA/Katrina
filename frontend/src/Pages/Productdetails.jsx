@@ -1,23 +1,37 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-
-import { AiOutlineHeart } from 'react-icons/ai'; // Whitelist icon
-import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa'; // Rating stars
+import { FaStar, FaStarHalfAlt, FaRegStar, FaHeart } from 'react-icons/fa'; // Rating stars
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
 export default function ProductDetail() {
+
   const [selectedImage, setSelectedImage] = useState(null);
+  const [wishlist, setWishlist] = useState({});
+
+  const toggleWishlist = (productId) => {
+    setWishlist((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
 
   const { id } = useParams();
-  const [product, setProduct] = useState(null);
+  const location = useLocation();
+  const [product, setProduct] = useState(location.state || {});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [county, setCounty] = useState("");
   const [pickupStation, setPickupStation] = useState("");
+
+  
+
+  useEffect(() => {
+    console.log("Product Details:", product);
+  }, [product]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -42,9 +56,36 @@ export default function ProductDetail() {
     console.log(`Product ${product.name} added to cart`);
   };
 
+  const calculateDiscountedPrice = (product) => {
+    if (!product || !product.price) return { originalPrice: "0.00", discountedPrice: "0.00", discountAmount: "0.00" };
+
+    const discountPercentage = parseFloat(product.discount) || 0;
+    const originalPrice = parseFloat(product.price) || 0;
+    const discountAmount = (discountPercentage / 100) * originalPrice;
+    const discountedPrice = originalPrice - discountAmount;
+
+    return {
+      originalPrice: originalPrice.toFixed(2),
+      discountedPrice: discountedPrice.toFixed(2),
+      discountAmount: discountAmount.toFixed(2),
+    };
+  };
+
+  const { originalPrice, discountedPrice } = calculateDiscountedPrice(product);
+
   if (loading) return <div className="text-center text-lg">Loading...</div>;
   if (error) return <div className="text-red-500 text-lg">Error: {error}</div>;
   if (!product) return <div className="text-gray-500 text-lg">Product not found</div>;
+
+  
+    
+
+
+  
+
+
+
+
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
@@ -77,13 +118,39 @@ export default function ProductDetail() {
           <div className="flex flex-col justify-center relative">
             {/* Whitelist Icon */}
             <div className="absolute top-0 right-0 p-2">
-              <AiOutlineHeart size={24} className="text-gray-500 hover:text-red-500 cursor-pointer" />
+
+               <button
+                                onClick={() => toggleWishlist(product.id || product._id)}
+                                className={`absolute  right-0 p-2  rounded-full transition-all duration-300 shadow-lg
+                                  ${wishlist[product.id || product._id] ? "bg-primaryOrange text-white" : "border border-primaryOrange text-primaryOrange"}
+                                  hover:shadow-primaryOrange/50`}
+                              >
+                                <FaHeart />
+                              </button>
+              
+
             </div>
             
             <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-            <p className="text-gray-600 mt-2">Discount: 10%</p>
-            <p className="text-gray-800 font-semibold text-lg mt-2"> {new Intl.NumberFormat('en-US', { style: 'currency', currency: 'KES' }).format(product.price)}</p>
-            <p className="text-primaryOrange mt-2">in stock {product.stock}</p>
+          
+            {product.discount > 0 && (
+  <div className="text-primaryBlack font-semibold text-sm mt-2">
+    <span className="line-through text-gray-500">Kshs. {originalPrice}</span>{" "}
+    Kshs. {discountedPrice}
+  </div>
+)}
+
+
+<p className="text-primaryOrange mt-1 line-clamp-2">
+  {product.stock <= 5 ? (
+    <span className="text-red-500 font-semibold"> {product.stock} {product.stock === 1 ? "unit" : "units"} left</span>
+  ) : (
+    <>{product.stock} in stock</>
+  )}
+</p>
+
+         
+            
             {/* Rating Section */}
             <div className="flex items-center space-x-2 mt-2">
               {/* Render Rating Stars */}

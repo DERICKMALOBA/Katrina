@@ -18,6 +18,7 @@ const ProductDetails = () => {
     price: "",
     stock: "",
     category: "",
+    discount:"",
     imageUrls: [],
   }); // Set initial state for a new product
   const [editProduct, setEditProduct] = useState(null); // State for editing a product
@@ -121,6 +122,7 @@ const ProductDetails = () => {
     formData.append("price", newProduct.price);
     formData.append("stock", newProduct.stock);
     formData.append("category", newProduct.category);
+    formData.append("discount", newProduct.discount);
 
     // Append each image file to the FormData object
     newProduct.imageUrls.forEach((file) => {
@@ -142,6 +144,7 @@ const ProductDetails = () => {
           description: "",
           price: "",
           stock: "",
+          discount:"0",
           category: "",
           image: [],
         });
@@ -272,6 +275,7 @@ const ProductDetails = () => {
             <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Category</th>
             <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Description</th>
             <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Price</th>
+            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase"> Discount</th>
             <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Stock</th>
             <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Actions</th>
           </tr>
@@ -282,7 +286,8 @@ const ProductDetails = () => {
               <td className="px-6 py-4 text-sm text-gray-300">{product.name}</td>
               <td className="px-6 py-4 text-sm text-gray-300">{product.category}</td>
               <td className="px-6 py-4 text-sm text-gray-300">{product.description}</td>
-              <td className="px-6 py-4 text-sm text-gray-300">ksh {product.price.toFixed(2)}</td>
+              <td className="px-6 py-4 text-sm text-gray-300">ksh {product.price}</td>
+              <td className="px-6 py-4 text-sm text-gray-300">{product.discount}</td>
               <td className="px-6 py-4 text-sm text-gray-300">{product.stock}</td>
               <td className="px-6 py-4 text-sm">
                 <button
@@ -359,6 +364,15 @@ const ProductDetails = () => {
               onChange={handleEditChange}
               value={editProduct.price}
             />
+
+<input
+              name="discount"
+              type="number"
+              placeholder="discount"
+              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+              onChange={handleEditChange}
+              value={editProduct.discount}
+            />
             <input
               name="stock"
               type="number"
@@ -434,6 +448,14 @@ const ProductDetails = () => {
               onChange={handleInputChange}
               value={newProduct.price}
             />
+             <input
+              name="discount"
+              type="number"
+              placeholder="discount"
+              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+              onChange={handleInputChange}
+              value={newProduct.discount}
+            />
             <input
               name="stock"
               type="number"
@@ -442,19 +464,27 @@ const ProductDetails = () => {
               onChange={handleInputChange}
               value={newProduct.stock}
             />
-            <select
-              name="category"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleInputChange}
-              value={newProduct.category}
-            >
-              <option value="">Select Category</option>
-              <option value="Tops">Tops</option>
-              <option value="Bottoms">Bottoms</option>
-              <option value="Special Occasion Wear">Special Occasion Wear</option>
-              <option value="Everyday Wear">Everyday Wear</option>
-              <option value="Casuals">Casuals</option>
-            </select>
+           <select
+  name="category"
+  className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+  onChange={handleInputChange}
+  value={newProduct.category}
+>
+  <option value="">Select Category</option>
+  <option value="Tops">Tops</option>
+  <option value="Bottoms">Bottoms</option>
+  <option value="Dressers">Dressers</option>
+  <option value="Outer Wear">Outer Wear</option>
+  <option value="Sleep Wear">Sleep Wear</option>
+  <option value="Under Wear">Under Wear</option>
+  <option value="Foot Wear">Foot Wear</option>
+  <option value="Accessories">Accessories</option>
+  <option value="Special Occasions">Special Occasions</option>
+  <option value="SportsWear">SportsWear</option>
+  <option value="Everyday Wear">Everyday Wear</option>
+  <option value="Casuals">Casuals</option>
+</select>
+
             <input
               type="file"
               multiple
