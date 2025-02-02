@@ -1,9 +1,11 @@
 import { motion } from "framer-motion";
-import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { useState,useEffect} from "react";
-const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE"];
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from "recharts";
+import { useState } from "react";
+import { useEffect} from "react";
 
-const SalesByCategoryChart = () => {
+const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#10B981", "#F59E0B"];
+
+const DistributionChart = () => {
 	const [error, setError] = useState(null);
 	const [top, setTop] = useState(null);
 	const [bot, setBot] = useState(null);
@@ -15,22 +17,22 @@ const SalesByCategoryChart = () => {
 	const [acc, setAcc] = useState(null);
 	const [spe, setSpe] = useState(null);
 	const [spo, setSpo] = useState(null);
-	const salesByCategory = [
+	const categoryData = [
 		{ name: "Tops", value: top },
+		{ name: "Dressess", value: dre },
 		{ name: "Bottoms", value: bot },
-		{ name: "Dressers", value: dre },
-		{ name: "OuterWear", value: out },
-		{ name: "SleepWear", value: sle },
-		{ name: "UnderWear", value: und },
-		{ name: "FootWear", value: foo },
+		{ name: "Outer Wear", value: out },
+		{ name: "Sports Wear", value: spo },
+		{ name: "Sleep Wear", value: sle },
+		{ name: "Under Wear", value: und },
+		{ name: "Foot Wear", value: foo },
 		{ name: "Accessories", value: acc },
-		{ name: "SpecialOccassions", value: spe },
-		{ name: "SportWear", value: spo },
+		{ name: "Special Wear", value: spe },
 	];
 	useEffect(() => {
 		const fetchUsers = async () => {
 		  try {
-			const response = await fetch("/api/sales/category"); // Change this to your actual API endpoint
+			const response = await fetch("/api/products/productscategory"); // Change this to your actual API endpoint
 			if (!response.ok) {
 			  throw new Error("Failed to fetch products");
 			}
@@ -61,21 +63,21 @@ const SalesByCategoryChart = () => {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ delay: 0.3 }}
 		>
-			<h2 className='text-xl font-semibold text-gray-100 mb-4'>Sales by Category</h2>
-
-			<div style={{ width: "100%", height: 300 }}>
-				<ResponsiveContainer>
+			<h2 className='text-lg font-medium mb-4 text-gray-100'>Category Distribution</h2>
+			<div className='h-80'>
+				<ResponsiveContainer width={"100%"} height={"100%"}>
 					<PieChart>
 						<Pie
-							data={salesByCategory}
-							cx='50%'
-							cy='50%'
+							data={categoryData}
+							cx={"50%"}
+							cy={"50%"}
+							labelLine={false}
 							outerRadius={80}
 							fill='#8884d8'
 							dataKey='value'
 							label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
 						>
-							{salesByCategory.map((entry, index) => (
+							{categoryData.map((entry, index) => (
 								<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 							))}
 						</Pie>
@@ -93,4 +95,4 @@ const SalesByCategoryChart = () => {
 		</motion.div>
 	);
 };
-export default SalesByCategoryChart;
+export default DistributionChart;

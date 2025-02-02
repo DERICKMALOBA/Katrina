@@ -4,11 +4,29 @@ import { motion } from "framer-motion";
 import StatCard from "../SharedComponent/StatCard";
 import EditProduct from "../Product/Edit";
 import SalesTrendChart from "../Product/SalesTrendChart";
-import CategoryDistributionChart from "../overview/CategoryDistributionChart";
+import DistributionChart from "../Product/categorydistribution";
 
 function ProductPage() {
   const [productCount, setProductCount] = useState(null);
   const [userCount, setUserCount] = useState(null);  
+  const [sales, setSales] = useState(null); 
+  useEffect(() => {
+    // Simulate fetching the product count (replace with an actual API call)
+    const fetchSales = async () => {
+      try {
+        // Example fetch call (replace with your actual API)
+        const response = await fetch('/api/sales/totalsales');
+        const data = await response.json();
+        
+        // Set the fetched product count to state
+        setSales(data.Totalsales);  // Assume data.count contains the product count
+      } catch (error) {
+        console.error('Error fetching product count:', error);
+      }
+    };
+
+    fetchSales();
+  }, []);
 
   useEffect(() => {
     // Simulate fetching the product count (replace with an actual API call)
@@ -74,7 +92,7 @@ function ProductPage() {
   <StatCard
     name="Total Sales"
     icon={Zap}
-    value="Ksh 2,345"
+    value={sales}
     color={colors.primaryOrange}
   />
   <StatCard
@@ -97,7 +115,7 @@ function ProductPage() {
         {/* CHARTS */}
         <motion.div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
           <SalesTrendChart/>
-          <CategoryDistributionChart/>
+          <DistributionChart/>
 					
 				</motion.div>
 
