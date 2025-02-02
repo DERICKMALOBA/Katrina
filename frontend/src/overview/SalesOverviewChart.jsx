@@ -1,23 +1,65 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { motion } from "framer-motion";
-
-const salesData = [
-	
-	{ name: "Jan", sales: 6100 },
-	{ name: "Feb", sales: 5900 },
-	{ name: "Mar", sales: 6800 },
-	{ name: "Apr", sales: 6300 },
-	{ name: "May", sales: 7100 },
-	{ name: "Jun", sales: 7500 },
-	{ name: "Jul", sales: 4200 },
-	{ name: "Aug", sales: 3800 },
-	{ name: "Sep", sales: 5100 },
-	{ name: "Oct", sales: 4600 },
-	{ name: "Nov", sales: 5400 },
-	{ name: "Dec", sales: 7200 },
-];
+import { useState } from "react";
+import { useEffect} from "react";
 
 const SalesOverviewChart = () => {
+	const [error, setError] = useState(null);
+		const [jan, setJan] = useState(null);
+		const [feb, setFeb] = useState(null);
+		const [mar, setMar] = useState(null);
+		const [apr, setApr] = useState(null);
+		const [may, setMay] = useState(null);
+		const [jun, setJun] = useState(null);
+		const [jul, setJul] = useState(null);
+		const [aug, setAug] = useState(null);
+		const [sep, setSep] = useState(null);
+		const [oct, setOct] = useState(null);
+		const [nov, setNov] = useState(null);
+		const [dec, setDec] = useState(null);
+		const salesData = [
+	
+			{ name: "Jan", sales: jan },
+			{ name: "Feb", sales: feb },
+			{ name: "Mar", sales: mar },
+			{ name: "Apr", sales: apr },
+			{ name: "May", sales: may },
+			{ name: "Jun", sales: jun },
+			{ name: "Jul", sales: jul },
+			{ name: "Aug", sales: aug },
+			{ name: "Sep", sales: sep },
+			{ name: "Oct", sales: oct },
+			{ name: "Nov", sales: nov },
+			{ name: "Dec", sales: dec },
+		];
+		useEffect(() => {
+			const fetchUsers = async () => {
+			  try {
+				const response = await fetch("/api/sales/salesgrowth"); // Change this to your actual API endpoint
+				if (!response.ok) {
+				  throw new Error("Failed to fetch products");
+				}
+				const data = await response.json();
+				console.log("Data is:"+data);
+				setJan(data.Jan); 
+				setFeb(data.Feb);
+				setMar(data.Mar); 
+				setApr(data.Apr);
+				setMay(data.May); 
+				setJun(data.Jun);
+				setJul(data.Jul); 
+				setAug(data.Aug);
+				setSep(data.Sep); 
+				setOct(data.Oct);
+				setNov(data.Nov); 
+				setDec(data.Dec);
+			  } catch (err) {
+				setError(err.message); // Handle errors
+				console.log(error);
+			  } 
+			};
+			fetchUsers();
+			}, []);
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'

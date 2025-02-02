@@ -6,6 +6,7 @@ const bodyParser = require('body-parser'); // Ensure body-parser is required
 const authRoutes = require('./routes/authroutes.js');
 const usersRoutes = require('./routes/usersroute.js');
 const productRoutes = require('./routes/ProductRoute.js');
+const salesRoutes = require('./routes/salesroute.js');
 const db = require('./config/db.js');
 
 // Load environment variables
@@ -25,7 +26,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', usersRoutes);
-
+app.use('/api/sales', salesRoutes);
 // Test DB connection
 db.connect((err) => {
   if (err) {
