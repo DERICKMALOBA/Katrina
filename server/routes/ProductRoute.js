@@ -187,5 +187,68 @@ router.get('/products', (req, res) => {
         res.status(200).json({ products: results });
     });
 });
-
+router.get('/productscategory', (req, res) => {
+    const query = 'SELECT*FROM products';
+    db.query(query,async (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error', error: err });
+      const l=results.length;
+      var j=0;
+      var top=0;
+      var bot=0;
+      var dre=0;
+      var out=0;
+      var sle=0;
+      var und=0;
+      var foo=0;
+      var acc=0;
+      var spe=0;
+      var spo=0;
+      var af=JSON.parse(JSON.stringify(results));
+      for(j;j<l;j++)
+          {
+            if(af[j].category=="tops")
+            {
+              top=top+1;
+            }
+            if(af[j].category=="bottoms")
+              {
+                bot=bot+1;
+              }
+              if(af[j].category=="dressers")
+                {
+                  dre=dre+1;
+                }  
+                if(af[j].category=="outerwear")
+                  {
+                    out=out+1;
+                  }
+                  if(af[j].category=="sleepwear")
+                    {
+                      sle=sle+1;
+                    } 
+                    if(af[j].category=="underwear")
+                      {
+                        und=und+1;
+                      } 
+                      if(af[j].category=="footwear")
+                        {
+                          foo=foo+1;
+                        }  
+                        if(af[j].category=="accessories")
+                          {
+                            acc=acc+1;
+                          } 
+                          if(af[j].category=="special")
+                            {
+                              spe=spe+1;
+                            }  
+                            if(af[j].category=="sport")
+                              {
+                                spo=spo+1;
+                              }  
+          }
+    console.log(top);
+    res.json({Top:top,Bot:bot,Dre:dre,Out:out,Sle:sle,Und:und,Foo:foo,Acc:acc,Spe:spe,Spo:spo});
+  });
+  });
 module.exports = router;

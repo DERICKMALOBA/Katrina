@@ -5,7 +5,7 @@ import { useEffect} from "react";
 
 const COLORS = ["#6366F1", "#8B5CF6", "#EC4899", "#10B981", "#F59E0B"];
 
-const CategoryDistributionChart = () => {
+const DistributionChart = () => {
 	const [error, setError] = useState(null);
 	const [top, setTop] = useState(null);
 	const [bot, setBot] = useState(null);
@@ -32,7 +32,7 @@ const CategoryDistributionChart = () => {
 	useEffect(() => {
 		const fetchUsers = async () => {
 		  try {
-			const response = await fetch("/api/sales/category"); // Change this to your actual API endpoint
+			const response = await fetch("/api/products/productscategory"); // Change this to your actual API endpoint
 			if (!response.ok) {
 			  throw new Error("Failed to fetch products");
 			}
@@ -63,7 +63,7 @@ const CategoryDistributionChart = () => {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ delay: 0.3 }}
 		>
-			<h2 className='text-lg font-medium mb-4 text-gray-100'>Sales By Category Distribution</h2>
+			<h2 className='text-lg font-medium mb-4 text-gray-100'>Category Distribution</h2>
 			<div className='h-80'>
 				<ResponsiveContainer width={"100%"} height={"100%"}>
 					<PieChart>
@@ -95,4 +95,4 @@ const CategoryDistributionChart = () => {
 		</motion.div>
 	);
 };
-export default CategoryDistributionChart;
+export default DistributionChart;

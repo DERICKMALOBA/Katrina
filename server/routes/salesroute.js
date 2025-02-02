@@ -1,7 +1,32 @@
 const express = require('express');
 const db = require('../config/db.js');
 const router = express.Router();
-     router.get('/weeksales', (req, res) => {
+router.get('/totalsales', (req, res) => {
+  const query = 'SELECT*FROM sales';
+  db.query(query,async (err, results) => {
+    if (err) return res.status(500).json({ message: 'Database error', error: err });
+    const nn = results.length;
+       console.log(nn);
+    res.json({Totalsales:nn});
+  });
+});
+router.get('/salesrevenue', (req, res) => {
+  const query = 'SELECT*FROM sales';
+  db.query(query,async (err, results) => {
+    if (err) return res.status(500).json({ message: 'Database error', error: err });
+    const nn = results.length;
+    var ar=JSON.parse(JSON.stringify(results));
+    var i=0;
+    var total=0
+    for(i;i<nn;i++)
+    {   
+          total=parseFloat(total)+parseFloat((ar[i].amount));
+    }
+       console.log(total);
+    res.json({Totalrevenue:total});
+  });
+});
+router.get('/weeksales', (req, res) => {
         const y = new Date().getFullYear();
         const required=7;
         const day = new Date();
