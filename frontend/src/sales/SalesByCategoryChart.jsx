@@ -1,16 +1,59 @@
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
-const salesByCategory = [
-	{ name: "Electronics", value: 400 },
-	{ name: "Clothing", value: 300 },
-	{ name: "Home & Garden", value: 200 },
-	{ name: "Books", value: 100 },
-	{ name: "Others", value: 150 },
-];
-
+import { useState,useEffect} from "react";
 const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE"];
 
 const SalesByCategoryChart = () => {
+	const [error, setError] = useState(null);
+	const [top, setTop] = useState(null);
+	const [bot, setBot] = useState(null);
+	const [dre, setDre] = useState(null);
+	const [out, setOut] = useState(null);
+	const [sle, setSle] = useState(null);
+	const [und, setUnd] = useState(null);
+	const [foo, setFoo] = useState(null);
+	const [acc, setAcc] = useState(null);
+	const [spe, setSpe] = useState(null);
+	const [spo, setSpo] = useState(null);
+	const salesByCategory = [
+		{ name: "Tops", value: top },
+		{ name: "Bottoms", value: bot },
+		{ name: "Dressers", value: dre },
+		{ name: "OuterWear", value: out },
+		{ name: "SleepWear", value: sle },
+		{ name: "UnderWear", value: und },
+		{ name: "FootWear", value: foo },
+		{ name: "Accessories", value: acc },
+		{ name: "SpecialOccassions", value: spe },
+		{ name: "SportWear", value: spo },
+	];
+	useEffect(() => {
+		const fetchUsers = async () => {
+		  try {
+			const response = await fetch("/api/sales/category"); // Change this to your actual API endpoint
+			if (!response.ok) {
+			  throw new Error("Failed to fetch products");
+			}
+			const data = await response.json();
+			console.log("Data is:"+data);
+			setTop(data.Top); 
+			setBot(data.Bot);
+			setDre(data.Dre); 
+			setOut(data.Out);
+			setSle(data.Sle); 
+			setUnd(data.Und);
+			setFoo(data.Foo);
+			setAcc(data.Acc);
+			setSpe(data.Spe); 
+			setSpo(data.Spo);
+		  } catch (err) {
+			setError(err.message); // Handle errors
+			console.log(error);
+		  } 
+		};
+		fetchUsers();
+		
+		}, []);
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'
