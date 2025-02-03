@@ -1,17 +1,48 @@
 import { motion } from "framer-motion";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-
-const dailyOrdersData = [
-	{ date: "07/01", orders: 45 },
-	{ date: "07/02", orders: 52 },
-	{ date: "07/03", orders: 49 },
-	{ date: "07/04", orders: 60 },
-	{ date: "07/05", orders: 55 },
-	{ date: "07/06", orders: 58 },
-	{ date: "07/07", orders: 62 },
-];
-
+import { useState,useEffect} from "react";
 const DailyOrders = () => {
+	const [error, setError] = useState(null);
+	const [mon, setMon] = useState(null);
+	const [tue, setTue] = useState(null);
+	const [wed, setWed] = useState(null);
+	const [thur, setThur] = useState(null);
+	const [fri, setFri] = useState(null);
+	const [sat, setSat] = useState(null);
+	const [sun, setSun] = useState(null);
+	const dailyOrdersData = [
+		{ date: "Sun", orders: sun },
+		{ date: "Mon", orders: mon },
+		{ date: "Tue", orders: tue},
+		{ date: "Wed", orders: wed },
+		{ date: "Thur", orders: thur },
+		{ date: "Fri", orders: fri },
+		{ date: "Sat", orders: sat },
+	];
+	useEffect(() => {
+		const fetchUsers = async () => {
+		  try {
+			const response = await fetch("/api/orders/weekorders"); // Change this to your actual API endpoint
+			if (!response.ok) {
+			  throw new Error("Failed to fetch products");
+			}
+			const data = await response.json();
+			console.log("Data is:"+data);
+			setMon(data.Mon); 
+			setTue(data.Tue);
+			setWed(data.Wed); 
+			setThur(data.Thur);
+			setFri(data.Fri); 
+			setSat(data.Sat);
+			setSun(data.Sun);
+		  } catch (err) {
+			setError(err.message); // Handle errors
+			console.log(error);
+		  } 
+		};
+		fetchUsers();
+		
+		}, []);
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'

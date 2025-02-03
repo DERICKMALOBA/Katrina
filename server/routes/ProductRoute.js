@@ -213,52 +213,62 @@ router.get('/productscategory', (req, res) => {
       var acc=0;
       var spe=0;
       var spo=0;
+      var every=0;
+      var cas=0;
       var af=JSON.parse(JSON.stringify(results));
       for(j;j<l;j++)
           {
-            if(af[j].category=="tops")
+            if(af[j].category=="Tops")
             {
               top=top+1;
             }
-            if(af[j].category=="bottoms")
+            if(af[j].category=="Bottoms")
               {
                 bot=bot+1;
               }
-              if(af[j].category=="dressers")
+              if(af[j].category=="Dressers")
                 {
                   dre=dre+1;
                 }  
-                if(af[j].category=="outerwear")
+                if(af[j].category=="Outer Wear")
                   {
                     out=out+1;
                   }
-                  if(af[j].category=="sleepwear")
+                  if(af[j].category=="Sleep Wear")
                     {
                       sle=sle+1;
                     } 
-                    if(af[j].category=="underwear")
+                    if(af[j].category=="Under Wear")
                       {
                         und=und+1;
                       } 
-                      if(af[j].category=="footwear")
+                      if(af[j].category=="Foot Wear")
                         {
                           foo=foo+1;
                         }  
-                        if(af[j].category=="accessories")
+                        if(af[j].category=="Accessories")
                           {
                             acc=acc+1;
                           } 
-                          if(af[j].category=="special")
+                          if(af[j].category=="Special Occasion Wear")
                             {
                               spe=spe+1;
                             }  
-                            if(af[j].category=="sport")
+                            if(af[j].category=="SportsWear")
                               {
                                 spo=spo+1;
                               }  
+                              if(af[j].category=="Everyday Wear")
+                                {
+                                  every=every+1;
+                                }  
+                                if(af[j].category=="Casuals")
+                                  {
+                                    cas=cas+1;
+                                  }  
           }
     console.log(top);
-    res.json({Top:top,Bot:bot,Dre:dre,Out:out,Sle:sle,Und:und,Foo:foo,Acc:acc,Spe:spe,Spo:spo});
+    res.json({Top:top,Bot:bot,Dre:dre,Out:out,Sle:sle,Und:und,Foo:foo,Acc:acc,Spe:spe,Spo:spo,Every:every,Cas:cas});
   });
   });
 module.exports = router;

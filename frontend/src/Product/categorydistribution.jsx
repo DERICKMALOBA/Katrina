@@ -17,6 +17,8 @@ const DistributionChart = () => {
 	const [acc, setAcc] = useState(null);
 	const [spe, setSpe] = useState(null);
 	const [spo, setSpo] = useState(null);
+	const [every, setEvery] = useState(null);
+	const [cas, setCas] = useState(null);
 	const categoryData = [
 		{ name: "Tops", value: top },
 		{ name: "Dressess", value: dre },
@@ -27,7 +29,9 @@ const DistributionChart = () => {
 		{ name: "Under Wear", value: und },
 		{ name: "Foot Wear", value: foo },
 		{ name: "Accessories", value: acc },
-		{ name: "Special Wear", value: spe },
+		{ name: "Special Occassion Wear", value: spe },
+		{ name: "Everyday Wear", value: every },
+		{ name: "Casuals", value: cas},
 	];
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -48,6 +52,8 @@ const DistributionChart = () => {
 			setAcc(data.Acc);
 			setSpe(data.Spe); 
 			setSpo(data.Spo);
+			setEvery(data.Every); 
+			setCas(data.Cas);
 		  } catch (err) {
 			setError(err.message); // Handle errors
 			console.log(error);
