@@ -8,14 +8,16 @@ import OrdersTable from "../orders/OrdersTable";
 const OrdersPage = () => {
 	const [error, setError] = useState(null);
 	const [totalorder, setTotalorder] = useState(null);
+	const [pendingorders, setPendingorders] = useState(null);
+	const [completedorders, setCompletedorders] = useState(null);
 	const orderStats = {
 		totalOrders: totalorder,
-		pendingOrders: "56",
-		completedOrders: "1,178",
+		pendingOrders: pendingorders,
+		completedOrders: completedorders,
 		totalRevenue: "98,765",
 	};
 useEffect(() => {
-	const fetchNew = async () => {
+	const fetchTotalorders = async () => {
 		try {
 		  const response = await fetch("/api/orders/totalorders"); // Change this to your actual API endpoint
 		  if (!response.ok) {
@@ -30,8 +32,44 @@ useEffect(() => {
 		} 
 	  };
 	  	  
-	fetchNew(); 
+	  fetchTotalorders(); 
 	  }, []);
+	  useEffect(() => {
+		const fetchpending = async () => {
+			try {
+			  const response = await fetch("/api/orders/pendingorders"); // Change this to your actual API endpoint
+			  if (!response.ok) {
+				throw new Error("Failed to fetch products");
+			  }
+			  const data = await response.json();
+			  console.log("Data is:"+data);
+			  setPendingorders(data.Pendingorders); // Set products to state
+			} catch (err) {
+			  setError(err.message); // Handle errors
+			  console.log(error);
+			} 
+		  };
+				
+		fetchpending(); 
+		  }, []);
+		  useEffect(() => {
+			const fetchcompleted = async () => {
+				try {
+				  const response = await fetch("/api/orders/completedorders"); // Change this to your actual API endpoint
+				  if (!response.ok) {
+					throw new Error("Failed to fetch products");
+				  }
+				  const data = await response.json();
+				  console.log("Data is:"+data);
+				  setCompletedorders(data.Completedorders); // Set products to state
+				} catch (err) {
+				  setError(err.message); // Handle errors
+				  console.log(error);
+				} 
+			  };
+					
+			fetchcompleted(); 
+			  }, []);
 	return (
 		<div className='flex-1 relative z-10 overflow-auto'>
 			

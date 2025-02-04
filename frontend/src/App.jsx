@@ -21,6 +21,9 @@ import ProductForm from "./Pages/submit";
 import Header from "./components/Header";
 import AdmiHeader from "./AdminComponents/AdminHeader";
 import ProductDetail from "./Pages/Productdetails";
+import Tops from "./Pages/Tops";
+import Bottoms from "./Pages/Bottoms";
+import CheckoutForm from "./Pages/Checkout";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -100,7 +103,9 @@ function App() {
           <Route path="/productdet/:name/:description/:price" element={<ProductInfo />} />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/productform" element={<ProductForm />} />
-
+          <Route path="/products/tops" element={<Tops />} />
+          <Route path="/products/bottoms" element={<Bottoms />} />
+          <Route path="/checkout" element={<CheckoutForm />} />
           {/* Admin Routes */}
           <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
           <Route path="/products" element={<AdminLayout><ProductPage /></AdminLayout>} />

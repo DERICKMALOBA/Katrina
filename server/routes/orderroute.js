@@ -93,4 +93,30 @@ router.get('/weekorders', (req, res) => {
           res.json({Pend:pend,Shipp:shipp,Deli:deli,Decl:decl});
     });
   });
+  router.get('/orderslist', (req, res) => {
+    const query = 'SELECT*FROM orders';
+    db.query(query,async (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error', error: err });     
+      console.log(results);
+          res.send(results)
+    });
+  });
+  router.get('/pendingorders', (req, res) => {
+    var value="Pending";
+    const query = 'SELECT*FROM orders WHERE status=?';
+    db.query(query,value,async (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error', error: err });     
+      const size=results.length;
+          res.json({Pendingorders:size});
+    });
+  });
+  router.get('/completedorders', (req, res) => {
+    var value="Delivered";
+    const query = 'SELECT*FROM orders WHERE status=?';
+    db.query(query,value,async (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error', error: err });     
+      const sizecomp=results.length;
+          res.json({Completedorders:sizecomp});
+    });
+  });
 module.exports = router;

@@ -24,10 +24,10 @@ function Nav() {
         } sm:flex sm:items-center sm:justify-between sm:gap-10 sm:block`}
       >
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 sm:mt-0">
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/tops" className="text-customGray font-thin text-sm sm:text-base">
             Tops
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/bottoms" className="text-customGray font-thin text-sm sm:text-base">
             Bottoms
           </Link>
           <Link to="/" className="text-customGray font-thin text-sm sm:text-base">

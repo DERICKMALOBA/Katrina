@@ -23,7 +23,7 @@ function Header() {
         {/* Logo Section - Left */}
         <Link to='/'>
           <h1 className="font-bold text-sm sm:text-xl flex gap-2">
-            <span className="text-white">Katrina Children's Closet</span>
+            <span className="text-white">Katrina Kids' Closet</span>
           </h1>
         </Link>
 
@@ -33,7 +33,7 @@ function Header() {
             <input 
               type="text" 
               placeholder="Search by an item..." 
-              className="bg-transparent focus:outline-none w-full sm:w-64 pl-4 pr-10" 
+              className="bg-transparent focus:outline-none size-5 w-full sm:w-64 pl-4 pr-10" 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)} 
               onKeyDown={handleKeyPress}  // Trigger search on Enter key press
@@ -44,7 +44,7 @@ function Header() {
             />
           </div>
         </div>
-        <FaUserCircle size={50} color="gray" />
+        <FaUserCircle size={30} color="gray" />
         {/* Links Section - Right */}
         <ul className="flex gap-4">
           <li className="hover:opacity-70 active:text-green-500 transition duration-200">
