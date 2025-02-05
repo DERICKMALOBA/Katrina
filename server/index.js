@@ -7,7 +7,10 @@ const authRoutes = require('./routes/authroutes.js');
 const usersRoutes = require('./routes/usersroute.js');
 const productRoutes = require('./routes/ProductRoute.js');
 const salesRoutes = require('./routes/salesroute.js');
+
+const offersRoute = require('./routes/Offers.js')
 const orderRoutes = require('./routes/orderroute.js');
+
 const db = require('./config/db.js');
 
 // Load environment variables
@@ -26,10 +29,12 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/offers', offersRoute);
 app.use('/api/users', usersRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/orders', orderRoutes);
 // Test DB connection
+
 db.connect((err) => {
   if (err) {
     console.error('Database connection failed:', err.message);
