@@ -5,7 +5,6 @@ import { useEffect } from "react";
 const UsersTable = () => {
   const [error, setError] = useState(null);
   const [users, setUsers] = useState([]); 
-  useEffect(() => {
     const fetchUsers = async () => {
       try {
         const response = await fetch("/api/users/userslist"); // Change this to your actual API endpoint
@@ -19,24 +18,33 @@ const UsersTable = () => {
         console.log(error);
       } 
     };
+    useEffect(() => {
     fetchUsers();
   }, []);
 
-  const handleDelete =async(ui) => {
-    alert(ui);
-      const res = await fetch('/api/users/deleteusers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:JSON.stringify({userid:ui})
-      });
-      const data = await res.json();
 
-      if (!data.success) {
-        console.log(data.message);
-      }
-  };
+  const handleDelete =async(ui) => {
+    if (!window.confirm("Are you sure you want to delete this customer?")) {
+      return;
+    }
+    const res = await fetch('/api/users/deleteusers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({userid:ui})
+    });
+    const data = await res.json();
+       if(res.ok) {
+        fetchUsers();
+       }
+    if (!data.success) {
+      console.log(data.message);
+    }
+    
+};
+
+
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8"
