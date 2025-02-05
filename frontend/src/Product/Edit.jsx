@@ -158,9 +158,6 @@ const ProductDetails = () => {
        toast.error("Failed to add product. Please try again.");
     }
   };
-
- 
-  
   const handleEditSubmit = async (e) => {
     e.preventDefault();
   

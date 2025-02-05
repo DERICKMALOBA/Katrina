@@ -32,7 +32,7 @@ const OrdersTable = () => {
 		);
 		setFilteredOrders(filtered);
 	};
-
+      var serial=1;
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'
@@ -100,19 +100,19 @@ const OrdersTable = () => {
 								transition={{ duration: 0.3 }}
 							>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
-									ORD{order.orderid}
+									ORD{serial++}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
 									{order.name}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
-									{order.phone}
+									0{order.phone}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
 									{order.email}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
-									ksh{order.amount}
+									ksh.{order.amount}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
 									{order.item}

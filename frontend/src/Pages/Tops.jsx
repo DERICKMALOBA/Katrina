@@ -26,7 +26,7 @@ export default function Tops() {
         console.log("Fetched data:", data); // Debugging log
 
         // Extract the products array from the response object
-        setProducts(Array.isArray(data.products) ? data.products : []);
+        setProducts(Array.isArray(data.tops) ? data.tops : []);
       } catch (err) {
         console.error("Fetch error:", err.message);
         setError(err.message);

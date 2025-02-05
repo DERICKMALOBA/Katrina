@@ -5,25 +5,27 @@ import { useEffect } from "react";
 const UsersTable = () => {
   const [error, setError] = useState(null);
   const [users, setUsers] = useState([]); 
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/users/userslist"); // Change this to your actual API endpoint
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await response.json();
+      setUsers(data); // Set products to state
+    } catch (err) {
+      setError(err.message); // Handle errors
+      console.log(error);
+    } 
+  };
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("/api/users/userslist"); // Change this to your actual API endpoint
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-        setUsers(data); // Set products to state
-      } catch (err) {
-        setError(err.message); // Handle errors
-        console.log(error);
-      } 
-    };
     fetchUsers();
   }, []);
 
   const handleDelete =async(ui) => {
-    alert(ui);
+    if (!window.confirm("Are you sure you want to delete this Customer?")) {
+      return;
+    }
       const res = await fetch('/api/users/deleteusers', {
         method: 'POST',
         headers: {
@@ -32,7 +34,6 @@ const UsersTable = () => {
         body:JSON.stringify({userid:ui})
       });
       const data = await res.json();
-
       if (!data.success) {
         console.log(data.message);
       }
