@@ -21,23 +21,26 @@ const UsersTable = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
   const handleDelete =async(ui) => {
-    if (!window.confirm("Are you sure you want to delete this Customer?")) {
+    if (!window.confirm("Are you sure you want to delete this customer?")) {
       return;
     }
-      const res = await fetch('/api/users/deleteusers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:JSON.stringify({userid:ui})
-      });
-      const data = await res.json();
-      if (!data.success) {
-        console.log(data.message);
-      }
-  };
+    const res = await fetch('/api/users/deleteusers', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body:JSON.stringify({userid:ui})
+    });
+    const data = await res.json();
+       if(res.ok) {
+        fetchUsers();
+       }
+    if (!data.success) {
+      console.log(data.message);
+    }
+    
+};
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8"
