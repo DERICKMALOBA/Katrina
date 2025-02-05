@@ -7,9 +7,11 @@ import "react-toastify/dist/ReactToastify.css";
 
 const ProductDetails = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [displayedProducts, setDisplayedProducts] = useState(filteredProducts.slice(0, 10)); // Initially, show 10 products
+  const [displayedProducts, setDisplayedProducts] = useState(
+    filteredProducts.slice(0, 10)
+  ); // Initially, show 10 products
   const [showAll, setShowAll] = useState(false);
-  
+
   // Set initial state for products
   const [searchTerm, setSearchTerm] = useState(""); // Set initial search term
   const [newProduct, setNewProduct] = useState({
@@ -18,11 +20,13 @@ const ProductDetails = () => {
     price: "",
     stock: "",
     category: "",
-    discount:"",
+    discount: "",
     imageUrls: [],
   }); // Set initial state for a new product
   const [editProduct, setEditProduct] = useState(null); // State for editing a product
   const [showAddForm, setShowAddForm] = useState(false); // Show add form
+ 
+
 
   // Fetch products function
   const fetchProducts = async () => {
@@ -70,6 +74,39 @@ const ProductDetails = () => {
       imageUrls: fileArray,
     }));
   };
+
+
+
+  // const Edit = async () => {
+  
+
+  //   if (!editOffer) return;
+
+  //   try {
+  //     const response = await fetch(`/api/offers/edit-offer/${editOffer.id}`, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(editOffer),
+  //     });
+
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       toast.success("Offer updated successfully!");
+  //       setFilteredOffers((prevOffers) =>
+  //         prevOffers.map((offer) =>
+  //           offer.id === editOffer.id ? { ...offer, ...editOffer } : offer
+  //         )
+  //       );
+  //       setEditOffer(null); // Clear edit form
+  //     } else {
+  //       toast.error(data.error || "Failed to update offer.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to update offer. Please try again.");
+  //   }
+  // };
 
   // Handle delete product
   const handleDelete = async (id) => {
@@ -144,7 +181,7 @@ const ProductDetails = () => {
           description: "",
           price: "",
           stock: "",
-          discount:"0",
+          discount: "0",
           category: "",
           image: [],
         });
@@ -155,23 +192,29 @@ const ProductDetails = () => {
         toast.error(data.error || "Failed to add product.");
       }
     } catch (error) {
-       toast.error("Failed to add product. Please try again.");
+      toast.error("Failed to add product. Please try again.");
     }
   };
+
+ 
+  
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!editProduct) return;
-  
+
     try {
-      const response = await fetch(`/api/products/edit-product/${editProduct.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(editProduct),
-      });
-  
+      const response = await fetch(
+        `/api/products/edit-product/${editProduct.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editProduct),
+        }
+      );
+
       const data = await response.json();
       if (response.ok) {
         toast.success("Product updated successfully!", {
@@ -183,14 +226,16 @@ const ProductDetails = () => {
           draggable: true,
           progress: undefined,
         });
-  
+
         // Update the product list in the UI
         setFilteredProducts((prevProducts) =>
           prevProducts.map((product) =>
-            product.id === editProduct.id ? { ...product, ...editProduct } : product
+            product.id === editProduct.id
+              ? { ...product, ...editProduct }
+              : product
           )
         );
-  
+
         setEditProduct(null); // Clear edit form
       } else {
         toast.error(data.error || "Failed to update product.", {
@@ -216,10 +261,6 @@ const ProductDetails = () => {
       });
     }
   };
-  
-
-
-
 
   useEffect(() => {
     if (showAll) {
@@ -230,275 +271,320 @@ const ProductDetails = () => {
   }, [showAll, filteredProducts]);
 
   const handleShowAll = () => {
-    setShowAll(!showAll);  // Toggle between showing all or just 10 products
+    setShowAll(!showAll); // Toggle between showing all or just 10 products
   };
-
-
 
   return (
     <motion.div
-    className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8 relative"
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay: 0.2 }}
-  >
-    <div className="flex justify-between items-center mb-6">
-      <h2 className="text-xl font-semibold text-gray-100">Product List</h2>
-      <div className="relative flex gap-4 items-center">
-        <button
-          onClick={handleAddProduct}
-          className="bg-primaryBlue hover:bg-blue-500 text-white font-medium rounded-lg px-10 py-2 flex items-center justify-center gap-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-        >
-          <Plus size={35} /> Add a Product
-        </button>
-        <div className="relative w-full">
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={handleSearch}
-            value={searchTerm}
-          />
-          <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+      className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8 relative"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+    >
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-100">Product List</h2>
+        <div className="relative flex gap-4 items-center">
+          <button
+            onClick={handleAddProduct}
+            className="bg-primaryBlue hover:bg-blue-500 text-white font-medium rounded-lg px-10 py-2 flex items-center justify-center gap-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
+          >
+            <Plus size={35} /> Add a Product
+          </button>
+          <div className="relative w-full">
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="bg-gray-700 text-white placeholder-gray-400 rounded-lg pl-10 pr-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={handleSearch}
+              value={searchTerm}
+            />
+            <Search
+              className="absolute left-3 top-2.5 text-gray-400"
+              size={18}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-700">
-        <thead>
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-primaryOrange uppercase ">Name</th>
-            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Category</th>
-            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Description</th>
-            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Price</th>
-            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase"> Discount</th>
-            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Stock</th>
-            <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">Actions</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-700">
-          {displayedProducts.map((product) => (
-            <tr key={product.id}>
-              <td className="px-6 py-4 text-sm text-gray-300">{product.name}</td>
-              <td className="px-6 py-4 text-sm text-gray-300">{product.category}</td>
-              <td className="px-6 py-4 text-sm text-gray-300">{product.description}</td>
-              <td className="px-6 py-4 text-sm text-gray-300">ksh {product.price}</td>
-              <td className="px-6 py-4 text-sm text-gray-300">{product.discount}</td>
-              <td className="px-6 py-4 text-sm text-gray-300">{product.stock}</td>
-              <td className="px-6 py-4 text-sm">
-                <button
-                  onClick={() => handleEdit(product)}
-                  className="text-indigo-400 hover:text-indigo-300 mr-2"
-                >
-                  <Edit size={18} />
-                </button>
-                <button
-                  onClick={() => handleDelete(product.id)}
-                  className="text-red-400 hover:text-red-300"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
 
-        <div className="mt-4 items-center">
-        <button
-          onClick={handleShowAll}
-          className="text-primaryGreen font-bold hover:text-indigo-400"
-        >
-          {showAll ? 'Show Less' : 'Show All Products'}
-        </button>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-700">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-primaryOrange uppercase ">
+                Name
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">
+                Category
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">
+                Description
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">
+                Price
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">
+                {" "}
+                Discount
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">
+                Stock
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium  text-primaryOrange uppercase">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-700">
+            {displayedProducts.map((product) => (
+              <tr key={product.id}>
+                <td className="px-6 py-4 text-sm text-gray-300">
+                  {product.name}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-300">
+                  {product.category}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-300">
+                  {product.description}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-300">
+                  ksh {product.price}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-300">
+                  {product.discount}
+                </td>
+                <td className="px-6 py-4 text-sm text-gray-300">
+                  {product.stock}
+                </td>
+
+                <td className="px-6 py-4 text-sm flex items-center gap-4">
+  <button
+    onClick={() => handleEdit(product)}
+    className="text-indigo-400 hover:text-indigo-300"
+  >
+    <Edit size={18} />
+  </button>
+  <button
+    onClick={() => handleDelete(product.id)}
+    className="text-red-400 hover:text-red-300"
+  >
+    <Trash2 size={18} />
+  </button>
+  
+</td>
+
+               
+              </tr>
+            ))}
+          </tbody>
+
+          <div className="mt-4 items-center">
+            <button
+              onClick={handleShowAll}
+              className="text-primaryGreen font-bold hover:text-indigo-400"
+            >
+              {showAll ? "Show Less" : "Show All Products"}
+            </button>
+          </div>
+        </table>
       </div>
 
-      </table>
-    </div>
-  
-    {/* Edit Product Form Modal */}
-    {editProduct && (
-      <motion.div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
+      
+
+
+      {/* Edit Product Form Modal */}
+      {editProduct && (
         <motion.div
-          className="bg-gray-800 p-6 rounded-lg shadow-lg w-96"
-          initial={{ scale: 0.9 }}
-          animate={{ scale: 1 }}
+          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
         >
-          <div className="flex justify-between mb-4">
-            <h3 className="text-white text-lg font-semibold">Edit Product</h3>
-            <button
-              onClick={() => setEditProduct(null)}
-              className="text-gray-400 hover:text-gray-200"
-            >
-              <X size={20} />
-            </button>
-          </div>
-  
-          <form onSubmit={handleEditSubmit}>
-            <input
-              name="name"
-              placeholder="Product Name"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleEditChange}
-              value={editProduct.name}
-            />
-            <textarea
-              name="description"
-              placeholder="Description"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleEditChange}
-              value={editProduct.description}
-            />
-            <input
-              name="price"
-              type="number"
-              placeholder="Price"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleEditChange}
-              value={editProduct.price}
-            />
+          <motion.div
+            className="bg-gray-800 p-6 rounded-lg shadow-lg w-96"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+          >
+            <div className="flex justify-between mb-4">
+              <h3 className="text-white text-lg font-semibold">Edit Product</h3>
+              <button
+                onClick={() => setEditProduct(null)}
+                className="text-gray-400 hover:text-gray-200"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
-<input
-              name="discount"
-              type="number"
-              placeholder="discount"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleEditChange}
-              value={editProduct.discount}
-            />
-            <input
-              name="stock"
-              type="number"
-              placeholder="Stock"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleEditChange}
-              value={editProduct.stock}
-            />
-            <select
-              name="category"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleEditChange}
-              value={editProduct.category}
-            >
-              <option value="">Select Category</option>
-              <option value="Tops">Tops</option>
-              <option value="Bottoms">Bottoms</option>
-              <option value="Special Occasion Wear">Special Occasion Wear</option>
-              <option value="Everyday Wear">Everyday Wear</option>
-              <option value="Casuals">Casuals</option>
-            </select>
-            <input
-              type="file"
-              multiple
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleImageUpload}
-            />
-           
-            <button type="submit" className="w-full bg-blue-500 px-4 py-2 text-white rounded">
-              Save
-            </button>
-          </form>
-        </motion.div>
-      </motion.div>
-    )}
-  
-    {/* Add Product Form Modal */}
-    {showAddForm && (
-      <motion.div
-        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50"
-      >
-        <motion.div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
-          <div className="flex justify-between mb-4">
-            <h3 className="text-white text-lg font-semibold">Add Product</h3>
-            <button
-              onClick={() => setShowAddForm(false)}
-              className="text-gray-400 hover:text-gray-200"
-            >
-              <X size={20} />
-            </button>
-          </div>
-  
-          <form onSubmit={handleSubmit}>
-            <input
-              name="name"
-              placeholder="Product Name"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleInputChange}
-              value={newProduct.name}
-            />
-            <textarea
-              name="description"
-              placeholder="Description"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleInputChange}
-              value={newProduct.description}
-            />
-            <input
-              name="price"
-              type="number"
-              placeholder="Price"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleInputChange}
-              value={newProduct.price}
-            />
-             <input
-              name="discount"
-              type="number"
-              placeholder="discount"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleInputChange}
-              value={newProduct.discount}
-            />
-            <input
-              name="stock"
-              type="number"
-              placeholder="Stock"
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleInputChange}
-              value={newProduct.stock}
-            />
-           <select
-  name="category"
-  className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-  onChange={handleInputChange}
-  value={newProduct.category}
->
-  <option value="">Select Category</option>
-  <option value="Tops">Tops</option>
-  <option value="Bottoms">Bottoms</option>
-  <option value="Dressers">Dressers</option>
-  <option value="Outer Wear">Outer Wear</option>
-  <option value="Sleep Wear">Sleep Wear</option>
-  <option value="Under Wear">Under Wear</option>
-  <option value="Foot Wear">Foot Wear</option>
-  <option value="Accessories">Accessories</option>
-  <option value="Special Occasions">Special Occasions</option>
-  <option value="SportsWear">SportsWear</option>
-  <option value="Everyday Wear">Everyday Wear</option>
-  <option value="Casuals">Casuals</option>
-</select>
+            <form onSubmit={handleEditSubmit}>
+              <input
+                name="name"
+                placeholder="Product Name"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleEditChange}
+                value={editProduct.name}
+              />
+              <textarea
+                name="description"
+                placeholder="Description"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleEditChange}
+                value={editProduct.description}
+              />
+              <input
+                name="price"
+                type="number"
+                placeholder="Price"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleEditChange}
+                value={editProduct.price}
+              />
 
-            <input
-              type="file"
-              multiple
-              className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
-              onChange={handleImageUpload}
-            />
-           
-           
-            <button type="submit" className="w-full bg-blue-500 px-4 py-2 text-white rounded">
-              Add Product
-            </button>
-          </form>
+              <input
+                name="discount"
+                type="number"
+                placeholder="discount"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleEditChange}
+                value={editProduct.discount}
+              />
+              <input
+                name="stock"
+                type="number"
+                placeholder="Stock"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleEditChange}
+                value={editProduct.stock}
+              />
+              <select
+                name="category"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleEditChange}
+                value={editProduct.category}
+              >
+                <option value="">Select Category</option>
+                <option value="Tops">Tops</option>
+                <option value="Bottoms">Bottoms</option>
+                <option value="Dressers">Dressers</option>
+                <option value="Outer Wear">Outer Wear</option>
+                <option value="Sleep Wear">Sleep Wear</option>
+                <option value="Under Wear">Under Wear</option>
+                <option value="Foot Wear">Foot Wear</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Special Occasions">Special Occasions</option>
+                <option value="SportsWear">SportsWear</option>
+                <option value="Everyday Wear">Everyday Wear</option>
+                <option value="Casuals">Casuals</option>
+              </select>
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleImageUpload}
+              />
+
+              <button
+                type="submit"
+                className="w-full bg-blue-500 px-4 py-2 text-white rounded"
+              >
+                Save
+              </button>
+            </form>
+          </motion.div>
         </motion.div>
-      </motion.div>
-    )}
-  </motion.div>
-  
+      )}
+
+      {/* Add Product Form Modal */}
+      {showAddForm && (
+        <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
+          <motion.div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
+            <div className="flex justify-between mb-4">
+              <h3 className="text-white text-lg font-semibold">Add Product</h3>
+              <button
+                onClick={() => setShowAddForm(false)}
+                className="text-gray-400 hover:text-gray-200"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <input
+                name="name"
+                placeholder="Product Name"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleInputChange}
+                value={newProduct.name}
+              />
+              <textarea
+                name="description"
+                placeholder="Description"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleInputChange}
+                value={newProduct.description}
+              />
+              <input
+                name="price"
+                type="number"
+                placeholder="Price"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleInputChange}
+                value={newProduct.price}
+              />
+              <input
+                name="discount"
+                type="number"
+                placeholder="discount"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleInputChange}
+                value={newProduct.discount}
+              />
+              <input
+                name="stock"
+                type="number"
+                placeholder="Stock"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleInputChange}
+                value={newProduct.stock}
+              />
+              <select
+                name="category"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleInputChange}
+                value={newProduct.category}
+              >
+                <option value="">Select Category</option>
+                <option value="Tops">Tops</option>
+                <option value="Bottoms">Bottoms</option>
+                <option value="Dressers">Dressers</option>
+                <option value="Outer Wear">Outer Wear</option>
+                <option value="Sleep Wear">Sleep Wear</option>
+                <option value="Under Wear">Under Wear</option>
+                <option value="Foot Wear">Foot Wear</option>
+                <option value="Accessories">Accessories</option>
+                <option value="Special Occasions">Special Occasions</option>
+                <option value="SportsWear">SportsWear</option>
+                <option value="Everyday Wear">Everyday Wear</option>
+                <option value="Casuals">Casuals</option>
+              </select>
+
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                className="w-full p-2 mb-3 bg-gray-700 text-white rounded"
+                onChange={handleImageUpload}
+              />
+
+              <button
+                type="submit"
+                className="w-full bg-blue-500 px-4 py-2 text-white rounded"
+              >
+                Add Product
+              </button>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
+    </motion.div>
   );
 };
 
