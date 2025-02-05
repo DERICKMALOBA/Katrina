@@ -1,26 +1,33 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Eye } from "lucide-react";
-
-const orderData = [
-	{ id: "ORD001", customer: "John Doe", total: 235.4, status: "Delivered", date: "2023-07-01" },
-	{ id: "ORD002", customer: "Jane Smith", total: 412.0, status: "Processing", date: "2023-07-02" },
-	{ id: "ORD003", customer: "Bob Johnson", total: 162.5, status: "Shipped", date: "2023-07-03" },
-	{ id: "ORD004", customer: "Alice Brown", total: 750.2, status: "Pending", date: "2023-07-04" },
-	{ id: "ORD005", customer: "Charlie Wilson", total: 95.8, status: "Delivered", date: "2023-07-05" },
-	{ id: "ORD006", customer: "Eva Martinez", total: 310.75, status: "Processing", date: "2023-07-06" },
-	{ id: "ORD007", customer: "David Lee", total: 528.9, status: "Shipped", date: "2023-07-07" },
-	{ id: "ORD008", customer: "Grace Taylor", total: 189.6, status: "Delivered", date: "2023-07-08" },
-];
-
+import { Search} from "lucide-react";
+import { useEffect} from "react";
 const OrdersTable = () => {
 	const [searchTerm, setSearchTerm] = useState("");
-	const [filteredOrders, setFilteredOrders] = useState(orderData);
-
+	const [filteredOrders, setFilteredOrders] = useState([]);
+	const [error, setError] = useState(null);
+	useEffect(() => {
+		const fetchOrders = async () => {
+		  try {
+			const response = await fetch("/api/orders/orderslist"); // Change this to your actual API endpoint
+			if (!response.ok) {
+			  throw new Error("Failed to fetch products");
+			}
+			const data = await response.json();
+			console.log("Data is:"+data);
+			setFilteredOrders(data); ;
+		  } catch (err) {
+			setError(err.message); // Handle errors
+			console.log(error);
+		  } 
+		};
+		fetchOrders();
+		
+		}, []);
 	const handleSearch = (e) => {
 		const term = e.target.value.toLowerCase();
 		setSearchTerm(term);
-		const filtered = orderData.filter(
+		const filtered =filteredOrders.filter(
 			(order) => order.id.toLowerCase().includes(term) || order.customer.toLowerCase().includes(term)
 		);
 		setFilteredOrders(filtered);
@@ -58,16 +65,28 @@ const OrdersTable = () => {
 								Customer
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Total
+								Phone
+							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
+								Email
+							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
+								Amount
+							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
+								Item
+							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
+								Quantity
+							</th>
+							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
+								Date
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Status
 							</th>
 							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
 								Date
-							</th>
-							<th className='px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider'>
-								Actions
 							</th>
 						</tr>
 					</thead>
@@ -81,13 +100,28 @@ const OrdersTable = () => {
 								transition={{ duration: 0.3 }}
 							>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
-									{order.id}
+									ORD{order.orderid}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
-									{order.customer}
+									{order.name}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
-									ksh{order.total.toFixed(2)}
+									{order.phone}
+								</td>
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
+									{order.email}
+								</td>
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
+									ksh{order.amount}
+								</td>
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
+									{order.item}
+								</td>
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
+									{order.quantity}
+								</td>
+								<td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-100'>
+									{order.date}
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
 									<span
@@ -105,11 +139,6 @@ const OrdersTable = () => {
 									</span>
 								</td>
 								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>{order.date}</td>
-								<td className='px-6 py-4 whitespace-nowrap text-sm text-gray-300'>
-									<button className='text-indigo-400 hover:text-indigo-300 mr-2'>
-										<Eye size={18} />
-									</button>
-								</td>
 							</motion.tr>
 						))}
 					</tbody>

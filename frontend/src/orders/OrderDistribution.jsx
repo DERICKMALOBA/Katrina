@@ -1,15 +1,40 @@
 import { motion } from "framer-motion";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
-
-const orderStatusData = [
-	{ name: "Pending", value: 30 },
-	{ name: "Processing", value: 45 },
-	{ name: "Shipped", value: 60 },
-	{ name: "Delivered", value: 120 },
-];
+import { useState,useEffect} from "react";
 const COLORS = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#FED766", "#2AB7CA"];
-
 const OrderDistribution = () => {
+	const [error, setError] = useState(null);
+	const [pend, setPend] = useState(null);
+	const [shipp, setShipp] = useState(null);
+	const [deli, setDeli] = useState(null);
+	const [decli, setDecli] = useState(null);
+	const orderStatusData = [
+		{ name: "Pending", value: pend },
+		{ name: "Shipped", value: shipp },
+		{ name: "Delivered", value:deli },
+		{ name: "Declined", value:decli },
+	];
+	useEffect(() => {
+		const fetchStatus = async () => {
+		  try {
+			const response = await fetch("/api/orders/orderstatus"); // Change this to your actual API endpoint
+			if (!response.ok) {
+			  throw new Error("Failed to fetch products");
+			}
+			const data = await response.json();
+			console.log("Data is:"+data);
+			setPend(data.Pend); 
+			setShipp(data.Shipp);
+			setDeli(data.Deli); 
+			setDecli(data.Decli);
+		  } catch (err) {
+			setError(err.message); // Handle errors
+			console.log(error);
+		  } 
+		};
+		fetchStatus();
+		
+		}, []);
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700'
