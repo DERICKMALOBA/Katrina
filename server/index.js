@@ -3,11 +3,10 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser'); // Ensure body-parser is required
-const authRoutes = require('./routes/authroutes.js');
 const usersRoutes = require('./routes/usersroute.js');
 const productRoutes = require('./routes/ProductRoute.js');
 const salesRoutes = require('./routes/salesroute.js');
-
+const authRouter = require('./routes/authroutes.js');
 const offersRoute = require('./routes/Offers.js')
 const orderRoutes = require('./routes/orderroute.js');
 
@@ -27,7 +26,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
 // Routes
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRouter);
 app.use('/api/products', productRoutes);
 app.use('/api/offers', offersRoute);
 app.use('/api/users', usersRoutes);

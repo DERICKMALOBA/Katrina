@@ -24,6 +24,7 @@ import ProductDetail from "./Pages/Productdetails";
 import Tops from "./Pages/Tops";
 import Bottoms from "./Pages/Bottoms";
 import CheckoutForm from "./Pages/Checkout";
+import ProtectedRoute from "./components/PrivateRoute";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -107,6 +108,7 @@ function App() {
           <Route path="/products/bottoms" element={<Bottoms />} />
           <Route path="/checkout" element={<CheckoutForm />} />
           {/* Admin Routes */}
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
           <Route path="/products" element={<AdminLayout><ProductPage /></AdminLayout>} />
           <Route path="/customers" element={<AdminLayout><Customers /></AdminLayout>} />
@@ -114,6 +116,7 @@ function App() {
           <Route path="/orders" element={<AdminLayout><OrdersPage /></AdminLayout>} />
           <Route path="/offers" element={<AdminLayout><OffersPage /></AdminLayout>} />
           <Route path="/analytics" element={<AdminLayout><AnalyticsPage /></AdminLayout>} />
+          </Route>
         </Routes>
       </Layout>
     </Router>
