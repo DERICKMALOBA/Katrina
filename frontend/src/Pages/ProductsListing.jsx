@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
+import { useDispatch } from "react-redux";
+import { addItem } from "../Redux/CartSlice";
 
 export default function ProductList() {
+  const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -129,7 +132,8 @@ export default function ProductList() {
               )}
 
               {/* Add to Cart Button */}
-              <button className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
+              <button  onClick={() => dispatch(addItem(product))}
+              className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
                 Add to Cart
               </button>
             </div>
