@@ -1,4 +1,4 @@
-import { persistor, store } from './Redux/Store.js'
+import { persistor, store } from './Redux/store.jsx'
 import { Provider } from 'react-redux'
 import { createRoot } from 'react-dom/client'
 import './index.css'
