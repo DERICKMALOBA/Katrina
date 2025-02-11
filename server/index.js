@@ -10,7 +10,7 @@ const salesRoutes = require('./routes/salesroute.js');
 
 const offersRoute = require('./routes/Offers.js')
 const orderRoutes = require('./routes/orderroute.js');
-
+const messageRoutes = require('./routes/messagesroute.js');
 const db = require('./config/db.js');
 
 // Load environment variables
@@ -21,7 +21,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.use(bodyParser.urlencoded({ extended: true }));
 // Increase payload size limit
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -33,7 +33,7 @@ app.use('/api/offers', offersRoute);
 app.use('/api/users', usersRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/orders', orderRoutes);
-// Test DB connection
+app.use('/api/messages', messageRoutes);
 
 db.connect((err) => {
   if (err) {

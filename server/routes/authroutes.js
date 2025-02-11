@@ -23,7 +23,13 @@ router.post('/signup', async (req, res) => {
     if (results.length > 0) {
       return res.status(400).json({ message: 'User with this email or phone already exists' });
     }
-
+       var ar=[email,name];
+       const Q = 'INSERT INTO chats (email,name) VALUES (?,?)';
+       db.query(Q,ar,(err, result) => {
+         if (err) {
+           return res.status(500).json({ message: 'Database error', error: err });
+         }
+       });
     // Hash the password before saving to the database
     const hashedPassword = await bcrypt.hash(password, 10);
     const m= new Date().getMonth() + 1; 

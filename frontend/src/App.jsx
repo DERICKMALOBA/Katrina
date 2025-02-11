@@ -11,7 +11,6 @@ import OffersPage from "./AdminPages/Offers";
 import AnalyticsPage from "./AdminPages/AnalyticsPage";
 import SignIn from "./Pages/SingIn";
 import SignUp from "./Pages/SingUp";
-
 import Nav from "./components/Navbar";
 import Home from "./Pages/home";
 import ProductList from "./Pages/ProductsListing";
@@ -32,6 +31,8 @@ import Foot from "./Pages/Foot";
 import Accessories from "./Pages/Accessories";
 import Special from "./Pages/Special";
 import Sports from "./Pages/Sports";
+import MessagePopup from "./Pages/Chat";
+import AdminMessagePanel from "./Pages/Adminreply";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -122,6 +123,8 @@ function App() {
           <Route path="/products/accessories" element={<Accessories/>} />
           <Route path="/products/special" element={<Special/>} />
           <Route path="/products/sports" element={<Sports/>} />
+          <Route path="/chats" element={<MessagePopup/>} />
+          <Route path="/adminreply" element={<AdminMessagePanel/>} />
           {/* Admin Routes */}
           <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
           <Route path="/products" element={<AdminLayout><ProductPage /></AdminLayout>} />
