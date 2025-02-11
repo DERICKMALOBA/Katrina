@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function SignUp() {
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({
@@ -28,26 +28,44 @@ const navigate = useNavigate();
         },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
 
-      if (!data.success) {
-        setLoading(false);
-        setError(data.message); // Display the error message from the server
-        return;
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || 'Failed to sign up');
       }
-      else{
-        setSuccess(data.message);
-      }
+
+      const data = await res.json();
+      console.log(data); // Check the response here
+      navigate('/sign-in');
+
+     
+
       setLoading(false);
       setError(null);
-      setSuccess(success.message);
-      navigate('/sign-in');
+      toast.success('Registration successful!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { backgroundColor: 'green', color: 'white' }
+      });
+      
     } catch (error) {
       setLoading(false);
       setError(error.message);
-    }
-    finally{
-      setLoading(false);
+      toast.error(error.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: { backgroundColor: 'red', color: 'white' }
+      });
     }
   };
 
@@ -74,7 +92,7 @@ const navigate = useNavigate();
         }}
       >
         <h1 className="text-3xl text-center font-bold my-7 text-blue-800">
-        Katrina Children Closets
+          Katrina Children Closets
         </h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
@@ -94,8 +112,7 @@ const navigate = useNavigate();
             onChange={handleChange}
           />
 
-           {/* Phone Number Input */}
-           <input
+          <input
             type="text"
             placeholder="Enter your phone number"
             className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
@@ -111,7 +128,7 @@ const navigate = useNavigate();
             name="pass"
             onChange={handleChange}
           />
-         
+
           <button
             type="submit"
             className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-100"
@@ -123,13 +140,11 @@ const navigate = useNavigate();
         <div className="mt-4 text-center">
           <p className="text-blue-600">Already have an account?</p>
           <Link to="/sign-in">
-            <span className="text-blue-600 hover:text-blue-100 cursor-pointer">
+            <span className="text-blue-600 hover:text-blue-400 cursor-pointer">
               Sign In
             </span>
           </Link>
         </div>
-        {error && <p className="text-red-500 mt-5">{error}</p>}
-        {success && <p className="text-green-500 mt-5">{success}</p>}
       </div>
     </div>
   );
