@@ -5,24 +5,22 @@ import { useEffect } from "react";
 const UsersTable = () => {
   const [error, setError] = useState(null);
   const [users, setUsers] = useState([]); 
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch("/api/users/userslist"); // Change this to your actual API endpoint
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
-        const data = await response.json();
-        setUsers(data); // Set products to state
-      } catch (err) {
-        setError(err.message); // Handle errors
-        console.log(error);
-      } 
-    };
-    useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("/api/users/userslist"); // Change this to your actual API endpoint
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await response.json();
+      setUsers(data); // Set products to state
+    } catch (err) {
+      setError(err.message); // Handle errors
+      console.log(error);
+    } 
+  };
+  useEffect(() => {
     fetchUsers();
   }, []);
-
-
   const handleDelete =async(ui) => {
     if (!window.confirm("Are you sure you want to delete this customer?")) {
       return;
@@ -43,8 +41,6 @@ const UsersTable = () => {
     }
     
 };
-
-
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8"

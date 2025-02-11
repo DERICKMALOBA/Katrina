@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 
-export default function Tops() {
-  const [products, setProducts] = useState([]);
+export default function Accessories() {
+  const [bottoms, setBottoms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [wishlist, setWishlist] = useState({});
@@ -18,7 +18,7 @@ export default function Tops() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products/tops");
+        const response = await fetch("/api/products/accessories");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -26,7 +26,7 @@ export default function Tops() {
         console.log("Fetched data:", data); // Debugging log
 
         // Extract the products array from the response object
-        setProducts(Array.isArray(data.tops) ? data.tops : []);
+        setBottoms(Array.isArray(data.accessories) ? data.accessories: []);
       } catch (err) {
         console.error("Fetch error:", err.message);
         setError(err.message);
@@ -42,11 +42,11 @@ export default function Tops() {
 
   return (
     <div className="p-4">
-      {products.length === 0 ? (
+      {bottoms.length === 0 ? (
         <p className="text-center text-gray-600">No products available.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-          {products.map((product) => (
+          {bottoms.map((product) => (
             <div
               key={product.id || product._id}
               className="relative bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"

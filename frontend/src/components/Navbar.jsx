@@ -30,28 +30,28 @@ function Nav() {
           <Link to="/products/bottoms" className="text-customGray font-thin text-sm sm:text-base">
             Bottoms
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/dressers" className="text-customGray font-thin text-sm sm:text-base">
             Dressers
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/outer" className="text-customGray font-thin text-sm sm:text-base">
             Outer Wear
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/sleep" className="text-customGray font-thin text-sm sm:text-base">
             Sleep Wear
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/under" className="text-customGray font-thin text-sm sm:text-base">
             Under Wear
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/foot" className="text-customGray font-thin text-sm sm:text-base">
             Foot Wear
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/accessories" className="text-customGray font-thin text-sm sm:text-base">
             Accessories
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/special" className="text-customGray font-thin text-sm sm:text-base">
             Special Occasions
           </Link>
-          <Link to="/" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/sports" className="text-customGray font-thin text-sm sm:text-base">
             SportsWear
           </Link>
         </div>

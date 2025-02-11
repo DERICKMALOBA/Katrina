@@ -373,4 +373,512 @@ router.get('/bottoms', (req, res) => {
         res.json({bottoms: [], totalDiscountAmount: "0.00" });
     });
 });
+router.get('/dressers', (req, res) => {
+    var category="Dressers";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                dressers: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({dressers: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/outer', (req, res) => {
+    var category="Outer Wear";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                outer: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({outer: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/sleep', (req, res) => {
+    var category="Sleep Wear";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                sleep: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({sleep: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/under', (req, res) => {
+    var category="Under Wear";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                under: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({under: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/foot', (req, res) => {
+    var category="Foot Wear";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                foot: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({foot: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/accessories', (req, res) => {
+    var category="Accessories";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                accessories: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({accessories: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/special', (req, res) => {
+    var category="Special Occasions";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                special: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({special: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/sports', (req, res) => {
+    var category="SportsWear";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+              return res.json({
+                sports: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({sports: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/everyday', (req, res) => {
+    var category="Everyday Wear";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls = [];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+  
+              return res.json({
+                everyday: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({everyday: [], totalDiscountAmount: "0.00" });
+      });
+  });
+  router.get('/casuals', (req, res) => {
+    var category="Casuals";
+    const query = 'SELECT * FROM products WHERE category=?';
+      db.query(query,category,(err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+  
+          if (results.length >= 1) {
+              let totalDiscountAmount = 0;
+  
+              const productsWithDiscount = results.map((product) => {
+                  let imageUrls =[];
+  
+                  try {
+                      if (product.image) {
+                          const parsedImage = JSON.parse(product.image);
+                          // Ensure imageUrls is always an array
+                          imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                      }
+                  } catch (parseError) {
+                      console.error('Error parsing product image data:', parseError);
+                      imageUrls = [];
+                  }
+  
+                  const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+                  // Calculate discount
+                  const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                  const originalPrice = parseFloat(product.price) || 0;
+                  const discountAmount = (discountPercentage / 100) * originalPrice;
+                  const discountedPrice = originalPrice - discountAmount;
+  
+                  totalDiscountAmount += discountAmount;
+  
+                  return {
+                      ...product,
+                      originalPrice: originalPrice.toFixed(2), // Keep original price
+                      discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                      discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                      imageUrls: fullImageUrls,
+                  };
+              });
+              return res.json({
+                casuals: productsWithDiscount,
+                  totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+              });
+          }
+  
+          res.json({casuals: [], totalDiscountAmount: "0.00" });
+      });
+  });
 module.exports = router;
