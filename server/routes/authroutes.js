@@ -7,13 +7,12 @@ const router = express.Router();
 
 // Sign Up Route
 router.post('/signup', async (req, res) => {
-  const { name, email, phone, password } = req.body;
-  // Validate input
+  const { name, email, phone, password, role = 'customer' } = req.body;  // Default role is 'customer'
+
   if (!name || !email || !phone || !password) {
     return res.status(400).json({ message: 'All fields (name, email, phone, password) are required' });
   }
 
-  // Check if the user already exists
   const checkQuery = 'SELECT * FROM customers WHERE email = ? OR phone = ?';
   db.query(checkQuery, [email, phone], async (err, results) => {
     if (err) {
@@ -23,6 +22,7 @@ router.post('/signup', async (req, res) => {
     if (results.length > 0) {
       return res.status(400).json({ message: 'User with this email or phone already exists' });
     }
+<<<<<<< HEAD
        var ar=[email,name];
        const Q = 'INSERT INTO chats (email,name) VALUES (?,?)';
        db.query(Q,ar,(err, result) => {
@@ -31,22 +31,26 @@ router.post('/signup', async (req, res) => {
          }
        });
     // Hash the password before saving to the database
+=======
+
+>>>>>>> a4ceaf0cce56cfef0acdeb6711f8017dbbb945a0
     const hashedPassword = await bcrypt.hash(password, 10);
-    const m= new Date().getMonth() + 1; 
+    const m = new Date().getMonth() + 1;
     const y = new Date().getFullYear();
-    const fq=[name, email, phone, hashedPassword,m,y]
-    const insertQuery = 'INSERT INTO customers (name, email, phone, password,month,year) VALUES (?, ?, ?, ?,?,?)';
-    db.query(insertQuery,fq,(err, result) => {
+    const fq = [name, email, phone, hashedPassword, m, y, role]; // Add the role to the insert query
+    const insertQuery = 'INSERT INTO customers (name, email, phone, password, month, year, role) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.query(insertQuery, fq, (err, result) => {
       if (err) {
         return res.status(500).json({ message: 'Database error', error: err });
       }
 
-      // Create a JWT token for the user
-      const token = jwt.sign({ id: result.insertId, email }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: result.insertId, email, role }, process.env.JWT_SECRET, {
         expiresIn: '1d',
       });
-      const data = { message: 'Successfull registred'};
-      res.json(data);
+
+      const data = { message: 'Successfully registered' };
+      console.log(data);  // Check the response
+      res.json({ data, token });  // Send the token in response
     });
   });
 });
@@ -69,20 +73,24 @@ router.post('/signin', (req, res) => {
     }
 
     const user = results[0];
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log(password);
-    console.log(user.password);
 
-    if (password!==user.password) {
+    if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
-    res.status(200).json({ success: true, user: { id: user.id, email: user.email, token } });
+  
+
+    res.status(200).json({
+      success: true,
+      user: { id: user.id, email: user.email, role: user.role, token },
+    });
   });
 });
+
+
 
 module.exports = router;

@@ -1,16 +1,18 @@
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from '../Redux/User/UserSlice';
+} from '../Redux/UserSlice';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
-  const { loading, error } = useSelector((state) => state.user);
+  const { loading } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -24,32 +26,67 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(signInStart());
-  
+
     try {
-       // Optional: Set loading state
-      const res = await fetch('/api/auth/signin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-  
-      if (!data.success || !data.user || !data.user.token) {
-        throw new Error(data.message || 'Invalid response from server');
-      }
-  
-      localStorage.setItem('accessToken', data.user.token); // Save token
-      
-console.log('Access Token:', data.user.token);
-      dispatch(signInSuccess(data.user));
-      navigate('/');
+        const res = await fetch('/api/auth/signin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        const data = await res.json();
+
+        // Check if the response is valid and contains token and role
+        if (!data.success || !data.user || !data.user.token || !data.user.role) {
+            throw new Error(data.message || 'Invalid response from server');
+        }
+
+        // Store token and role in localStorage
+        localStorage.setItem('accessToken', data.user.token);
+        localStorage.setItem('userRole', data.user.role);
+
+        console.log('Access Token:', data.user.token);
+        console.log('User Role:', data.user.role);
+
+        dispatch(signInSuccess(data.user));
+
+        toast.success('Sign-in successful!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            style: { backgroundColor: 'green', color: 'white' }
+        });
+
+        // Navigate based on the user role
+        if (data.user.role === 'admin') {
+            navigate('/overview'); // Admin Dashboard
+        } else {
+            navigate('/'); // Home page for normal users
+        }
     } catch (error) {
-      dispatch(signInFailure(error.message));
-      console.error(error.message);
-    } 
-  };
+        dispatch(signInFailure(error.message));
+        console.error(error.message);
+
+        toast.error(error.message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            style: { backgroundColor: 'red', color: 'white' }
+        });
+    }
+};
+
+
   
 
   return (
@@ -94,7 +131,7 @@ console.log('Access Token:', data.user.token);
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-100 transition duration-300"
+            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-400 transition duration-300"
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
@@ -108,11 +145,7 @@ console.log('Access Token:', data.user.token);
             </span>
           </Link>
         </div>
-        {error && (
-          <p className="text-red-600 text-center mt-5 font-medium">
-            {error}
-          </p>
-        )}
+        
       </div>
     </div>
   );

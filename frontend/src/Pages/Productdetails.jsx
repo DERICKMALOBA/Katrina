@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addItem } from "../Redux/CartSlice";
 import { useParams, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaHeart } from 'react-icons/fa'; // Rating stars
@@ -11,6 +13,7 @@ export default function ProductDetail() {
 
   const [selectedImage, setSelectedImage] = useState(null);
   const [wishlist, setWishlist] = useState({});
+  const dispatch = useDispatch();
 
   const toggleWishlist = (productId) => {
     setWishlist((prev) => ({
@@ -52,9 +55,7 @@ export default function ProductDetail() {
     fetchProduct();
   }, [id]);
 
-  const handleAddToCart = () => {
-    console.log(`Product ${product.name} added to cart`);
-  };
+
 
   const calculateDiscountedPrice = (product) => {
     if (!product || !product.price) return { originalPrice: "0.00", discountedPrice: "0.00", discountAmount: "0.00" };
@@ -169,7 +170,7 @@ export default function ProductDetail() {
             </div>
 
             <button
-              onClick={handleAddToCart}
+             onClick={() => dispatch(addItem(product))}
               className="mt-6 bg-primaryBlue text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
             >
               Add to Cart

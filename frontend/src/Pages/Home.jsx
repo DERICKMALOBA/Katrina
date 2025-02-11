@@ -1,16 +1,17 @@
-import Cart from "./Cart";
+
 
 const Home=()=>{
     return(
         <>
-        <Cart/>
+      
+      
 
 
 
 <div>
-        <p>welcome to coding</p>
+        <p>developers at work wait for the product.....</p>
 
-        <h2>maloba</h2>
+        
         
         </div>
 

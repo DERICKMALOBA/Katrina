@@ -1,11 +1,13 @@
 import { FaSearch } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
 import { FaShoppingCart } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Link} from 'react-router-dom';
 import { useState} from 'react';
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   
   const handleSearchClick = () => {
     const urlParams = new URLSearchParams();
@@ -23,7 +25,7 @@ function Header() {
         {/* Logo Section - Left */}
         <Link to='/'>
           <h1 className="font-bold text-sm sm:text-xl flex gap-2">
-            <span className="text-white">Katrina Kids' Closet</span>
+            <span className="text-white">Katrina Kids  Closet</span>
           </h1>
         </Link>
 
@@ -46,12 +48,21 @@ function Header() {
         </div>
         <FaUserCircle size={30} color="gray" />
         {/* Links Section - Right */}
-        <ul className="flex gap-4">
-          <li className="hover:opacity-70 active:text-green-500 transition duration-200">
-            <Link to='/'>HELP?</Link>
-          </li>
-          <FaShoppingCart size={24} className="text-gray-600" />
-        </ul>
+        <ul className="flex gap-6 items-center relative">
+      <li className="hover:opacity-70 active:text-green-500 transition duration-200">
+        <Link to="/">HELP?</Link>
+      </li>
+
+      <Link to="/cart" className="relative">
+        <FaShoppingCart size={28} className="text-gray-700 hover:text-green-600 transition duration-200" />
+        
+        {totalQuantity > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
+            {totalQuantity}
+          </span>
+        )}
+      </Link>
+    </ul>
       </div>
     </header>
   );

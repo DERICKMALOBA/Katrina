@@ -33,7 +33,6 @@ import Special from "./Pages/Special";
 import Sports from "./Pages/Sports";
 import MessagePopup from "./Pages/Chat";
 import AdminMessagePanel from "./Pages/Adminreply";
-
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -126,6 +125,7 @@ function App() {
           <Route path="/chats" element={<MessagePopup/>} />
           <Route path="/adminreply" element={<AdminMessagePanel/>} />
           {/* Admin Routes */}
+          <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
           <Route path="/products" element={<AdminLayout><ProductPage /></AdminLayout>} />
           <Route path="/customers" element={<AdminLayout><Customers /></AdminLayout>} />
@@ -133,6 +133,7 @@ function App() {
           <Route path="/orders" element={<AdminLayout><OrdersPage /></AdminLayout>} />
           <Route path="/offers" element={<AdminLayout><OffersPage /></AdminLayout>} />
           <Route path="/analytics" element={<AdminLayout><AnalyticsPage /></AdminLayout>} />
+          </Route>
         </Routes>
       </Layout>
     </Router>
