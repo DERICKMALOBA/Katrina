@@ -8,7 +8,7 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from '../Redux/User/UserSlice';
+} from '../Redux/UserSlice';
 
 function SignIn() {
   const [formData, setFormData] = useState({});
