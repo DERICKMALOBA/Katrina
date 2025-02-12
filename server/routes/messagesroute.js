@@ -29,15 +29,27 @@ router.post("/messagessend", (req, res) => {
   });
 });
 router.post("/reply", (req, res) => {
-  const { messageId, adminReply } = req.body;
+  const {text,messageId} = req.body;
   var adminreply=1;
   const query = "UPDATE chats SET adminmsg = ?,replied=? WHERE id = ?";
-  db.query(query, [adminReply,adminreply,messageId], (err, result) => {
+  db.query(query, [text,adminreply,messageId], (err, result) => {
     if (err) {
       console.error("Error updating admin reply:", err);
       return res.status(500).json({ error: "Error replying to message" });
     }
 
+  });
+});
+router.get("/messageslist/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  const query = "SELECT*FROM chats WHERE id=?";
+  db.query(query,id, (err, result) => {
+    if (err) {
+      console.error("Error updating admin reply:", err);
+      return res.status(500).json({ error: "Error replying to message" });
+    }
+    res.send(result);
   });
 });
 module.exports = router;

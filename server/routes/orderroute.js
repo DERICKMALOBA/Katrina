@@ -76,7 +76,7 @@ router.get('/weekorders', (req, res) => {
                   {
                     pend=pend+1;
                   }
-                  if(af[j].status=="Shipping")
+                  if(af[j].status=="Shipped")
                     {
                       shipp=shipp+1;
                     }
@@ -117,6 +117,16 @@ router.get('/weekorders', (req, res) => {
       if (err) return res.status(500).json({ message: 'Database error', error: err });     
       const sizecomp=results.length;
           res.json({Completedorders:sizecomp});
+    });
+  });
+  router.post('/update', (req, res) => {
+    const {Value,Id}=req.body;
+    var finalvalues=[Value,Id];
+    const query = 'UPDATE orders SET status=? WHERE orderid=?';
+    db.query(query,finalvalues,async (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error', error: err });  
+      console.log(results);
+      res.send(results);   
     });
   });
 module.exports = router;

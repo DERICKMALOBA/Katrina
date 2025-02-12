@@ -32,7 +32,11 @@ import Accessories from "./Pages/Accessories";
 import Special from "./Pages/Special";
 import Sports from "./Pages/Sports";
 import MessagePopup from "./Pages/Chat";
-import AdminMessagePanel from "./Pages/Adminreply";
+import ProtectedRoute from "./components/PrivateRoute";
+import Cart from "./Pages/Cart";
+import AdminMessagePanel from "./Pages/Adminmessages";
+import Admin from "./Pages/Adminreply";
+import ForgotPassword from "./Pages/Forgotpassword";
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -123,7 +127,10 @@ function App() {
           <Route path="/products/special" element={<Special/>} />
           <Route path="/products/sports" element={<Sports/>} />
           <Route path="/chats" element={<MessagePopup/>} />
-          <Route path="/adminreply" element={<AdminMessagePanel/>} />
+          <Route path="/cart" element={<Cart/>} />
+          <Route path="/adminmessages" element={<AdminMessagePanel/>} />
+          <Route path="/message/:id" element={<Admin/>}/>
+          <Route path="/forgot" element={<ForgotPassword/>}/>
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
           <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />

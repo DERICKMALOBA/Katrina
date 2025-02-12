@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../config/db.js');
-
+const nodemailer = require("nodemailer");
 const router = express.Router();
 
 // Sign Up Route
@@ -22,7 +22,6 @@ router.post('/signup', async (req, res) => {
     if (results.length > 0) {
       return res.status(400).json({ message: 'User with this email or phone already exists' });
     }
-<<<<<<< HEAD
        var ar=[email,name];
        const Q = 'INSERT INTO chats (email,name) VALUES (?,?)';
        db.query(Q,ar,(err, result) => {
@@ -30,10 +29,6 @@ router.post('/signup', async (req, res) => {
            return res.status(500).json({ message: 'Database error', error: err });
          }
        });
-    // Hash the password before saving to the database
-=======
-
->>>>>>> a4ceaf0cce56cfef0acdeb6711f8017dbbb945a0
     const hashedPassword = await bcrypt.hash(password, 10);
     const m = new Date().getMonth() + 1;
     const y = new Date().getFullYear();
@@ -90,7 +85,50 @@ router.post('/signin', (req, res) => {
     });
   });
 });
+router.post('/forgot', async (req, res) => {
+  const { Email} = req.body;  // Default role is 'customer'
+console.log(Email);
+  if (!Email) {
+    return res.status(400).json({ message: 'All fields (name, email, phone, password) are required' });
+  }
 
+  const checkQuery = 'SELECT * FROM customers WHERE email = ?';
+  db.query(checkQuery, [Email], async (err, results) => {
+    if (err) {
+      return res.status(500).json({ message: 'Database error', error: err });
+    }
+    const size=results.length;
+    console.log(size);
+    if(size!=1)
+    {
+      res.json({message:0});
+    }
+    if(size==1)
+    {
+const transporter = nodemailer.createTransport({
+  service: "gmail", 
+  auth: {
+    user: "mateilimo1@gmail.com",
+    pass: "rkxd qgnq kscn wfpk",
+  },
+});
+  try {
+    const mailOptions = {
+      from: "mateilimo1@gmail.com",
+      to:"derickgreen18@gmail.com",
+      subject:"Sending mails to customers",
+      text: "Good evening Derrick maloba you have been hired to Safaricom Company as software developer",
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.response);
+    res.json({message:1})
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
+    }
+  });
+});
 
 
 module.exports = router;
