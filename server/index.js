@@ -33,13 +33,8 @@ app.use('/api/offers', offersRoute);
 app.use('/api/users', usersRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/orders', orderRoutes);
-<<<<<<< HEAD
 app.use('/api/messages', messageRoutes);
-=======
 app.use('/api/admin', AdmiRrouter)
-// Test DB connection
->>>>>>> a4ceaf0cce56cfef0acdeb6711f8017dbbb945a0
-
 db.connect((err) => {
   if (err) {
     console.error('Database connection failed:', err.message);
