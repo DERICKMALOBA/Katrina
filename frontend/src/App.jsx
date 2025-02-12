@@ -29,7 +29,7 @@ import ProductDetail from "./Pages/Productdetails";
 import Tops from "./Pages/Tops";
 import Bottoms from "./Pages/Bottoms";
 import CheckoutForm from "./Pages/Checkout";
-<<<<<<< HEAD
+
 import Dressers from "./Pages/Dressers";
 import Outer from "./Pages/Outer";
 import Sleep from "./Pages/Sleep";
@@ -44,11 +44,8 @@ import Cart from "./Pages/Cart";
 import AdminMessagePanel from "./Pages/Adminmessages";
 import Admin from "./Pages/Adminreply";
 import ForgotPassword from "./Pages/Forgotpassword";
-=======
-import ProtectedRoute from "./components/PrivateRoute";
-import Cart from "./Pages/Cart";
 
->>>>>>> maloba
+
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
