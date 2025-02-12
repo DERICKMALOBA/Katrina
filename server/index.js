@@ -12,6 +12,7 @@ const orderRoutes = require('./routes/orderroute.js');
 
 const db = require('./config/db.js');
 const AdmiRrouter = require('./routes/adminavator.js');
+const deliverRouter = require('./routes/Delivery.js');
 
 // Load environment variables
 dotenv.config();
@@ -34,6 +35,7 @@ app.use('/api/users', usersRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/admin', AdmiRrouter)
+app.use('/api/delivery', deliverRouter);
 // Test DB connection
 
 db.connect((err) => {

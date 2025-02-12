@@ -1,6 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import { addItem, removeItem, removeProduct } from "../Redux/CartSlice";
 import { Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
+
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
@@ -63,17 +65,26 @@ const Cart = () => {
           </div>
 
           {/* Cart Summary */}
-          <div className="w-full md:w-1/3 bg-gray-100  rounded-lg shadow-md ">
-            <h3 className="text-lg font-bold mb-3 text-center">Cart Summary</h3>
-            <p className="text-md font-semibold mr-5">Total Items: {cart.totalQuantity}</p>
-            <p className="text-lg font-bold mr-5">Total Price: Ksh {cart.totalPrice.toFixed(2)}</p>
-           
-            <button
-              className="w-full bg-blue-600 text-white px-4 py-2 mt-2 rounded-md hover:bg-blue-700"
-            >
-              Proceed to Checkout
-            </button>
-          </div>
+          <div className="w-full md:w-1/3 bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+  <h3 className="text-xl font-semibold mb-4 text-center text-gray-800">Cart Summary</h3>
+
+  <div className="flex justify-between items-center border-b pb-3">
+    <p className="text-md font-medium text-gray-600">Total Items:</p>
+    <p className="text-lg font-semibold text-gray-900">{cart.totalQuantity}</p>
+  </div>
+
+  <div className="flex justify-between items-center border-b py-3">
+    <p className="text-md font-medium text-gray-600">Total Price:</p>
+    <p className="text-lg font-bold text-green-600">Ksh {cart.totalPrice.toFixed(2)}</p>
+  </div>
+
+  <Link to="/checkout">
+  <button className="w-full bg-orange-500 text-white font-medium text-lg px-5 py-3 mt-4 rounded-lg shadow-md hover:bg-orange-600 transition duration-300">
+    Proceed to Checkout
+  </button>
+</Link>
+</div>
+ 
         </div>
       )}
     </div>

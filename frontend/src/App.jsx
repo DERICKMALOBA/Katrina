@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom"; 
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Sidebar from "./AdminComponents/Sidebar";
 
@@ -9,6 +14,7 @@ import SalesPage from "./AdminPages/SalesPage";
 import OrdersPage from "./AdminPages/OrdersPage";
 import OffersPage from "./AdminPages/Offers";
 import AnalyticsPage from "./AdminPages/AnalyticsPage";
+import EditDelivery from "./AdminPages/EditDelivery";
 import SignIn from "./Pages/SingIn";
 import SignUp from "./Pages/SingUp";
 
@@ -24,11 +30,13 @@ import ProductDetail from "./Pages/Productdetails";
 import Tops from "./Pages/Tops";
 import Bottoms from "./Pages/Bottoms";
 import CheckoutForm from "./Pages/Checkout";
+import ProtectedRoute from "./components/PrivateRoute";
+import Cart from "./Pages/Cart";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
-  
+
   // List of admin routes
   const adminRoutes = [
     "/overview",
@@ -38,6 +46,7 @@ const Layout = ({ children }) => {
     "/orders",
     "/offers",
     "/analytics",
+    "/edit-delivery",
   ];
 
   // Check if the current route is an admin route
@@ -77,7 +86,7 @@ const AdminLayout = ({ children }) => {
         {/* Admin Panel Content */}
         <div className="relative z-10 flex-grow flex flex-col">
           {/* Admin Header */}
-          <AdmiHeader/>
+          <AdmiHeader />
 
           {/* Page Content */}
           <div className="flex-grow bg-primaryBlack p-6 overflow-auto">
@@ -92,7 +101,7 @@ const AdminLayout = ({ children }) => {
 function App() {
   return (
     <Router>
-          <ToastContainer />
+      <ToastContainer />
       <Layout>
         <Routes>
           {/* Public Routes */}
@@ -100,21 +109,82 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/" element={<Home />} />
           <Route path="/product" element={<ProductList />} />
-          <Route path="/productdet/:name/:description/:price" element={<ProductInfo />} />
+          <Route
+            path="/productdet/:name/:description/:price"
+            element={<ProductInfo />}
+          />
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/productform" element={<ProductForm />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="/products/tops" element={<Tops />} />
           <Route path="/products/bottoms" element={<Bottoms />} />
           <Route path="/checkout" element={<CheckoutForm />} />
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-          <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
-          <Route path="/products" element={<AdminLayout><ProductPage /></AdminLayout>} />
-          <Route path="/customers" element={<AdminLayout><Customers /></AdminLayout>} />
-          <Route path="/sales" element={<AdminLayout><SalesPage /></AdminLayout>} />
-          <Route path="/orders" element={<AdminLayout><OrdersPage /></AdminLayout>} />
-          <Route path="/offers" element={<AdminLayout><OffersPage /></AdminLayout>} />
-          <Route path="/analytics" element={<AdminLayout><AnalyticsPage /></AdminLayout>} />
+            <Route
+              path="/overview"
+              element={
+                <AdminLayout>
+                  <OverviewPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/products"
+              element={
+                <AdminLayout>
+                  <ProductPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/customers"
+              element={
+                <AdminLayout>
+                  <Customers />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/sales"
+              element={
+                <AdminLayout>
+                  <SalesPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <AdminLayout>
+                  <OrdersPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/edit-delivery"
+              element={
+                <AdminLayout>
+                  <EditDelivery />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/offers"
+              element={
+                <AdminLayout>
+                  <OffersPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <AdminLayout>
+                  <AnalyticsPage />
+                </AdminLayout>
+              }
+            />
           </Route>
         </Routes>
       </Layout>

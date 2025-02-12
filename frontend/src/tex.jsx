@@ -1,123 +1,302 @@
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
-function SignUp() {
-  const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
-  };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setLoading(true);
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      const data = await res.json();
-      console.log(data);
-  
-      if (!data.success) {
-        setLoading(false);
-        setError(data.message); // Display the error message from the server
-        return;
-      }
-  
-      setLoading(false);
-      setError(null);
-      navigate('/sign-in');
-    } catch (error) {
-      setLoading(false);
-      setError(error.message);
-    }
-  };
-  
-  return (
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div className="mx-auto p-6 bg-gray-100 rounded-lg shadow-md space-y-6 relative">
+<div className="flex">
+  <div className="w-3/4 pr-6 space-y-6">
+    {/* Customer Details */}
     <div
-      style={{
-        backgroundImage: `url('/image2.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
+      className={`p-4 border rounded-lg ${
+        customerDetailsCleared ? "bg-green-100" : "bg-white"
+      }`}
     >
-      <div
-        style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.7)',
-          padding: '40px',
-          borderRadius: '15px',
-          boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-          width: '100%',
-          maxWidth: '400px',
-        }}
-      >
-        <h1 className="text-3xl text-center font-semibold my-7">Sign up</h1>
-        <form onSubmit={handleSubmit} className="space-y-5">
+      <h1 className="text-xl font-semibold text-gray-800">
+        Customer Details
+      </h1>
+      {!customerDetailsCleared ? (
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              className="p-2 border rounded w-full"
+              type="text"
+              placeholder="First Name"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleInputChange}
+              required
+            />
+            <input
+              className="p-2 border rounded w-full"
+              type="text"
+              placeholder="Second Name"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              className="p-2 border rounded w-full"
+              type="text"
+              placeholder="Phone Number"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleInputChange}
+              required
+            />
+            <input
+              className="p-2 border rounded w-full"
+              type="text"
+              placeholder="Alternative Phone Number"
+              name="altPhoneNumber"
+              value={formData.altPhoneNumber}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
           <input
+            className="p-2 border rounded w-full"
             type="text"
-            placeholder="Username"
-            className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
-            id="username"
-            onChange={handleChange}
+            placeholder="Address"
+            name="address"
+            value={formData.address}
+            onChange={handleInputChange}
+            required
           />
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
-            id="email"
-            onChange={handleChange}
-          />
-           <input
-            type="number"
-            placeholder="Enter your phone number"
-            className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
-            id="phone"
-            name="phone"
-            onChange={handleChange}
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
-            id="password"
-            onChange={handleChange}
-          />
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
-          >
-            {loading ? 'Loading...' : 'Sign Up'}
-          </button>
-        </form>
+          <div className="grid grid-cols-2 gap-4">
+            {/* County Dropdown */}
+            <select
+              className="p-2 border rounded w-full"
+              value={selectedCounty}
+              onChange={handleCountyChange}
+              required
+            >
+              <option value="">Select a County</option>
+              {deliveryData.counties.map((county, index) => (
+                <option key={index} value={county}>
+                  {county}
+                </option>
+              ))}
+            </select>
 
-        <div className="mt-4 text-center">
-          <p className="text-gray-600">Have an account?</p>
-          <Link to="/sign-in">
-            <span className="text-blue-600 hover:text-blue-800 cursor-pointer">
-              Sign In
-            </span>
-          </Link>
+            {/* City Dropdown (Disabled until a county is selected) */}
+            <select
+              className="p-2 border rounded w-full"
+              value={selectedCity}
+              onChange={handleCityChange}
+              disabled={!selectedCounty}
+              required
+            >
+              <option value="">Select a City</option>
+              {selectedCounty &&
+                deliveryData.cities[selectedCounty]?.map(
+                  (city, index) => (
+                    <option key={index} value={city}>
+                      {city}
+                    </option>
+                  )
+                )}
+            </select>
+          </div>
+
+          {/* Display Delivery Fee */}
+          <div className="mt-4">
+            <label className="text-gray-700 font-semibold">
+              Delivery Fee:
+            </label>
+            <input
+              className="p-2 border rounded w-full bg-gray-100"
+              type="text"
+              value={formData.deliveryFee || ""}
+              readOnly
+            />
+          </div>
+
+          <div className="flex justify-end space-x-4 mt-4">
+            <button className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">
+              Cancel
+            </button>
+            <button
+              className="bg-green-600 text-white p-2 rounded hover:bg-green-700"
+              onClick={() => setCustomerDetailsCleared(true)}
+            >
+              Save
+            </button>
+          </div>
         </div>
-        {error && <p className="text-red-500 mt-5">{error}</p>}
+      ) : (
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-green-600 flex items-center">
+            ✔ <span className="ml-2">Customer Details</span>
+          </h3>
+          <button
+            className="text-primaryBlack hover:underline"
+            onClick={() => setCustomerDetailsCleared(false)}
+          >
+            Change
+          </button>
+        </div>
+      )}
+    </div>
+
+    {/* Delivery Details */}
+    {customerDetailsCleared && (
+      <div
+        className={`p-4 border rounded-lg ${
+          deliveryDetailsCleared ? "bg-green-100" : "bg-white"
+        }`}
+      >
+        <h1 className="text-xl font-semibold text-gray-800">
+          Delivery Details
+        </h1>
+        {!deliveryDetailsCleared ? (
+          <div className="space-y-4">
+            <select
+              className="p-2 border rounded w-full"
+              value={formData.deliveryVehicle}
+              onChange={handleInputChange}
+              name="deliveryVehicle"
+              required
+            >
+              <option value="">Select Delivery Vehicle</option>
+              {deliveryData.deliveryVehicles &&
+              deliveryData.deliveryVehicles.length > 0 ? (
+                deliveryData.deliveryVehicles.map((vehicle, index) => (
+                  <option key={index} value={vehicle}>
+                    {vehicle}
+                  </option>
+                ))
+              ) : (
+                <option value="">No vehicles available</option>
+              )}
+            </select>
+            <input
+              className="p-2 border rounded w-full"
+              type="text"
+              placeholder="Delivery Fee"
+              name="deliveryFee"
+              value={formData.deliveryFee}
+              onChange={handleInputChange}
+              required
+            />
+            <div className="flex justify-end space-x-4 mt-4">
+              <button className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">
+                Cancel
+              </button>
+              <button
+                className="bg-green-600 text-white p-2 rounded hover:bg-green-700"
+                onClick={() => setDeliveryDetailsCleared(true)}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-green-600 flex items-center">
+              ✔ <span className="ml-2">Delivery Details</span>
+            </h3>
+            <button
+              className="text-primaryBlack hover:underline"
+              onClick={() => setDeliveryDetailsCleared(false)}
+            >
+              Change
+            </button>
+          </div>
+        )}
+      </div>
+    )}
+
+    {/* Payment Details */}
+    {deliveryDetailsCleared && (
+      <div
+        className={`p-4 border rounded-lg ${
+          paymentCleared ? "bg-green-100" : "bg-white"
+        }`}
+      >
+        <h1 className="text-xl font-semibold text-gray-800">
+          Payment Details
+        </h1>
+        {!paymentCleared ? (
+          <div className="space-y-4">
+            <select
+              className="p-2 border rounded w-full"
+              value={formData.paymentMethod}
+              onChange={handlePaymentMethodChange}
+              required
+            >
+              <option value="">Select Payment Method</option>
+              <option value="credit_card">Credit Card</option>
+              <option value="mpesa">Mpesa</option>
+            </select>
+            {formData.paymentMethod === "credit_card" && (
+              <CreditCardPayment />
+            )}
+            {formData.paymentMethod === "mpesa" && <MpesaPayment />}
+            <div className="flex justify-end space-x-4 mt-4">
+              <button className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">
+                Cancel
+              </button>
+              <button
+                className="bg-green-600 text-white p-2 rounded hover:bg-green-700"
+                onClick={() => setPaymentCleared(true)}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-green-600 flex items-center">
+              ✔ <span className="ml-2">Payment Details</span>
+            </h3>
+            <button
+              className="text-primaryBlack hover:underline"
+              onClick={() => setPaymentCleared(false)}
+            >
+              Change
+            </button>
+          </div>
+        )}
+      </div>
+    )}
+  </div>
+
+  <div className="w-1/4">
+    {/* Order Summary */}
+    <div className="p-4 border rounded-lg bg-white shadow-md">
+      <h3 className="text-xl font-semibold">Order Summary</h3>
+      <div className="space-y-2 mt-4">
+        <p>Total Price: KSh {totalPrice}</p>
+        <button
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 w-full"
+          onClick={handleSubmit}
+        >
+          Complete Order
+        </button>
       </div>
     </div>
-  );
-}
-
-export default SignUp;
+  </div>
+</div>
+</div>
