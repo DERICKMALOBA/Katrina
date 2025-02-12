@@ -17,7 +17,6 @@ import AnalyticsPage from "./AdminPages/AnalyticsPage";
 import EditDelivery from "./AdminPages/EditDelivery";
 import SignIn from "./Pages/SingIn";
 import SignUp from "./Pages/SingUp";
-
 import Nav from "./components/Navbar";
 import Home from "./Pages/home";
 import ProductList from "./Pages/ProductsListing";
@@ -30,8 +29,22 @@ import ProductDetail from "./Pages/Productdetails";
 import Tops from "./Pages/Tops";
 import Bottoms from "./Pages/Bottoms";
 import CheckoutForm from "./Pages/Checkout";
+
+import Dressers from "./Pages/Dressers";
+import Outer from "./Pages/Outer";
+import Sleep from "./Pages/Sleep";
+import Under from "./Pages/Under";
+import Foot from "./Pages/Foot";
+import Accessories from "./Pages/Accessories";
+import Special from "./Pages/Special";
+import Sports from "./Pages/Sports";
+import MessagePopup from "./Pages/Chat";
 import ProtectedRoute from "./components/PrivateRoute";
 import Cart from "./Pages/Cart";
+import AdminMessagePanel from "./Pages/Adminmessages";
+import Admin from "./Pages/Adminreply";
+import ForgotPassword from "./Pages/Forgotpassword";
+
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -119,6 +132,19 @@ function App() {
           <Route path="/products/tops" element={<Tops />} />
           <Route path="/products/bottoms" element={<Bottoms />} />
           <Route path="/checkout" element={<CheckoutForm />} />
+          <Route path="/products/dressers" element={<Dressers />} />
+          <Route path="/products/outer" element={<Outer/>} />
+          <Route path="/products/sleep" element={<Sleep/>} />
+          <Route path="/products/under" element={<Under/>} />
+          <Route path="/products/foot" element={<Foot/>} />
+          <Route path="/products/accessories" element={<Accessories/>} />
+          <Route path="/products/special" element={<Special/>} />
+          <Route path="/products/sports" element={<Sports/>} />
+          <Route path="/chats" element={<MessagePopup/>} />
+          <Route path="/cart" element={<Cart/>} />
+          <Route path="/adminmessages" element={<AdminMessagePanel/>} />
+          <Route path="/message/:id" element={<Admin/>}/>
+          <Route path="/forgot" element={<ForgotPassword/>}/>
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route

@@ -9,7 +9,7 @@ const salesRoutes = require('./routes/salesroute.js');
 const authRouter = require('./routes/authroutes.js');
 const offersRoute = require('./routes/Offers.js')
 const orderRoutes = require('./routes/orderroute.js');
-
+const messageRoutes = require('./routes/messagesroute.js');
 const db = require('./config/db.js');
 const AdmiRrouter = require('./routes/adminavator.js');
 const deliverRouter = require('./routes/Delivery.js');
@@ -22,7 +22,7 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.use(bodyParser.urlencoded({ extended: true }));
 // Increase payload size limit
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
@@ -34,10 +34,16 @@ app.use('/api/offers', offersRoute);
 app.use('/api/users', usersRoutes);
 app.use('/api/sales', salesRoutes);
 app.use('/api/orders', orderRoutes);
+
+app.use('/api/messages', messageRoutes);
 app.use('/api/admin', AdmiRrouter)
 app.use('/api/delivery', deliverRouter);
-// Test DB connection
+// Test DB connecti
 
+app.use('/api/admin', AdmiRrouter)
+// Test DB connect
+app.use('/api/messages', messageRoutes);
+app.use('/api/admin', AdmiRrouter)
 db.connect((err) => {
   if (err) {
     console.error('Database connection failed:', err.message);

@@ -12,8 +12,8 @@ import {
 
 function SignIn() {
   const [formData, setFormData] = useState({});
-  const { loading } = useSelector((state) => state.user);
-
+ useSelector((state) => state.user);
+  const [loading,setLoading]=useState(false); 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -26,7 +26,7 @@ function SignIn() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(signInStart());
-
+    setLoading(true);
     try {
         const res = await fetch('/api/auth/signin', {
             method: 'POST',
@@ -37,7 +37,7 @@ function SignIn() {
         });
 
         const data = await res.json();
-
+        setLoading(false);
         // Check if the response is valid and contains token and role
         if (!data.success || !data.user || !data.user.token || !data.user.role) {
             throw new Error(data.message || 'Invalid response from server');
@@ -72,7 +72,7 @@ function SignIn() {
     } catch (error) {
         dispatch(signInFailure(error.message));
         console.error(error.message);
-
+        setLoading(true);
         toast.error(error.message, {
             position: "top-right",
             autoClose: 5000,
@@ -142,6 +142,11 @@ function SignIn() {
           <Link to="/sign-up">
             <span className="text-blue-600 font-medium hover:underline cursor-pointer">
               Create an Account
+            </span><br/><br/>
+          </Link>
+          <Link to="/forgot">
+            <span className="text-blue-600 font-medium hover:underline cursor-pointer">
+              Forgot Password
             </span>
           </Link>
         </div>
