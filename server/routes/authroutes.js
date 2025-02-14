@@ -42,10 +42,10 @@ router.post('/signup', async (req, res) => {
       const token = jwt.sign({ id: result.insertId, email, role }, process.env.JWT_SECRET, {
         expiresIn: '1d',
       });
-
-      const data = { message: 'Successfully registered' };
+       
+      const data = { message: 'Successfully registered',Name:name,Email:email,Phone:phone,Role:role};
       console.log(data);  // Check the response
-      res.json({ data, token });  // Send the token in response
+      res.json({  message: 'Successfully registered',Name:name,Email:email,Phone:phone,Role:role, token });  // Send the token in response
     });
   });
 });

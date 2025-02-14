@@ -44,6 +44,7 @@ import Cart from "./Pages/Cart";
 import AdminMessagePanel from "./Pages/Adminmessages";
 import Admin from "./Pages/Adminreply";
 import ForgotPassword from "./Pages/Forgotpassword";
+import Profile from "./Pages/test";
 
 
 // Component to conditionally render the layout
@@ -145,6 +146,8 @@ function App() {
           <Route path="/adminmessages" element={<AdminMessagePanel/>} />
           <Route path="/message/:id" element={<Admin/>}/>
           <Route path="/forgot" element={<ForgotPassword/>}/>
+          <Route path="/profile" element={<Profile/>}/>
+
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route

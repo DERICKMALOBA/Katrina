@@ -40,4 +40,41 @@ deliverRouter.put('/update/:id',  (req, res) => {
   });
 });
 
+
+deliverRouter.put("/update-data", (req, res) => {
+  const { county, cityFees, cityVehicles } = req.body;
+
+  if (!county || !cityFees || !cityVehicles) {
+    return res.status(400).json({ error: "Missing required fields" });
+  }
+
+  const updatePromises = Object.keys(cityFees).map((city) => {
+    const query = `
+      UPDATE delivery
+      SET delivery_fee = ?, delivery_vehicle = ?
+      WHERE county_name = ? AND city_name = ?`;
+
+    return new Promise((resolve, reject) => {
+      db.query(
+        query,
+        [cityFees[city], JSON.stringify(cityVehicles[city]), county, city],
+        (err, result) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  });
+
+  Promise.all(updatePromises)
+    .then(() => res.status(200).json({ message: "Delivery data updated successfully!" }))
+    .catch((error) => {
+      console.error("Error updating delivery data:", error);
+      res.status(500).json({ error: "Database error" });
+    });
+});
+
 module.exports = deliverRouter;

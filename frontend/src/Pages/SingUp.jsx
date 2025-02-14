@@ -2,8 +2,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../Redux/AuthSlice';
 
 function SignUp() {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -23,25 +26,24 @@ function SignUp() {
       setLoading(true);
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || 'Failed to sign up');
-      }
-
+  
       const data = await res.json();
-      console.log(data); // Check the response here
+      console.log(data);  // Check the structure of the response data
+  
+      if (!res.ok) {
+        throw new Error(data.message || 'Failed to sign up');
+      }
+  
+      // Dispatch user data to Redux store
+      dispatch(setUser({ name: data.Name, email: data.Email, phone: data.Phone,role:data.Role }));
+  
       navigate('/sign-in');
-
-     
-
       setLoading(false);
       setError(null);
+  
       toast.success('Registration successful!', {
         position: "top-right",
         autoClose: 5000,
@@ -52,7 +54,7 @@ function SignUp() {
         progress: undefined,
         style: { backgroundColor: 'green', color: 'white' }
       });
-      
+  
     } catch (error) {
       setLoading(false);
       setError(error.message);
@@ -68,6 +70,8 @@ function SignUp() {
       });
     }
   };
+  
+  
 
   return (
     <div
