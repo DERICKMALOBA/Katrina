@@ -6,26 +6,20 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
-let users = {}; // Store users with their socket IDs
+let users = {};
 
 io.on("connection", (socket) => {
   console.log("New client connected");
-
-  // Assign user to a specific socket
-  socket.on("set_user", (userId) => {
-    users[userId] = socket.id;  // Save the socket ID with user ID
+  socket.on("register", (email) => {
+    users[email] = socket.id; 
     console.log(`User ${userId} connected with socket ID ${socket.id}`);
   });
-
-  // Listen for incoming messages
-  socket.on("send_message", (data) => {
+  socket.on("sendmessage", (data) => {
     const { recipientId, message } = data;
-
-    // Send message to the recipient user if they exist
     if (users[recipientId]) {
       io.to(users[recipientId]).emit("receive_message", {
         text: message,
-        sender: "Admin",  // or dynamic sender
+        sender: "Admin",
       });
     } else {
       console.log("Recipient not found");
@@ -33,7 +27,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    // Remove user from the users list when they disconnect
     for (let userId in users) {
       if (users[userId] === socket.id) {
         delete users[userId];

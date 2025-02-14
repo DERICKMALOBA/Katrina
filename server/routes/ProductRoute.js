@@ -80,7 +80,6 @@ router.get('/productslist', (req, res) => {
                 try {
                     if (product.image) {
                         const parsedImage = JSON.parse(product.image);
-                        // Ensure imageUrls is always an array
                         imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
                     }
                 } catch (parseError) {

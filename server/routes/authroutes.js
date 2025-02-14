@@ -115,9 +115,9 @@ const transporter = nodemailer.createTransport({
   try {
     const mailOptions = {
       from: "mateilimo1@gmail.com",
-      to:"derickgreen18@gmail.com",
+      to:Email,
       subject:"Sending mails to customers",
-      text: "Good evening Derrick maloba you have been hired to Safaricom Company as software developer",
+      text: "Dear customer reset your password by clicking this link:http://localhost:5173/resetpassword",
     };
 
     const info = await transporter.sendMail(mailOptions);

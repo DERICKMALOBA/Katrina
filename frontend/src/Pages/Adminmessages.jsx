@@ -17,7 +17,7 @@ const AdminMessagePanel = () => {
         {messages.map((msg) => (
           <div key={msg.id} style={styles.messageCard}>
             <p style={styles.userMessage}>
-            <Link to={`/message/${msg.id}`}>
+            <Link to={`/message/${msg.email}`}>
               <strong>{msg.name}:</strong>
               </Link>
             </p>

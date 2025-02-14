@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams,} from "react-router-dom";
 const Admin = () => {
   const [messages, setMessages] = useState([]);
-    const { id } = useParams();
+    const { email } = useParams();
     const [newMessage, setNewMessage] = useState("");
   // Fetch all messages
   useEffect(() => {
-    fetch(`/api/messages/messageslist/${id}`)
+    fetch(`/api/messages/messageslist/${email}`)
       .then((res) => res.json())
       .then((data) => setMessages(data))
       .catch((err) => console.error("Error fetching messages:", err));
@@ -18,7 +18,7 @@ const Admin = () => {
     e.preventDefault();
     if (!newMessage.trim()) return;
     alert(newMessage);
-    const messageData = {messageId:id, text: newMessage };
+    const messageData = {messageEmail:email, text: newMessage };
 
     const response = await fetch("api/messages/reply", {
       method: "POST",
