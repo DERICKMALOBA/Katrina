@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 
-// Custom hook to fetch delivery data
 const useFetchDeliveryData = () => {
   const [deliveryData, setDeliveryData] = useState({
     counties: [],
     cities: {},
     deliveryFees: {},
-    deliveryVehicles: {},
+    cityVehicles: {},
     loading: true,
     error: null,
   });
@@ -23,36 +22,23 @@ const useFetchDeliveryData = () => {
         const countiesSet = new Set();
         const citiesMap = {};
         const deliveryFeesMap = {};
-        const deliveryVehiclesMap = {};
+        const cityVehiclesMap = {};
 
         data.forEach((item) => {
           countiesSet.add(item.county_name);
-
           if (!citiesMap[item.county_name]) {
             citiesMap[item.county_name] = [];
           }
           citiesMap[item.county_name].push(item.city_name);
-
           deliveryFeesMap[item.city_name] = item.delivery_fee;
-
-          try {
-            deliveryVehiclesMap[item.city_name] = JSON.parse(
-              item.delivery_vehicle || "[]"
-            );
-          } catch (error) {
-            console.error(
-              `Error parsing delivery_vehicle for ${item.city_name}:`,
-              error
-            );
-            deliveryVehiclesMap[item.city_name] = [];
-          }
+          cityVehiclesMap[item.city_name] = item.delivery_vehicle || ""; // Store vehicles
         });
 
         setDeliveryData({
           counties: Array.from(countiesSet),
           cities: citiesMap,
           deliveryFees: deliveryFeesMap,
-          deliveryVehicles: deliveryVehiclesMap,
+          cityVehicles: cityVehiclesMap,
           loading: false,
           error: null,
         });
@@ -71,239 +57,107 @@ const useFetchDeliveryData = () => {
   return deliveryData;
 };
 
-const EditDelivery = () => {
-  const [vehicle, setVehicle] = useState("");
+const EditDeliveryFee = () => {
   const [county, setCounty] = useState("");
-  const [city, setCity] = useState("");
-  const [cityDeliveryFee, setCityDeliveryFee] = useState("");
-  const [cities, setCities] = useState([]); // Dynamic cities list
-  const [error, setError] = useState("");
-
-  // Fetch delivery data using the custom hook
+  const [cityFees, setCityFees] = useState({});
+  const [cityVehicles, setCityVehicles] = useState({});
   const deliveryData = useFetchDeliveryData();
 
   useEffect(() => {
     if (county) {
-      setCities(deliveryData.cities[county] || []);
+      const newCityFees = {};
+      const newCityVehicles = {};
+      (deliveryData.cities[county] || []).forEach((city) => {
+        newCityFees[city] = deliveryData.deliveryFees[city] || "";
+        newCityVehicles[city] = deliveryData.cityVehicles[city] || "";
+      });
+      setCityFees(newCityFees);
+      setCityVehicles(newCityVehicles);
     } else {
-      setCities([]); // Ensure cities is empty if no county is selected
+      setCityFees({});
+      setCityVehicles({});
     }
   }, [county, deliveryData]);
 
-  const handleCityDeliveryFeeChange = (cityName, newFee) => {
-    if (isNaN(newFee) || newFee < 0) {
-      setError("Delivery fee must be a positive number");
-      return;
-    }
-    setError("");
-    const updatedCities = cities.map((ct) =>
-      ct.name === cityName ? { ...ct, deliveryFee: Number(newFee) } : ct
-    );
-    setCities(updatedCities);
+  const handleFeeChange = (city, newFee) => {
+    if (isNaN(newFee) || newFee < 0) return;
+    setCityFees({ ...cityFees, [city]: newFee });
   };
 
-  const handleCityAdd = () => {
-    if (city && cityDeliveryFee) {
-      if (isNaN(cityDeliveryFee) || cityDeliveryFee < 0) {
-        setError("Delivery fee must be a positive number");
-        return;
-      }
-      setError("");
-      const newCity = {
-        name: city,
-        deliveryFee: Number(cityDeliveryFee),
-        vehicles: [],
-      };
-      setCities([...cities, newCity]);
-      setCity("");
-      setCityDeliveryFee("");
-    } else {
-      setError("Please fill in both city name and delivery fee");
-    }
+  const handleVehicleChange = (city, newVehicle) => {
+    setCityVehicles({ ...cityVehicles, [city]: newVehicle });
   };
 
-  const handleCityDelete = (cityName) => {
-    const updatedCities = cities.filter((city) => city.name !== cityName);
-    setCities(updatedCities);
-  };
-
-  const handleVehicleDelete = (cityName, vehicleName) => {
-    const updatedCities = cities.map((city) =>
-      city.name === cityName
-        ? {
-            ...city,
-            vehicles: city.vehicles.filter((veh) => veh !== vehicleName),
-          }
-        : city
-    );
-    setCities(updatedCities);
-  };
-
-  const handleVehicleAddToCity = (cityName) => {
-    if (vehicle) {
-      const updatedCities = cities.map((city) =>
-        city.name === cityName
-          ? { ...city, vehicles: [...city.vehicles, vehicle] }
-          : city
-      );
-      setCities(updatedCities);
-      setVehicle("");
-    } else {
-      setError("Please enter a vehicle name");
-    }
-  };
-
-  const handleUpdateSettings = async () => {
-    const updatedSettings = {
-      counties: [
-        {
-          name: county,
-          cities,
-        },
-      ],
-    };
-
+  const handleUpdateData = async () => {
     try {
-      const response = await fetch("/admin/settings", {
+      const response = await fetch("/api/delivery/update-data", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedSettings),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ county, cityFees, cityVehicles }),
       });
 
       const data = await response.json();
-
       if (response.ok) {
-        alert("Settings updated successfully!");
+        alert("Delivery data updated successfully!");
       } else {
-        alert("Error updating settings: " + data.message);
+        alert("Error updating data: " + data.message);
       }
     } catch (error) {
-      console.error("Error updating settings:", error);
-      alert("Error updating settings");
+      alert("Error updating data");
     }
   };
+  // const cleanedText = cityVehicles[city]?.replace(/["\\]/g, '').trim() || "";
 
   return (
     <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-8">Admin Settings</h1>
-
-      {/* County Selection Section */}
-      {deliveryData.counties && deliveryData.counties.length > 0 && (
-        <select
-          value={county}
-          onChange={(e) => setCounty(e.target.value)}
-          className="border border-gray-300 p-2 rounded-md w-1/3"
-        >
-          <option value="">Select a county</option>
-          {deliveryData.counties.map((countyItem, index) => (
-            <option key={index} value={countyItem}>
-              {countyItem}
-            </option>
-          ))}
-        </select>
-      )}
-
-      {/* Cities Section */}
-      {county && deliveryData.cities[county] && (
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Cities in {county}</h2>
-
-          {/* Add City Section */}
-          <div className="flex items-center mb-4">
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="border border-gray-300 p-2 rounded-md mr-4"
-              placeholder="Enter city name"
-            />
-            <input
-              type="number"
-              value={cityDeliveryFee}
-              onChange={(e) => setCityDeliveryFee(e.target.value)}
-              className="border border-gray-300 p-2 rounded-md mr-4"
-              placeholder="Enter delivery fee"
-            />
-            <button
-              onClick={handleCityAdd}
-              className="bg-yellow-500 text-white py-2 px-4 rounded-md hover:bg-yellow-600"
-            >
-              Add City
-            </button>
-          </div>
-
-          {/* Error Message */}
-          {error && <p className="text-red-500">{error}</p>}
-
-          {/* List of Cities */}
-          <ul className="list-disc pl-6">
-            {cities.map((ct, index) => (
-              <li key={index} className="mb-4 flex items-center">
-                <span>
-                  {ct.name} - KSh{ct.deliveryFee}
-                </span>
+      <h1 className="text-2xl font-bold text-center mb-8 text-primaryOrange">Edit Delivery Data</h1>
+      <select
+        value={county}
+        onChange={(e) => setCounty(e.target.value)}
+        className="border border-gray-300 p-2 rounded-md w-1/3"
+      >
+        <option value="">Select a county</option>
+        {deliveryData.counties.map((countyItem, index) => (
+          <option key={index} value={countyItem}>{countyItem}</option>
+        ))}
+      </select>
+      {county && (
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-4 text-white">Cities in {county}</h2>
+          {Object.keys(cityFees).map((city, index) => (
+            <div key={index} className="mb-4">
+              <div className="flex items-center mb-2">
+                <span className="w-1/3 text-white">{city}</span>
                 <input
                   type="number"
-                  value={ct.city}
-                  onChange={(e) =>
-                    handleCityDeliveryFeeChange(ct.name, e.target.value)
-                  }
-                  className="border border-gray-300 p-2 rounded-md ml-4 w-32"
+                  value={cityFees[city]}
+                  onChange={(e) => handleFeeChange(city, e.target.value)}
+                  className="border border-gray-300 p-2 rounded-md w-1/3"
                 />
-                <button
-                  onClick={() => handleCityDelete(ct.name)}
-                  className="ml-4 text-red-500 hover:underline"
-                >
-                  Delete City
-                </button>
+              </div>
+              <div className="flex items-center mb-4">
+                <span className="w-1/3 text-white">Vehicles</span>
+                <input
+                  type="text"
+                  value={cityVehicles[city]?.replace(/["\\]/g, '').trim() || ""} 
 
-                {/* Vehicle Management for this City */}
-                <div className="ml-6">
-                  <input
-                    type="text"
-                    value={vehicle}
-                    onChange={(e) => setVehicle(e.target.value)}
-                    className="border border-gray-300 p-2 rounded-md mr-4"
-                    placeholder="Enter vehicle name"
-                  />
-                  <button
-                    onClick={() => handleVehicleAddToCity(ct.name)}
-                    className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600"
-                  >
-                    Add Vehicle
-                  </button>
-
-                  {/* List of Vehicles for this City */}
-                  <ul className="list-disc pl-6 mt-2">
-                    {(ct.vehicles || []).map((veh, idx) => (
-                      <li key={idx} className="mb-2">
-                        {veh}
-                        <button
-                          onClick={() => handleVehicleDelete(ct.name, veh)}
-                          className="ml-4 text-red-500 hover:underline"
-                        >
-                          Delete
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  onChange={(e) => handleVehicleChange(city, e.target.value)}
+                  className="border border-gray-300 p-2 rounded-md w-1/3"
+                  placeholder="e.g., Bikes, Vans"
+                />
+              </div>
+            </div>
+          ))}
+          <button
+            onClick={handleUpdateData}
+            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+          >
+            Update Data
+          </button>
         </div>
       )}
-
-      <button
-        onClick={handleUpdateSettings}
-        className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
-      >
-        Update Settings
-      </button>
     </div>
   );
 };
 
-export default EditDelivery;
+export default EditDeliveryFee;
