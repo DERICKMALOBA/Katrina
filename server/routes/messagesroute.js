@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db.js');
 router.get("/messageslist", (req, res) => {
-  const query = "SELECT * FROM chats";
+  const query = "SELECT DISTINCT email,name FROM chats";
   db.query(query, (err, results) => {
     if (err) {
       console.error("Error fetching messages:", err);
@@ -14,8 +14,8 @@ router.get("/messageslist", (req, res) => {
 router.post("/messagessend", (req, res) => {
   const { text, sender } = req.body;
  var admin=0;
-  const query = "INSERT INTO chats (name, customermsg,replied) VALUES (?,?,?)";
-  db.query(query, [sender, text,admin], (err, result) => {
+  const query = "INSERT INTO chats (email,name, customermsg,replied) VALUES (?,?,?,?)";
+  db.query(query, ["mateilimo1@gmail.com",sender, text,admin], (err, result) => {
     if (err) {
       console.error("Error inserting message:", err);
       return res.status(500).json({ error: "Error sending message" });
@@ -40,11 +40,11 @@ router.post("/reply", (req, res) => {
 
   });
 });
-router.get("/messageslist/:id", (req, res) => {
-  const { id } = req.params;
-  console.log(id);
-  const query = "SELECT*FROM chats WHERE id=?";
-  db.query(query,id, (err, result) => {
+router.get("/messageslist/:email", (req, res) => {
+  const { email } = req.params;
+  console.log(email);
+  const query = "SELECT*FROM chats WHERE email=?";
+  db.query(query,email, (err, result) => {
     if (err) {
       console.error("Error updating admin reply:", err);
       return res.status(500).json({ error: "Error replying to message" });

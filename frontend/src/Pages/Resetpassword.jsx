@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -10,30 +9,45 @@ import {
   signInFailure,
 } from '../Redux/UserSlice';
 
-function SignIn() {
-  const [formData, setFormData] = useState({});
+function ResetPassword() {
  useSelector((state) => state.user);
   const [loading,setLoading]=useState(false); 
+  const [newpassword,setNewpassword]=useState({});
+  const [confirmpassword,setConfirmpassword]=useState({});
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
+  const handlenew = (e) => {
+       setNewpassword(e.target.value);
   };
-
+  const handleconfirm = (e) => {
+    setConfirmpassword(e.target.value);
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(signInStart());
     setLoading(true);
+    const  form={new:newpassword,confirm:confirmpassword}
+    if(newpassword!=confirmpassword)
+    {
+        toast.error("Kindly ensure that new password and Confirm password match", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            style: { backgroundColor: 'red', color: 'white' }
+        });
+       return;  
+    }
     try {
-        const res = await fetch('/api/auth/signin', {
+        const res = await fetch('/api/auth/resetpassword', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(form),
         });
 
         const data = await res.json();
@@ -111,49 +125,34 @@ function SignIn() {
           maxWidth: '400px',
         }}
       >
-        <h1 className="text-4xl text-center font-bold text-blue-800 my-7">
-          Katrina Children Closets
+        <h1 className="text-2xl text-center font-bold text-blue-800 my-7">
+          Changing Password
         </h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
-            type="email"
-            placeholder="Email Address"
+            type="password"
+            placeholder="New password"
             className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
             id="email"
-            onChange={handleChange}
+            onChange={handlenew}
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Confirm password"
             className="w-full border p-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
             id="password"
-            onChange={handleChange}
+            onChange={handleconfirm}
           />
           <button
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-400 transition duration-300"
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? 'Resetting...' : 'Reset'}
           </button>
         </form>
-
-        <div className="mt-6 text-center">
-          <p className="text-blue-700">Don’t have an account?</p>
-          <Link to="/sign-up">
-            <span className="text-blue-600 font-medium hover:underline cursor-pointer">
-              Create an Account
-            </span><br/><br/>
-          </Link>
-          <Link to="/forgot">
-            <span className="text-blue-600 font-medium hover:underline cursor-pointer">
-              Forgot Password
-            </span>
-          </Link>
-        </div>
-        
       </div>
     </div>
   );
 }
 
-export default SignIn;
+export default ResetPassword;
