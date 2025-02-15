@@ -474,14 +474,14 @@ const CheckoutPage = () => {
     <span>Total Cost:</span>
       <span>
         Ksh{" "}
-        {parseFloat(totalPrice) + (parseFloat(formData?.deliveryFee) || 0).toLocaleString()}
+        {parseFloat(totalPrice) + (parseFloat(formData?.deliveryFee) || 0)}
       </span>
 </div>
     </div>
 
     {/* Complete Order Button */}
     <button
-      className="bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 w-full transition duration-200"
+      className=" bg-orange-500 text-white p-3 rounded-lg hover:bg-orange-700 w-full transition duration-200"
       onClick={handleSubmit}
     >
       Complete Order
