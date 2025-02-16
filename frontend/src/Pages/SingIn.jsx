@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../Redux/AuthSlice';
 import {
   signInStart,
   signInSuccess,
@@ -42,7 +43,7 @@ function SignIn() {
         if (!data.success || !data.user || !data.user.token || !data.user.role) {
             throw new Error(data.message || 'Invalid response from server');
         }
-
+        dispatch(setUser({ name: data.Name, email: data.Email, phone: data.Phone,role:data.Role }));
         // Store token and role in localStorage
         localStorage.setItem('accessToken', data.user.token);
         localStorage.setItem('userRole', data.user.role);

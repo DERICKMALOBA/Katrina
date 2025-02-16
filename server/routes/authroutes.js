@@ -78,10 +78,11 @@ router.post('/signin', (req, res) => {
       expiresIn: '1d',
     });
   
-
+  var ar=JSON.parse(JSON.stringify(results));
     res.status(200).json({
       success: true,
       user: { id: user.id, email: user.email, role: user.role, token },
+      Name:ar[0].name,Email:ar[0].email,Phone:ar[0].phone,Role:ar[0].role
     });
   });
 });

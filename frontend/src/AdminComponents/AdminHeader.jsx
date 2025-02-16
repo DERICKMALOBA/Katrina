@@ -1,9 +1,12 @@
 import { MessageCircle, Bell } from "lucide-react";
 import { useState, useEffect } from "react";
-
+import { Link } from "react-router-dom";
+import io from "socket.io-client";
+const socket = io("http://localhost:3000");
+import AdminMessagePanel from "../Pages/Adminmessages";
+import Sound from "../public/notify.m4a";
 const AdminProfile = () => {
   const [imageUrl, setImageUrl] = useState("/uploads/default-avatar.png"); // Default avatar URL
-
   // Fetch the current avatar from the backend
   useEffect(() => {
     const fetchAvatar = async () => {
@@ -20,7 +23,6 @@ const AdminProfile = () => {
 
     fetchAvatar();
   }, []); // This will only run once when the component is mounted
-
   // Handle image change from file picker
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -67,6 +69,17 @@ const AdminProfile = () => {
 };
 
 const AdmiHeader = () => {
+  const[total,setTotal]=useState("");
+  useEffect(() => {
+    socket.on("adminnotifications", (data) => {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const sound = new Audio(Sound);
+        const track = audioContext.createMediaElementSource(sound);
+        track.connect(audioContext.destination);
+        sound.play().catch(err => console.error("Audio error:", err));
+     setTotal(data.Total);
+    });
+  });
   return (
     <header className="flex items-center justify-between bg-transparent p-4 shadow-md">
       {/* Logo and Business Name */}
@@ -80,8 +93,14 @@ const AdmiHeader = () => {
       <div className="hidden md:flex items-center space-x-6">
         {/* Message Icon */}
         <div className="relative">
-          <MessageCircle size={24} className="text-white gap-3" />
-          {/* You can add a badge here if needed */}
+          <Link to="/adminmessages" element={<AdminMessagePanel/>}>
+          <MessageCircle size={24}  className="text-white gap-3" />
+          {total> 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
+            {total}
+          </span>
+        )}
+          </Link>
         </div>
 
         {/* Notification Icon */}
