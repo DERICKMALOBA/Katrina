@@ -1,5 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
+const blacklist = new Set();
 const bcrypt = require('bcryptjs');
 const db = require('../config/db.js');
 const nodemailer = require("nodemailer");
@@ -129,6 +130,17 @@ const transporter = nodemailer.createTransport({
   }
     }
   });
+});
+
+router.post("/logout", (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extract token from headers
+
+  if (!token) {
+    return res.status(400).json({ message: "No token provided" });
+  }
+
+  blacklist.add(token); // Add token to blacklist
+  res.json({ message: "Logged out successfully" });
 });
 
 

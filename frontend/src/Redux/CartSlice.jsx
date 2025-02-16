@@ -1,54 +1,86 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
+
+const calculateDiscountedPrice = (product) => {
+  if (!product || !product.price) return 0;
+
+  const discountPercentage = parseFloat(product.discount) || 0;
+  const originalPrice = parseFloat(product.price) || 0;
+  const discountAmount = (discountPercentage / 100) * originalPrice;
+  const discountedPrice = originalPrice - discountAmount;
+
+  return Math.round(discountedPrice * 100) / 100; 
+};
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    items: [], // Stores cart products
-    totalQuantity: 0, // Total items in cart
-    totalPrice: 0, // Total cart price
+    items: [],
+    totalQuantity: 0,
+    totalPrice: 0,
   },
   reducers: {
     addItem: (state, action) => {
-      const existingItem = state.items.find(item => item.id === action.payload.id);
+      const newItem = action.payload;
+      const existingItem = state.items.find((item) => item.id === newItem.id);
+      const discountedPrice = calculateDiscountedPrice(newItem);
+
       if (existingItem) {
-        existingItem.quantity += 1;
-      } else {
-        state.items.push({ ...action.payload, quantity: 1 });
-      }
-      state.totalQuantity += 1;
-      state.totalPrice += action.payload.price; // Update total price
-    },
-    removeItem: (state, action) => {
-      const existingItem = state.items.find(item => item.id === action.payload);
-      if (existingItem) {
-        if (existingItem.quantity > 1) {
-          existingItem.quantity -= 1;
-          state.totalPrice -= existingItem.price; // Subtract price of one item
+        if (existingItem.quantity < newItem.stock) {
+          existingItem.quantity++;
+          state.totalQuantity++;
+          state.totalPrice = Math.round((state.totalPrice + discountedPrice) * 100) / 100;
+          toast.success(`${newItem.name} added to cart!`);
         } else {
-          state.items = state.items.filter(item => item.id !== action.payload);
-          state.totalPrice -= existingItem.price * existingItem.quantity; // Remove item price
+          toast.error("Cannot add more than available stock!");
         }
-        state.totalQuantity -= 1;
+      } else {
+        if (newItem.stock > 0) {
+          state.items.push({
+            ...newItem,
+            quantity: 1,
+            discountedPrice,
+          });
+          state.totalQuantity++;
+          state.totalPrice = Math.round((state.totalPrice + discountedPrice) * 100) / 100;
+          toast.success(`${newItem.name} added to cart!`);
+        } else {
+          toast.error("This item is out of stock!");
+        }
       }
     },
-    removeProduct: (state, action) => {
-      const existingItem = state.items.find(item => item.id === action.payload);
+
+    removeItem: (state, action) => {
+      const id = action.payload;
+      const existingItem = state.items.find((item) => item.id === id);
+
       if (existingItem) {
-        state.totalQuantity -= existingItem.quantity; // Reduce total items count
-        state.totalPrice -= existingItem.price * existingItem.quantity; // Reduce total price
-        state.items = state.items.filter(item => item.id !== action.payload); // Remove product
+        state.totalQuantity--;
+        state.totalPrice = Math.round((state.totalPrice - existingItem.discountedPrice) * 100) / 100;
+
+        if (existingItem.quantity === 1) {
+          state.items = state.items.filter((item) => item.id !== id);
+          toast.info(`${existingItem.name} removed from cart.`);
+        } else {
+          existingItem.quantity--;
+          toast.info(`Reduced ${existingItem.name} quantity.`);
+        }
       }
     },
-    clearCart: (state) => {
-      state.items = [];
-      state.totalQuantity = 0;
-      state.totalPrice = 0;
+
+    removeProduct: (state, action) => {
+      const id = action.payload;
+      const existingItem = state.items.find((item) => item.id === id);
+
+      if (existingItem) {
+        state.totalQuantity -= existingItem.quantity;
+        state.totalPrice = Math.round((state.totalPrice - existingItem.discountedPrice * existingItem.quantity) * 100) / 100;
+        state.items = state.items.filter((item) => item.id !== id);
+        toast.warning(`${existingItem.name} removed from cart.`);
+      }
     },
   },
 });
 
-// Export actions
-export const { addItem, removeItem, removeProduct, clearCart } = cartSlice.actions;
-
-// Export reducer
+export const { addItem, removeItem, removeProduct } = cartSlice.actions;
 export default cartSlice.reducer;
