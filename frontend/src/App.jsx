@@ -50,7 +50,6 @@ import ResetPassword from "./Pages/Resetpassword";
 import Profile from "./Pages/test";
 
 
-
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -65,6 +64,8 @@ const Layout = ({ children }) => {
     "/offers",
     "/analytics",
     "/edit-delivery",
+    "/adminmessages",
+    "/message/:email",
   ];
 
   // Check if the current route is an admin route
@@ -138,6 +139,7 @@ function App() {
           <Route path="/products/bottoms" element={<Bottoms />} />
           <Route path="/checkout" element={<CheckoutForm />} />
           <Route path="/products/dressers" element={<Dressers />} />
+
           <Route path="/products/outer" element={<Outer/>} />
           <Route path="/products/sleep" element={<Sleep/>} />
           <Route path="/products/under" element={<Under/>} />
@@ -153,7 +155,18 @@ function App() {
 
           <Route path="/resetpassword" element={<ResetPassword/>}/>
           <Route path="/profile" element={<Profile/>}/>
-
+          <Route path="/products/outer" element={<Outer />} />
+          <Route path="/products/sleep" element={<Sleep />} />
+          <Route path="/products/under" element={<Under />} />
+          <Route path="/products/foot" element={<Foot />} />
+          <Route path="/products/accessories" element={<Accessories />} />
+          <Route path="/products/special" element={<Special />} />
+          <Route path="/products/sports" element={<Sports />} />
+          <Route path="/chats" element={<MessagePopup />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/forgot" element={<ForgotPassword />} />
+          <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/profile" element={<Profile />} />
 
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
@@ -162,6 +175,22 @@ function App() {
               element={
                 <AdminLayout>
                   <OverviewPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/adminmessages"
+              element={
+                <AdminLayout>
+                  <AdminMessagePanel />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/message/:email"
+              element={
+                <AdminLayout>
+                  <Admin />
                 </AdminLayout>
               }
             />
