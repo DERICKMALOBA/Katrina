@@ -18,7 +18,7 @@ import EditDelivery from "./AdminPages/EditDelivery";
 import SignIn from "./Pages/SingIn";
 import SignUp from "./Pages/SingUp";
 import Nav from "./components/Navbar";
-import Home from "./Pages/home";
+import Home from "./Pages/Home";
 import ProductList from "./Pages/ProductsListing";
 import ProductInfo from "./Pages/Productdetails";
 import ProductForm from "./Pages/submit";
@@ -44,8 +44,12 @@ import Cart from "./Pages/Cart";
 import AdminMessagePanel from "./Pages/Adminmessages";
 import Admin from "./Pages/Adminreply";
 import ForgotPassword from "./Pages/Forgotpassword";
+
 import ResetPassword from "./Pages/Resetpassword";
+
 import Profile from "./Pages/test";
+
+
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -135,6 +139,22 @@ function App() {
           <Route path="/products/bottoms" element={<Bottoms />} />
           <Route path="/checkout" element={<CheckoutForm />} />
           <Route path="/products/dressers" element={<Dressers />} />
+
+          <Route path="/products/outer" element={<Outer/>} />
+          <Route path="/products/sleep" element={<Sleep/>} />
+          <Route path="/products/under" element={<Under/>} />
+          <Route path="/products/foot" element={<Foot/>} />
+          <Route path="/products/accessories" element={<Accessories/>} />
+          <Route path="/products/special" element={<Special/>} />
+          <Route path="/products/sports" element={<Sports/>} />
+          <Route path="/chats" element={<MessagePopup/>} />
+          <Route path="/cart" element={<Cart/>} />
+          <Route path="/adminmessages" element={<AdminMessagePanel/>} />
+          <Route path="/message/:email" element={<Admin/>}/>
+          <Route path="/forgot" element={<ForgotPassword/>}/>
+
+          <Route path="/resetpassword" element={<ResetPassword/>}/>
+          <Route path="/profile" element={<Profile/>}/>
           <Route path="/products/outer" element={<Outer />} />
           <Route path="/products/sleep" element={<Sleep />} />
           <Route path="/products/under" element={<Under />} />
@@ -147,6 +167,7 @@ function App() {
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/profile" element={<Profile />} />
+
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route

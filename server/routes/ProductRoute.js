@@ -66,55 +66,64 @@ router.put('/edit-product/:id', (req, res) => {
 });
 
 router.get('/productslist', (req, res) => {
-    const query = 'SELECT * FROM products';
+    let { page = 1, limit = 12 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = (page - 1) * limit;
 
-    db.query(query, (err, results) => {
+    const query = `SELECT * FROM products LIMIT ? OFFSET ?`;
+    
+    db.query(query, [limit, offset], (err, results) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err });
 
-        if (results.length >= 1) {
-            let totalDiscountAmount = 0;
-
-            const productsWithDiscount = results.map((product) => {
-                let imageUrls = [];
-
-                try {
-                    if (product.image) {
-                        const parsedImage = JSON.parse(product.image);
-                        imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
-                    }
-                } catch (parseError) {
-                    console.error('Error parsing product image data:', parseError);
-                    imageUrls = [];
-                }
-
-                const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
-
-                // Calculate discount
-                const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
-                const originalPrice = parseFloat(product.price) || 0;
-                const discountAmount = (discountPercentage / 100) * originalPrice;
-                const discountedPrice = originalPrice - discountAmount;
-
-                totalDiscountAmount += discountAmount;
-
-                return {
-                    ...product,
-                    originalPrice: originalPrice.toFixed(2), // Keep original price
-                    discountedPrice: discountedPrice.toFixed(2), // Show price after discount
-                    discountAmount: discountAmount.toFixed(2), // Show how much was discounted
-                    imageUrls: fullImageUrls,
-                };
-            });
-
-            return res.json({
-                products: productsWithDiscount,
-                totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
-            });
+        if (results.length === 0) {
+            return res.json({ products: [], totalDiscountAmount: "0.00", page, limit });
         }
 
-        res.json({ products: [], totalDiscountAmount: "0.00" });
+        let totalDiscountAmount = 0;
+
+        const productsWithDiscount = results.map((product) => {
+            let imageUrls = [];
+
+            // ✅ Safe Image Parsing
+            try {
+                if (product.image) {
+                    imageUrls = JSON.parse(product.image);
+                    imageUrls = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
+                }
+            } catch (parseError) {
+                console.warn(`⚠️ Failed to parse image JSON for product ID ${product.id}:`, parseError);
+                imageUrls = [];
+            }
+
+            const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
+            // ✅ Optimized Discount Calculation
+            const discountPercentage = parseFloat(product.discount) || 0;
+            const originalPrice = parseFloat(product.price) || 0;
+            const discountAmount = (discountPercentage / 100) * originalPrice;
+            const discountedPrice = originalPrice - discountAmount;
+
+            totalDiscountAmount += discountAmount;
+
+            return {
+                ...product,
+                originalPrice: originalPrice.toFixed(2),
+                discountedPrice: discountedPrice.toFixed(2),
+                discountAmount: discountAmount.toFixed(2),
+                imageUrls: fullImageUrls,
+            };
+        });
+
+        res.json({
+            products: productsWithDiscount,
+            totalDiscountAmount: totalDiscountAmount.toFixed(2),
+            page,
+            limit,
+        });
     });
 });
+
 
 
 
@@ -880,4 +889,113 @@ router.get('/dressers', (req, res) => {
           res.json({casuals: [], totalDiscountAmount: "0.00" });
       });
   });
+
+
+
+ 
+
+
+
+router.get("/discount", (req, res) => {
+    const { discount } = req.query;
+
+    if (!discount || isNaN(discount)) {
+        return res.status(400).json({ message: "Invalid discount value" });
+    }
+
+    const query = "SELECT * FROM products WHERE discount >= ?";
+    const queryParams = [Number(discount)];
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+router.get("/price", (req, res) => {
+    const { minPrice, maxPrice } = req.query;
+    let query = "SELECT * FROM products WHERE 1=1";  
+    let queryParams = [];
+
+    if (minPrice && maxPrice) {
+        query += " AND price BETWEEN ? AND ?";
+        queryParams.push(Number(minPrice), Number(maxPrice));
+    } else if (minPrice) {
+        query += " AND price >= ?";
+        queryParams.push(Number(minPrice));
+    } else if (maxPrice) {
+        query += " AND price <= ?";
+        queryParams.push(Number(maxPrice));
+    }
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+
+router.get("/price-asc", (req, res) => {
+    const query = "SELECT * FROM products ORDER BY price ASC";
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching products:", err);
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
+        res.json(results);
+    });
+});
+
+router.get("/price-desc", (req, res) => {
+    const query = "SELECT * FROM products ORDER BY price DESC";
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching products:", err);
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
+        res.json(results);
+    });
+});
+
+
+
+router.get("/rating", (req, res) => {
+    const query = "SELECT * FROM products ORDER BY rating DESC"; // Highest rating first
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Database error: ", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+
+router.get("/newest", (req, res) => {
+    let query = "SELECT * FROM products ORDER BY created_at DESC";
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Database error: ", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+
+
+
+
+
+
 module.exports = router;
