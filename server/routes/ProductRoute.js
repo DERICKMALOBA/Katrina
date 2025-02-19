@@ -66,55 +66,64 @@ router.put('/edit-product/:id', (req, res) => {
 });
 
 router.get('/productslist', (req, res) => {
-    const query = 'SELECT * FROM products';
+    let { page = 1, limit = 12 } = req.query;
+    page = parseInt(page);
+    limit = parseInt(limit);
+    const offset = (page - 1) * limit;
 
-    db.query(query, (err, results) => {
+    const query = `SELECT * FROM products LIMIT ? OFFSET ?`;
+    
+    db.query(query, [limit, offset], (err, results) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err });
 
-        if (results.length >= 1) {
-            let totalDiscountAmount = 0;
-
-            const productsWithDiscount = results.map((product) => {
-                let imageUrls = [];
-
-                try {
-                    if (product.image) {
-                        const parsedImage = JSON.parse(product.image);
-                        imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
-                    }
-                } catch (parseError) {
-                    console.error('Error parsing product image data:', parseError);
-                    imageUrls = [];
-                }
-
-                const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
-
-                // Calculate discount
-                const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
-                const originalPrice = parseFloat(product.price) || 0;
-                const discountAmount = (discountPercentage / 100) * originalPrice;
-                const discountedPrice = originalPrice - discountAmount;
-
-                totalDiscountAmount += discountAmount;
-
-                return {
-                    ...product,
-                    originalPrice: originalPrice.toFixed(2), // Keep original price
-                    discountedPrice: discountedPrice.toFixed(2), // Show price after discount
-                    discountAmount: discountAmount.toFixed(2), // Show how much was discounted
-                    imageUrls: fullImageUrls,
-                };
-            });
-
-            return res.json({
-                products: productsWithDiscount,
-                totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
-            });
+        if (results.length === 0) {
+            return res.json({ products: [], totalDiscountAmount: "0.00", page, limit });
         }
 
-        res.json({ products: [], totalDiscountAmount: "0.00" });
+        let totalDiscountAmount = 0;
+
+        const productsWithDiscount = results.map((product) => {
+            let imageUrls = [];
+
+            // ✅ Safe Image Parsing
+            try {
+                if (product.image) {
+                    imageUrls = JSON.parse(product.image);
+                    imageUrls = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
+                }
+            } catch (parseError) {
+                console.warn(`⚠️ Failed to parse image JSON for product ID ${product.id}:`, parseError);
+                imageUrls = [];
+            }
+
+            const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
+            // ✅ Optimized Discount Calculation
+            const discountPercentage = parseFloat(product.discount) || 0;
+            const originalPrice = parseFloat(product.price) || 0;
+            const discountAmount = (discountPercentage / 100) * originalPrice;
+            const discountedPrice = originalPrice - discountAmount;
+
+            totalDiscountAmount += discountAmount;
+
+            return {
+                ...product,
+                originalPrice: originalPrice.toFixed(2),
+                discountedPrice: discountedPrice.toFixed(2),
+                discountAmount: discountAmount.toFixed(2),
+                imageUrls: fullImageUrls,
+            };
+        });
+
+        res.json({
+            products: productsWithDiscount,
+            totalDiscountAmount: totalDiscountAmount.toFixed(2),
+            page,
+            limit,
+        });
     });
 });
+
 
 
 
@@ -880,4 +889,11 @@ router.get('/dressers', (req, res) => {
           res.json({casuals: [], totalDiscountAmount: "0.00" });
       });
   });
+
+
+
+
+
+
+
 module.exports = router;

@@ -24,34 +24,34 @@ function Nav() {
         } sm:flex sm:items-center sm:justify-between sm:gap-10 sm:block`}
       >
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 sm:mt-0">
-          <Link to="/products/tops" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/tops" className="text-gray-700 font-medium text-sm sm:text-base">
             Tops
           </Link>
-          <Link to="/products/bottoms" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/bottoms" className="text-gray-700 font-semibold text-sm sm:text-base">
             Bottoms
           </Link>
-          <Link to="/products/dressers" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/dressers" className="text-gray-700 font-medium text-sm sm:text-base">
             Dressers
           </Link>
-          <Link to="/products/outer" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/outer" className="text-gray-700 font-medium text-sm sm:text-base">
             Outer Wear
           </Link>
-          <Link to="/products/sleep" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/sleep" className="text-gray-700 font-medium text-sm sm:text-base">
             Sleep Wear
           </Link>
-          <Link to="/products/under" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/under" className="text-gray-700 font-medium text-sm sm:text-base">
             Under Wear
           </Link>
-          <Link to="/products/foot" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/foot" className="text-gray-700 font-medium text-sm sm:text-base">
             Foot Wear
           </Link>
-          <Link to="/products/accessories" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/accessories" className="text-gray-700 font-medium text-sm sm:text-base">
             Accessories
           </Link>
-          <Link to="/products/special" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/special" className="text-gray-700 font-medium text-sm sm:text-base">
             Special Occasions
           </Link>
-          <Link to="/products/sports" className="text-customGray font-thin text-sm sm:text-base">
+          <Link to="/products/sports" className="text-gray-700 font-medium text-sm sm:text-base">
             SportsWear
           </Link>
         </div>

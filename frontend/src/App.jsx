@@ -18,7 +18,7 @@ import EditDelivery from "./AdminPages/EditDelivery";
 import SignIn from "./Pages/SingIn";
 import SignUp from "./Pages/SingUp";
 import Nav from "./components/Navbar";
-import Home from "./Pages/home";
+import Home from "./Pages/Home";
 import ProductList from "./Pages/ProductsListing";
 import ProductInfo from "./Pages/Productdetails";
 import ProductForm from "./Pages/submit";
@@ -44,11 +44,11 @@ import Cart from "./Pages/Cart";
 import AdminMessagePanel from "./Pages/Adminmessages";
 import Admin from "./Pages/Adminreply";
 import ForgotPassword from "./Pages/Forgotpassword";
-<<<<<<< HEAD
+
 import ResetPassword from "./Pages/Resetpassword";
-=======
+
 import Profile from "./Pages/test";
->>>>>>> 388461b6940c7923d87339ec0c095f428b6e2f0e
+
 
 
 // Component to conditionally render the layout
@@ -150,12 +150,11 @@ function App() {
           <Route path="/adminmessages" element={<AdminMessagePanel/>} />
           <Route path="/message/:email" element={<Admin/>}/>
           <Route path="/forgot" element={<ForgotPassword/>}/>
-<<<<<<< HEAD
+
           <Route path="/resetpassword" element={<ResetPassword/>}/>
-=======
           <Route path="/profile" element={<Profile/>}/>
 
->>>>>>> 388461b6940c7923d87339ec0c095f428b6e2f0e
+
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route
