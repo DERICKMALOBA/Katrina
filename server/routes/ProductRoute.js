@@ -892,6 +892,108 @@ router.get('/dressers', (req, res) => {
 
 
 
+ 
+
+
+
+router.get("/discount", (req, res) => {
+    const { discount } = req.query;
+
+    if (!discount || isNaN(discount)) {
+        return res.status(400).json({ message: "Invalid discount value" });
+    }
+
+    const query = "SELECT * FROM products WHERE discount >= ?";
+    const queryParams = [Number(discount)];
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+router.get("/price", (req, res) => {
+    const { minPrice, maxPrice } = req.query;
+    let query = "SELECT * FROM products WHERE 1=1";  
+    let queryParams = [];
+
+    if (minPrice && maxPrice) {
+        query += " AND price BETWEEN ? AND ?";
+        queryParams.push(Number(minPrice), Number(maxPrice));
+    } else if (minPrice) {
+        query += " AND price >= ?";
+        queryParams.push(Number(minPrice));
+    } else if (maxPrice) {
+        query += " AND price <= ?";
+        queryParams.push(Number(maxPrice));
+    }
+
+    db.query(query, queryParams, (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+
+router.get("/price-asc", (req, res) => {
+    const query = "SELECT * FROM products ORDER BY price ASC";
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching products:", err);
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
+        res.json(results);
+    });
+});
+
+router.get("/price-desc", (req, res) => {
+    const query = "SELECT * FROM products ORDER BY price DESC";
+    
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Error fetching products:", err);
+            return res.status(500).json({ message: "Internal Server Error" });
+        }
+        res.json(results);
+    });
+});
+
+
+
+router.get("/rating", (req, res) => {
+    const query = "SELECT * FROM products ORDER BY rating DESC"; // Highest rating first
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Database error: ", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+
+router.get("/newest", (req, res) => {
+    let query = "SELECT * FROM products ORDER BY created_at DESC";
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error("Database error: ", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+        res.json(results);
+    });
+});
+
+
+
 
 
 

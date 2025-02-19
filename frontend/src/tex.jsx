@@ -1,4 +1,44 @@
+ const fetchFilteredProducts = async () => {
+    try {
+        let apiUrl = "/api/products/productslist";
+        const queryParams = new URLSearchParams();
 
+        if (discount) {
+            apiUrl = "/api/products/discount";
+            queryParams.append("discount", discount);
+        } else if (size) {
+            apiUrl = "/api/products/size";
+            queryParams.append("size", size);
+        } else if (rating) {
+            apiUrl = "/api/products/rating";
+        } else if (priceRange.min || priceRange.max) {
+            apiUrl = "/api/products/price"; // Use price filtering route
+            if (priceRange.min) queryParams.append("minPrice", priceRange.min);
+            if (priceRange.max) queryParams.append("maxPrice", priceRange.max);
+        } else if (sortBy) {
+            apiUrl = "/api/products/pricedescasce";
+            queryParams.append("sortBy", sortBy);
+        }
+
+        const fullUrl = `${apiUrl}?${queryParams.toString()}`;
+        console.log("Fetching:", fullUrl);
+        const response = await fetch(fullUrl);
+        if (!response.ok) throw new Error("Failed to fetch products");
+
+        const data = await response.json();
+        setProducts(Array.isArray(data) ? data : data.products || []);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+    }
+};
+
+// Fetch products when triggerSearch changes
+useEffect(() => {
+    if (triggerSearch) {
+        fetchFilteredProducts();
+        setTriggerSearch(false); // Reset trigger
+    }
+}, [triggerSearch]);
 
 
 

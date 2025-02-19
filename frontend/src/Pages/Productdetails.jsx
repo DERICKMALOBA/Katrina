@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
 import { useParams, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FaStar, FaStarHalfAlt, FaRegStar, FaHeart } from "react-icons/fa"; // Rating stars
+import { FaStar, FaStarHalfAlt, FaHeart } from "react-icons/fa"; // Rating stars
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -87,6 +87,12 @@ export default function ProductDetail() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
       {/* Left Side - Product Info */}
       <div className="md:col-span-2 space-y-6">
+         {/* Display discount if greater than zero */}
+         {product.discount > 0 && (
+                <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+                  -{Math.round(product.discount)}% OFF
+                </span>
+              )}
         {/*  Product Image & Summary */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white shadow-lg rounded-lg p-6">
           {/* Image Slider */}
@@ -129,6 +135,11 @@ export default function ProductDetail() {
             </div>
 
             <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
+            {product.discount > 0 && (
+                <span className="absolute top-2  bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+                  -{Math.round(product.discount)}% OFF
+                </span>
+              )}
 
             {product.discount > 0 && (
               <div className="text-primaryBlack font-semibold text-sm mt-2">
@@ -151,22 +162,22 @@ export default function ProductDetail() {
             </p>
 
             {/* Rating Section */}
-            <div className="flex items-center space-x-2 mt-2">
-              {/* Render Rating Stars */}
-              {Array(5)
-                .fill()
-                .map((_, index) => (
-                  <span key={index}>
-                    {index < 4 ? (
+            <div className="flex items-center mt-2 mb-2">
+              {[...Array(5)].map((_, index) => (
+                <span key={index}>
+                  {product.rating > 0 ? (
+                    product.rating >= index + 1 ? (
                       <FaStar className="text-yellow-500" />
-                    ) : index === 4 && product.rating % 1 !== 0 ? (
+                    ) : product.rating > index && product.rating < index + 1 ? (
                       <FaStarHalfAlt className="text-yellow-500" />
                     ) : (
-                      <FaRegStar className="text-yellow-500" />
-                    )}
-                  </span>
-                ))}
-              <span className="text-gray-600">({product.rating}/5)</span>
+                      <FaStar className="text-gray-300" />
+                    )
+                  ) : (
+                    <FaStar className="text-gray-300" /> // Display gray stars if rating is 0
+                  )}
+                </span>
+              ))}
             </div>
 
             <button
@@ -175,7 +186,7 @@ export default function ProductDetail() {
               className={`px-4 py-2 ${
                 remainingStock === 0
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-blue-500 hover:bg-blue-700"
+                  : "bg-primaryOrange hover:bg-orange-600 pt-3"
               } text-white font-bold rounded`}
             >
               {remainingStock === 0 ? "Out of Stock" : "Add to Cart"}
