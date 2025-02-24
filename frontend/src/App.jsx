@@ -48,8 +48,12 @@ import ForgotPassword from "./Pages/Forgotpassword";
 import ResetPassword from "./Pages/Resetpassword";
 
 import Profile from "./Pages/test";
+<<<<<<< HEAD
 
 
+=======
+import NotificationsPage from "./Pages/notifications";
+>>>>>>> limo
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -66,6 +70,7 @@ const Layout = ({ children }) => {
     "/edit-delivery",
     "/adminmessages",
     "/message/:email",
+    "/notify"
   ];
 
   // Check if the current route is an admin route
@@ -183,6 +188,14 @@ function App() {
               element={
                 <AdminLayout>
                   <AdminMessagePanel />
+                </AdminLayout>
+              }
+            />
+               <Route
+              path="/notify"
+              element={
+                <AdminLayout>
+                  <NotificationsPage/>
                 </AdminLayout>
               }
             />

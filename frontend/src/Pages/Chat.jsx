@@ -1,7 +1,7 @@
 import { useState,useEffect} from "react";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:5000");
 const MessagePopup = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
