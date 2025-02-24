@@ -73,10 +73,8 @@ router.get('/productslist', (req, res) => {
 
         if (results.length >= 1) {
             let totalDiscountAmount = 0;
-
             const productsWithDiscount = results.map((product) => {
                 let imageUrls = [];
-
                 try {
                     if (product.image) {
                         const parsedImage = JSON.parse(product.image);
@@ -86,7 +84,6 @@ router.get('/productslist', (req, res) => {
                     console.error('Error parsing product image data:', parseError);
                     imageUrls = [];
                 }
-
                 const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
 
                 // Calculate discount

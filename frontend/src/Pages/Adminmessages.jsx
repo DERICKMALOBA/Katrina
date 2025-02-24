@@ -9,12 +9,6 @@ const AdminMessagePanel = () => {
       .then((data) => setMessages(data))
       .catch((err) => console.error("Error fetching messages:", err));
   }, []);
-  const unread=(a)=> {
-    var i=JSON.parse(JSON.stringify(messages))
-    var l=i[a].replied;
-     alert(l);
-     return l+"Unread messages";
-  }
   return (
     <div style={styles.container}>
       <h2 style={styles.heading}>Admin Messages</h2>
@@ -23,7 +17,7 @@ const AdminMessagePanel = () => {
           <div key={msg.id} style={styles.messageCard}>
             <p style={styles.userMessage}>
             <Link to={`/message/${msg.email}`}>
-              <strong>{msg.name} {unread(msg.id)}</strong>
+              <strong>{msg.name}  </strong>
               </Link>
             </p>
           </div>

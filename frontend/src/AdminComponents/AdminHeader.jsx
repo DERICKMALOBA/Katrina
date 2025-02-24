@@ -2,16 +2,17 @@ import { MessageCircle, Bell } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import io from "socket.io-client";
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:5000");
 import AdminMessagePanel from "../Pages/Adminmessages";
 import Sound from "../public/notify.m4a";
+import Stock from "../public/stock.mp3";
+import NotificationsPage from "../Pages/notifications";
 const AdminProfile = () => {
-  const [imageUrl, setImageUrl] = useState("/uploads/default-avatar.png"); // Default avatar URL
-  // Fetch the current avatar from the backend
+  const [imageUrl, setImageUrl] = useState("/uploads/default-avatar.png");
   useEffect(() => {
     const fetchAvatar = async () => {
       try {
-        const response = await fetch("/api/admin/get-avatar"); // Endpoint to get current avatar
+        const response = await fetch("/api/admin/get-avatar");
         const result = await response.json();
         if (result.avatarUrl) {
           setImageUrl(result.avatarUrl); // Set avatar URL if found
@@ -22,8 +23,7 @@ const AdminProfile = () => {
     };
 
     fetchAvatar();
-  }, []); // This will only run once when the component is mounted
-  // Handle image change from file picker
+  }, []);
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -49,7 +49,6 @@ const AdminProfile = () => {
 
   return (
     <div className="flex items-center space-x-2 gap-4">
-      {/* Avatar Image */}
       <input
         type="file"
         accept="image/*"
@@ -70,6 +69,7 @@ const AdminProfile = () => {
 
 const AdmiHeader = () => {
   const[total,setTotal]=useState("");
+  const[totall,setTotall]=useState('');
   useEffect(() => {
     socket.on("adminnotifications", (data) => {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -78,6 +78,16 @@ const AdmiHeader = () => {
         track.connect(audioContext.destination);
         sound.play().catch(err => console.error("Audio error:", err));
      setTotal(data.Total);
+    });
+  });
+  useEffect(() => {
+    socket.on("stocknotify", (data) => {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const sound = new Audio(Stock);
+        const track = audioContext.createMediaElementSource(sound);
+        track.connect(audioContext.destination);
+        sound.play().catch(err => console.error("Audio error:", err));
+     setTotall(data);
     });
   });
   return (
@@ -105,18 +115,20 @@ const AdmiHeader = () => {
 
         {/* Notification Icon */}
         <div className="relative">
+        <Link to="/notify" element={<NotificationsPage/>}>
           <Bell size={24} className="text-white gap-4" />
-          {/* You can add a badge here if needed */}
+          {totall> 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
+            {totall}
+          </span>
+        )}
+        </Link>
         </div>
-
-        {/* Admin Profile (Avatar, Admin Name) */}
         <div className="flex items-center space-x-2 gap-4">
           <AdminProfile />
           <span className="text-white hidden sm:block">Admin Name</span>
         </div>
       </div>
-
-      {/* Mobile version of Admin Profile (Avatar Only) */}
       <div className="md:hidden flex items-center space-x-4">
         <AdminProfile />
       </div>

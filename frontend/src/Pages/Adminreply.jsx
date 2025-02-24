@@ -2,7 +2,7 @@ import { useState,useEffect} from "react";
 import { useParams,} from "react-router-dom";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
-const socket = io("http://localhost:3000");
+const socket = io("http://localhost:5000");
 const Admin = () => {
   const [messages, setMessages] = useState([]);
   const user = useSelector((state) => state.auth.user);

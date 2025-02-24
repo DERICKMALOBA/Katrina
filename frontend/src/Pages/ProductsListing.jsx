@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
-
+import io from "socket.io-client";
+const socket = io("http://localhost:5000");
 export default function ProductList() {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
@@ -17,7 +18,10 @@ export default function ProductList() {
       [productId]: !prev[productId],
     }));
   };
-
+ // var x=({Name:"matei limo"});
+  var y=({Name:"matei limo"});
+  //socket.emit("checkstock",(x));
+  socket.emit("checknotify",(y));
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -36,10 +40,9 @@ export default function ProductList() {
       } finally {
         setLoading(false);
       }
-    };
+    }; 
     fetchProducts();
   }, []);
-
   if (loading) return <div className="text-center text-lg">Loading...</div>;
   if (error) return <div className="text-center text-red-500">Error: {error}</div>;
 
