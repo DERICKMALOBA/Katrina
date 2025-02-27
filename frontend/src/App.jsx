@@ -52,6 +52,13 @@ import ResetPassword from "./Pages/Resetpassword";
 import Profile from "./Pages/test";
 
 // Layout component
+
+
+
+import NotificationsPage from "./Pages/notifications";
+
+// Component to conditionally render the layout
+
 const Layout = ({ children }) => {
   const location = useLocation();
 
@@ -71,6 +78,7 @@ const Layout = ({ children }) => {
     "/edit-delivery",
     "/adminmessages",
     "/message/:email",
+    "/notify"
   ];
 
   const isExcludedRoute = excludedRoutes.includes(location.pathname);
@@ -152,6 +160,7 @@ function App() {
 
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+
             <Route path="/overview" element={<AdminLayout><OverviewPage /></AdminLayout>} />
             <Route path="/adminmessages" element={<AdminLayout><AdminMessagePanel /></AdminLayout>} />
             <Route path="/message/:email" element={<AdminLayout><Admin /></AdminLayout>} />
@@ -162,6 +171,95 @@ function App() {
             <Route path="/edit-delivery" element={<AdminLayout><EditDelivery /></AdminLayout>} />
             <Route path="/offers" element={<AdminLayout><OffersPage /></AdminLayout>} />
             <Route path="/analytics" element={<AdminLayout><AnalyticsPage /></AdminLayout>} />
+            <Route
+              path="/overview"
+              element={
+                <AdminLayout>
+                  <OverviewPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/adminmessages"
+              element={
+                <AdminLayout>
+                  <AdminMessagePanel />
+                </AdminLayout>
+              }
+            />
+               <Route
+              path="/notify"
+              element={
+                <AdminLayout>
+                  <NotificationsPage/>
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/message/:email"
+              element={
+                <AdminLayout>
+                  <Admin />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/products"
+              element={
+                <AdminLayout>
+                  <ProductPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/customers"
+              element={
+                <AdminLayout>
+                  <Customers />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/sales"
+              element={
+                <AdminLayout>
+                  <SalesPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <AdminLayout>
+                  <OrdersPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/edit-delivery"
+              element={
+                <AdminLayout>
+                  <EditDelivery />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/offers"
+              element={
+                <AdminLayout>
+                  <OffersPage />
+                </AdminLayout>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <AdminLayout>
+                  <AnalyticsPage />
+                </AdminLayout>
+              }
+            />
+
           </Route>
         </Routes>
       </Layout>

@@ -1,30 +1,36 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
-import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
-
+import io from "socket.io-client";
+const socket = io("http://localhost:5000");
 export default function ProductList() {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // Initialize navigate
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [wishlist, setWishlist] = useState({});
-  const [page, setPage] = useState(1);
-  const limit = 40; // Number of products per page
 
+  const toggleWishlist = (productId) => {
+    setWishlist((prev) => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
+  var y=({Name:"matei limo"});
+  socket.emit("checknotify",(y));
   useEffect(() => {
     const fetchProducts = async () => {
-      setLoading(true);
       try {
-        const response = await fetch(
-          `/api/products/productslist?page=${page}&limit=${limit}`
-        );
+        const response = await fetch("/api/products/productslist");
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
+        console.log("Fetched data:", data); // Debugging log
+
+        // Extract the products array from the response object
         setProducts(Array.isArray(data.products) ? data.products : []);
       } catch (err) {
         console.error("Fetch error:", err.message);
@@ -32,78 +38,107 @@ export default function ProductList() {
       } finally {
         setLoading(false);
       }
-    };
+    }; 
     fetchProducts();
-  }, [page]);
-
-  // Redirect to home page if no products
-  useEffect(() => {
-    if (!loading && products.length === 0) {
-      navigate("/"); // Redirect to home page
-    }
-  }, [products, loading, navigate]);
-
+  }, []);
   if (loading) return <div className="text-center text-lg">Loading...</div>;
-  if (error)
-    return <div className="text-center text-red-500">Error: {error}</div>;
+  if (error) return <div className="text-center text-red-500">Error: {error}</div>;
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-        {products.map((product) => (
-          <div
-            key={product.id || product._id}
-            className="relative bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
-          >
-            <Link
-              to={`/product/${product.id || product._id}`}
-              className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
+      {products.length === 0 ? (
+        <p className="text-center text-gray-600">No products available.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
+          {products.map((product) => (
+            <div
+              key={product.id || product._id}
+              className="relative bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
             >
-              {/* Display discount if greater than zero */}
+              {/* Product Image */}
+              <Link to={`/product/${product.id || product._id}`} className="block">
+                {product.imageUrls?.length > 0 ? (
+                  <img
+                    src={`http://localhost:5000${product.imageUrls[0]}`}
+                    alt={product.name}
+                    className="w-full h-40 object-cover rounded-lg"
+                  />
+                ) : (
+                  <img src="/default-image.jpg" alt="default" className="w-full h-40 object-cover rounded-lg" />
+                )}
+              </Link>
+
+              {/* Discount Price */}
               {product.discount > 0 && (
-                <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
-                  -{Math.round(product.discount)}% OFF
-                </span>
+                <div className="absolute top-2 right-2 bg-red-400 text-white text-sm font-semibold px-2 py-1 rounded-md">
+                  -{product.discount}% Off
+                </div>
               )}
 
-              {product.imageUrls?.length > 0 ? (
-                <img
-                  src={`http://localhost:5000${product.imageUrls[0]}`}
-                  alt={product.name}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
+              {/* Product Details */}
+              <div className="mt-2 relative">
+                {/* Product Name with Ellipsis */}
+                <h2 className="text-lg font-semibold truncate w-5/6">{product.name}</h2>
+
+                {/* Wishlist Icon */}
+                <button
+                  onClick={() => toggleWishlist(product.id || product._id)}
+                  className={`absolute  right-0 p-2  rounded-full transition-all duration-300 shadow-lg
+                    ${wishlist[product.id || product._id] ? "bg-primaryOrange text-white" : "border border-primaryOrange text-primaryOrange"}
+                    hover:shadow-primaryOrange/50`}
+                >
+                  <FaHeart />
+                </button>
+              </div>
+
+              {/* Price Display */}
+              {product.discount > 0 ? (
+                <div className="text-primaryBlack font-semibold text-sm mt-2">
+                  <span className="line-through text-gray-500">Kshs. {product.originalPrice}</span>{" "}
+                  Kshs. {product.discountedPrice}
+                </div>
               ) : (
-                <img
-                  src="/default-image.jpg"
-                  alt="default"
-                  className="w-full h-40 object-cover rounded-lg"
-                />
+                <p className="text-gray-600 font-semibold mt-1">Kshs. {product.price}</p>
               )}
-            </Link>
 
-            <div className="mt-2 relative">
-              <h2 className="text-lg font-semibold truncate w-5/6">
-                {product.name}
-              </h2>
-              <button
-                onClick={() =>
-                  setWishlist((prev) => ({
-                    ...prev,
-                    [product.id || product._id]:
-                      !prev[product.id || product._id],
-                  }))
-                }
-                className={`absolute  right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg
-                ${
-                  wishlist[product.id || product._id]
-                    ? "bg-primaryOrange text-white"
-                    : "border border-primaryOrange text-primaryOrange"
-                }
-                hover:shadow-primaryOrange/50`}
-              >
-                <FaHeart />
+              {/* Product Description */}
+
+              <p className="text-primaryOrange mt-1 line-clamp-2">
+  {product.stock <= 5 ? (
+    <span className="text-red-500 font-semibold"> {product.stock} {product.stock === 1 ? "unit" : "units"} left</span>
+  ) : (
+    <>{product.stock} units left</>
+  )}
+</p>
+
+
+     
+             
+
+              {/* Ratings */}
+              {product.rating && (
+                <div className="flex items-center mt-2">
+                  {[...Array(5)].map((_, index) => (
+                    <span key={index}>
+                      {product.rating >= index + 1 ? (
+                        <FaStar className="text-yellow-500" />
+                      ) : product.rating > index && product.rating < index + 1 ? (
+                        <FaStarHalfAlt className="text-yellow-500" />
+                      ) : (
+                        <FaStar className="text-gray-300" />
+                      )}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Add to Cart Button */}
+              <button  onClick={() => dispatch(addItem(product))}
+              className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
+                Add to Cart
               </button>
             </div>
+<<<<<<< HEAD
 
             {product.discount > 0 ? (
               <div className="text-primaryBlack font-semibold text-sm mt-2">
@@ -172,6 +207,12 @@ export default function ProductList() {
           Next
         </button>
       </div>
+=======
+          ))}
+        </div>
+      )}
+>>>>>>> b9dc61bbeb5766a9d5b1c8636a0ae3717fe03cfb
     </div>
+  
   );
 }
