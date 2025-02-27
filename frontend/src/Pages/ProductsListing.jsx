@@ -4,13 +4,16 @@ import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
 import io from "socket.io-client";
+
 const socket = io("http://localhost:5000");
+
 export default function ProductList() {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [wishlist, setWishlist] = useState({});
+  const [page, setPage] = useState(1); // Added pagination state
 
   const toggleWishlist = (productId) => {
     setWishlist((prev) => ({
@@ -18,8 +21,7 @@ export default function ProductList() {
       [productId]: !prev[productId],
     }));
   };
-  var y=({Name:"matei limo"});
-  socket.emit("checknotify",(y));
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -38,9 +40,11 @@ export default function ProductList() {
       } finally {
         setLoading(false);
       }
-    }; 
+    };
+
     fetchProducts();
   }, []);
+
   if (loading) return <div className="text-center text-lg">Loading...</div>;
   if (error) return <div className="text-center text-red-500">Error: {error}</div>;
 
@@ -83,7 +87,7 @@ export default function ProductList() {
                 {/* Wishlist Icon */}
                 <button
                   onClick={() => toggleWishlist(product.id || product._id)}
-                  className={`absolute  right-0 p-2  rounded-full transition-all duration-300 shadow-lg
+                  className={`absolute right-0 p-2 rounded-full transition-all duration-300 shadow-lg
                     ${wishlist[product.id || product._id] ? "bg-primaryOrange text-white" : "border border-primaryOrange text-primaryOrange"}
                     hover:shadow-primaryOrange/50`}
                 >
@@ -102,18 +106,13 @@ export default function ProductList() {
               )}
 
               {/* Product Description */}
-
               <p className="text-primaryOrange mt-1 line-clamp-2">
-  {product.stock <= 5 ? (
-    <span className="text-red-500 font-semibold"> {product.stock} {product.stock === 1 ? "unit" : "units"} left</span>
-  ) : (
-    <>{product.stock} units left</>
-  )}
-</p>
-
-
-     
-             
+                {product.stock <= 5 ? (
+                  <span className="text-red-500 font-semibold"> {product.stock} {product.stock === 1 ? "unit" : "units"} left</span>
+                ) : (
+                  <>{product.stock} units left</>
+                )}
+              </p>
 
               {/* Ratings */}
               {product.rating && (
@@ -133,62 +132,16 @@ export default function ProductList() {
               )}
 
               {/* Add to Cart Button */}
-              <button  onClick={() => dispatch(addItem(product))}
-              className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
+              <button
+                onClick={() => dispatch(addItem(product))}
+                className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
+              >
                 Add to Cart
               </button>
             </div>
-<<<<<<< HEAD
-
-            {product.discount > 0 ? (
-              <div className="text-primaryBlack font-semibold text-sm mt-2">
-                <span className="line-through text-gray-500">
-                  Kshs. {product.originalPrice}
-                </span>{" "}
-                Kshs. {product.discountedPrice}
-              </div>
-            ) : (
-              <p className="text-gray-600 font-semibold mt-1">
-                Kshs. {product.price}
-              </p>
-            )}
-
-            <p className="text-primaryOrange mt-1">
-              {product.stock <= 5 ? (
-                <span className="text-red-500 font-semibold">
-                  {product.stock} {product.stock === 1 ? "unit" : "units"} left
-                </span>
-              ) : (
-                <>{product.stock} units left</>
-              )}
-            </p>
-            <div className="flex items-center mt-2">
-              {[...Array(5)].map((_, index) => (
-                <span key={index}>
-                  {product.rating > 0 ? (
-                    product.rating >= index + 1 ? (
-                      <FaStar className="text-yellow-500" />
-                    ) : product.rating > index && product.rating < index + 1 ? (
-                      <FaStarHalfAlt className="text-yellow-500" />
-                    ) : (
-                      <FaStar className="text-gray-300" />
-                    )
-                  ) : (
-                    <FaStar className="text-gray-300" /> // Display gray stars if rating is 0
-                  )}
-                </span>
-              ))}
-            </div>
-
-            <button
-              onClick={() => dispatch(addItem(product))}
-              className="bg-purple text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
-            >
-              Add to Cart
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Pagination Controls */}
       <div className="flex justify-center mt-6">
@@ -207,12 +160,6 @@ export default function ProductList() {
           Next
         </button>
       </div>
-=======
-          ))}
-        </div>
-      )}
->>>>>>> b9dc61bbeb5766a9d5b1c8636a0ae3717fe03cfb
     </div>
-  
   );
 }
