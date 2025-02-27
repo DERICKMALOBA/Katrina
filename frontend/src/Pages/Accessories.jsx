@@ -80,8 +80,8 @@ export default function Accessories() {
                 <button
                   onClick={() => toggleWishlist(product.id || product._id)}
                   className={`absolute  right-0 p-2  rounded-full transition-all duration-300 shadow-lg
-                    ${wishlist[product.id || product._id] ? "bg-primaryOrange text-white" : "border border-primaryOrange text-primaryOrange"}
-                    hover:shadow-primaryOrange/50`}
+                    ${wishlist[product.id || product._id] ? "bg-purple-800 text-white" : "border border-primaryOrange text-primaryOrange"}
+                    hover:shadow-purple-600`}
                 >
                   <FaHeart />
                 </button>

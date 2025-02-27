@@ -13,6 +13,8 @@ const messageRoutes = require('./routes/messagesroute.js');
 const db = require('./config/db.js');
 const AdmiRrouter = require('./routes/adminavator.js');
 const deliverRouter = require('./routes/Delivery.js');
+const  mpesaRouter  = require('./routes/MpesaRoute.js');
+const checkoutRouter = require('./routes/checkoutRouter.js');
 
 // Load environment variables
 dotenv.config();
@@ -38,6 +40,8 @@ app.use('/api/orders', orderRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/admin', AdmiRrouter)
 app.use('/api/delivery', deliverRouter);
+app.use('/api', mpesaRouter)
+app.use('/api', checkoutRouter)
 // Test DB connecti
 
 app.use('/api/admin', AdmiRrouter)

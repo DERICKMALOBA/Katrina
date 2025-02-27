@@ -20,7 +20,7 @@ function Header() {
     }
   };
   return (
-    <header className="bg-primaryOrange sticky top-0 z-10 shadow-md">
+    <header className="bg-purple-800 sticky top-0 z-10 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3 gap-10">
         {/* Logo Section - Left */}
         <Link to='/'>
@@ -30,7 +30,7 @@ function Header() {
         </Link>
 
         {/* Search Input - Center */}
-        <div className="bg-slate-300 p-4 rounded-2xl flex items-center w-full max-w-md mx-auto">
+        <div className="bg-slate-300 size-10 p-4 rounded-2xl flex items-center w-full max-w-md mx-auto">
           <div className="relative w-full">
             <input 
               type="text" 
@@ -41,20 +41,20 @@ function Header() {
               onKeyDown={handleKeyPress}  // Trigger search on Enter key press
             />
             <FaSearch 
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600 text-2xl cursor-pointer"
+              className="absolute right-2 size-6 top-1/2 transform -translate-y-1/2 text-gray-600 text-2xl cursor-pointer"
               onClick={handleSearchClick} 
             />
           </div>
         </div>
-        <FaUserCircle size={30} color="gray" />
+        <FaUserCircle size={30} color="white" />
         {/* Links Section - Right */}
         <ul className="flex gap-6 items-center relative">
-      <li className="hover:opacity-70 active:text-green-500 transition duration-200">
+      <li className=" text-white  hover:opacity-70 active:text-white transition duration-200">
         <Link to="/">HELP?</Link>
       </li>
 
       <Link to="/cart" className="relative">
-        <FaShoppingCart size={28} className="text-gray-700 hover:text-green-600 transition duration-200" />
+        <FaShoppingCart size={28} className="text-white hover:text-green-600 transition duration-200" />
         
         {totalQuantity > 0 && (
           <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">

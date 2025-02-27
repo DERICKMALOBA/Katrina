@@ -126,7 +126,7 @@ export default function ProductDetail() {
                                   ${
                                     wishlist[product.id || product._id]
                                       ? "bg-primaryOrange text-white"
-                                      : "border border-primaryOrange text-primaryOrange"
+                                      : "border border-purple-800 text-purple-600"
                                   }
                                   hover:shadow-primaryOrange/50`}
               >
@@ -257,7 +257,7 @@ export default function ProductDetail() {
             rows="4"
             placeholder="Type your message..."
           ></textarea>
-          <button className="mt-4 bg-primaryGreen text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+          <button className="mt-4 bg-purple-800 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
             Send Message
           </button>
         </div>

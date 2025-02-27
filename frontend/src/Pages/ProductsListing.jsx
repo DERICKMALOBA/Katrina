@@ -147,7 +147,7 @@ export default function ProductList() {
 
             <button
               onClick={() => dispatch(addItem(product))}
-              className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
+              className="bg-purple text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
             >
               Add to Cart
             </button>
