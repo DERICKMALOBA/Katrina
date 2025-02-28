@@ -40,7 +40,7 @@ checkoutRouter.post("/checkout", async (req, res) => {
 
     // Insert order into database
     const sql = `
-      INSERT INTO delivery (
+      INSERT INTO checkout (
         firstName, lastName, phoneNumber, altPhoneNumber, address, county, city, 
         deliveryVehicle, deliveryFee, paymentMethod, mpesaNumber, totalPrice, totalAmount
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
