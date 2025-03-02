@@ -947,7 +947,30 @@ router.get("/discount", (req, res) => {
             console.error("Database error:", err);
             return res.status(500).json({ message: "Error fetching products", error: err });
         }
-        res.json(results);
+        const productsWithDiscount = results.map((product) => {
+            let imageUrls =[];
+
+            try {
+                if (product.image) {
+                    const parsedImage = JSON.parse(product.image);
+                    // Ensure imageUrls is always an array
+                    imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                }
+            } catch (parseError) {
+                console.error('Error parsing product image data:', parseError);
+                imageUrls = [];
+            }
+
+            const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+            return {
+                ...product,
+                imageUrls: fullImageUrls,
+            };
+        });
+        return res.json({
+          products: productsWithDiscount,
+   
+        });
     });
 });
 

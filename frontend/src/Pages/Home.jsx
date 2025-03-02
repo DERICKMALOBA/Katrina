@@ -168,7 +168,7 @@ const Home = () => {
               />
               <button
                 onClick={handlePriceFilterClick}
-                className="w-full bg-primaryOrange text-white py-2 rounded-md hover:bg-opacity-90 "
+                className="w-full bg-purple-800 text-white py-2 rounded-md hover:bg-opacity-90 "
               >
                 Apply
               </button>
@@ -276,10 +276,10 @@ const Home = () => {
                         className={`absolute  right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg
                 ${
                   wishlist[product.id || product._id]
-                    ? "bg-primaryOrange text-white"
-                    : "border border-primaryOrange text-primaryOrange"
+                    ? "bg-purple-800 text-purple"
+                    : "border border-purple-800 text-purple-800"
                 }
-                hover:shadow-primaryOrange/50`}
+                hover:shadow-purple-600`}
                       >
                         <FaHeart />
                       </button>
@@ -298,7 +298,7 @@ const Home = () => {
                       </p>
                     )}
 
-                    <p className="text-primaryOrange mt-1">
+                    <p className="text-purple-800 mt-1">
                       {product.stock <= 5 ? (
                         <span className="text-red-500 font-semibold">
                           {product.stock}{" "}
@@ -329,7 +329,7 @@ const Home = () => {
 
                     <button
                       onClick={() => dispatch(addItem(product))}
-                      className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
+                      className="bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
                     >
                       Add to Cart
                     </button>

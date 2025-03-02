@@ -156,7 +156,7 @@ export default function ProductDetail() {
                                   ${
                                     wishlist[product.id || product._id]
                                       ? "bg-primaryOrange text-white"
-                                      : "border border-primaryOrange text-primaryOrange"
+                                      : "border border-purple-800 text-purple-600"
                                   }
                                   hover:shadow-primaryOrange/50`}
               >
@@ -283,6 +283,7 @@ export default function ProductDetail() {
           <p className="text-gray-600 mb-4">
             Ask questions about this product:
           </p>
+<<<<<<< HEAD
     <div className="h-40 overflow-y-auto border p-2 rounded">
       {messages.map((msg) => {
         const Client = msg.email === user.email;
@@ -316,6 +317,16 @@ export default function ProductDetail() {
       </button>
     </form>
 </div>
+=======
+          <textarea
+            className="w-full p-2 border rounded-lg"
+            rows="4"
+            placeholder="Type your message..."
+          ></textarea>
+          <button className="mt-4 bg-purple-800 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+            Send Message
+          </button>
+>>>>>>> 8d156d236f14c07dad735a4f2d89ee0d16f4b96e
         </div>
       </div>
     </div>
