@@ -20,6 +20,10 @@ export default function ProductDetail() {
   const [wishlist, setWishlist] = useState({});
   const dispatch = useDispatch();
    var email=user.email;
+   socket.emit("register",email);
+   socket.on("usermessages",(data)=>{
+     setMessages(data);
+   });
   const toggleWishlist = (productId) => {
     setWishlist((prev) => ({
       ...prev,
@@ -38,10 +42,6 @@ export default function ProductDetail() {
    }
    else
    {
-    socket.emit("register",email);
-    socket.on("usermessages",(data)=>{
-      setMessages(data);
-    });
       e.preventDefault();
     if (!newmessage.trim()) return;
 
@@ -273,8 +273,6 @@ export default function ProductDetail() {
       </div>
 
       {/* Right Side - Delivery & Chat */}
-      <div className="space-y-6">
-        {/*  Delivery Section */}
 
         {/*  Chat Section */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-300">
@@ -283,7 +281,7 @@ export default function ProductDetail() {
           <p className="text-gray-600 mb-4">
             Ask questions about this product:
           </p>
-<<<<<<< HEAD
+
     <div className="h-40 overflow-y-auto border p-2 rounded">
       {messages.map((msg) => {
         const Client = msg.email === user.email;
@@ -317,18 +315,7 @@ export default function ProductDetail() {
       </button>
     </form>
 </div>
-=======
-          <textarea
-            className="w-full p-2 border rounded-lg"
-            rows="4"
-            placeholder="Type your message..."
-          ></textarea>
-          <button className="mt-4 bg-purple-800 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
-            Send Message
-          </button>
->>>>>>> 8d156d236f14c07dad735a4f2d89ee0d16f4b96e
         </div>
-      </div>
     </div>
   );
 }
