@@ -1,11 +1,14 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate,useLocation} from 'react-router-dom';
+import { useState,useEffect,useRef } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../Redux/AuthSlice';
 
 function SignUp() {
+  const location = useLocation();
+  const initialPage = useRef(location.pathname);
+  const [success, setSuccess] = useState(false);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
@@ -19,7 +22,11 @@ function SignUp() {
       [e.target.id]: e.target.value,
     });
   };
-
+  useEffect(() => {
+    if (success) {
+      navigate(initialPage.current); 
+    }
+  }, [success, navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -29,7 +36,10 @@ function SignUp() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-  
+      if(res.ok)
+      {
+        setSuccess(true);
+      }
       const data = await res.json();
       console.log(data);  // Check the structure of the response data
   
@@ -38,12 +48,12 @@ function SignUp() {
       }
   
       // Dispatch user data to Redux store
-      dispatch(setUser({ name: data.Name, email: data.Email, phone: data.Phone,role:data.Role }));
+      dispatch(setUser({ name: data.Name, email: data.Email, phone: data.Phone,role:data.Role}));
   
       navigate('/sign-in');
       setLoading(false);
       setError(null);
-  
+     console.log(error)
       toast.success('Registration successful!', {
         position: "top-right",
         autoClose: 5000,

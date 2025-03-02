@@ -77,6 +77,7 @@ router.get('/productslist', (req, res) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err });
        if (results.length === 0) {
             return res.json({ products: [], totalDiscountAmount: "0.00", page, limit });
+       }
         if (results.length >= 1) {
             let totalDiscountAmount = 0;
             const productsWithDiscount = results.map((product) => {

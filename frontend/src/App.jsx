@@ -48,12 +48,7 @@ import ForgotPassword from "./Pages/Forgotpassword";
 import ResetPassword from "./Pages/Resetpassword";
 
 import Profile from "./Pages/test";
-<<<<<<< HEAD
-
-
-=======
 import NotificationsPage from "./Pages/notifications";
->>>>>>> limo
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
