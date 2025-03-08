@@ -20,8 +20,6 @@ const Cart = () => {
           {/* Cart Items */}
           <div className="flex-1 bg-slate-100 rounded-lg">
             {cart.items.map((item) => {
-             
-
               return (
                 <div key={item.id} className="flex justify-between items-center border-b py-4">
                   {/* Left Section: Image, Name, Remove Button */}

@@ -22,7 +22,7 @@ function Footer() {
             <h2 className="text-2xl font-bold mb-4">Katrina Kid's Closet</h2>
             <h3 className="font-semibold">Need Help?</h3>
             <ul className="mt-2 space-y-2">
-              <li><a href="/chat" className="hover:text-green-400">Chat with Us</a></li>
+              <li><a href="/chats" className="hover:text-green-400">Chat with Us</a></li>
               <li><a href="/contact" className="hover:text-green-400">Contact Us</a></li>
               <li><a href="/help-center" className="hover:text-green-400">Help Center</a></li>
             </ul>

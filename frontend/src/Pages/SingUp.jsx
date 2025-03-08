@@ -49,7 +49,8 @@ function SignUp() {
   
       // Dispatch user data to Redux store
       dispatch(setUser({ name: data.Name, email: data.Email, phone: data.Phone,role:data.Role}));
-  
+      var em=data.Email;
+        localStorage.setItem("email",em)
       navigate('/sign-in');
       setLoading(false);
       setError(null);

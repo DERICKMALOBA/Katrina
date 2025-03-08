@@ -50,17 +50,9 @@ import Cart from "./Pages/Cart";
 import ForgotPassword from "./Pages/Forgotpassword";
 import ResetPassword from "./Pages/Resetpassword";
 import Profile from "./Pages/test";
-<<<<<<< HEAD
 import NotificationsPage from "./Pages/notifications";
-=======
 
 // Layout component
-
-
-
-import NotificationsPage from "./Pages/notifications";
-
->>>>>>> 8d156d236f14c07dad735a4f2d89ee0d16f4b96e
 // Component to conditionally render the layout
 
 const Layout = ({ children }) => {
