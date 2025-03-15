@@ -15,13 +15,13 @@ export default function ProductDetail() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [wishlist, setWishlist] = useState({});
   const dispatch = useDispatch();
-
   const toggleWishlist = (productId) => {
     setWishlist((prev) => ({
       ...prev,
       [productId]: !prev[productId],
     }));
   };
+ 
 
   const { id } = useParams();
   const location = useLocation();
@@ -243,8 +243,6 @@ export default function ProductDetail() {
       </div>
 
       {/* Right Side - Delivery & Chat */}
-      <div className="space-y-6">
-        {/*  Delivery Section */}
 
         {/*  Chat Section */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-300">
@@ -255,8 +253,7 @@ export default function ProductDetail() {
           <Link to="/chats" className="mt-4 bg-primaryGreen text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
             Send Message
           </Link>
-        </div>
-      </div>
+    </div>
     </div>
   );
-}
+  };
