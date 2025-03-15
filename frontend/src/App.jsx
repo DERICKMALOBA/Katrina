@@ -46,6 +46,7 @@ import ResetPassword from "./Pages/Resetpassword";
 
 import Profile from "./Pages/test";
 import NotificationsPage from "./Pages/notifications";
+import Footer from "./components/Footer";
 
 // import Navbar from "./components/CategoriesNav";
 
@@ -77,6 +78,7 @@ const Layout = ({ children }) => {
         <>
           <Header />
           <Nav />
+         
         </>
       )}
       {children}
@@ -166,6 +168,7 @@ function App() {
           {/* <Route path="/categories" element={<Navbar />} /> */}
 
           <Route path="/resetpassword" element={<ResetPassword />} />
+        
           <Route path="/profile" element={<Profile />} />
 
           {/* Admin Routes */}
@@ -260,7 +263,9 @@ function App() {
             />
           </Route>
         </Routes>
+        <Footer/>
       </Layout>
+      
     </Router>
   );
 }
