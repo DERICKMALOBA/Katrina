@@ -61,10 +61,10 @@ router.post('/signin', (req, res) => {
 
   const query = 'SELECT * FROM customers WHERE email = ?';
 
-  db.query(query, [email], async (err, results) => {
+  db.query(query, email, async (err, results) => {
     if (err) return res.status(500).json({ message: 'Database error', error: err });
 
-    if (results.length === 0) {
+    if (results.length ===0) {
       return res.status(404).json({ message: 'User not found' });
     }
 
@@ -83,7 +83,7 @@ router.post('/signin', (req, res) => {
     res.status(200).json({
       success: true,
       user: { id: user.id, email: user.email, role: user.role, token },
-      Name:ar[0].name,Email:ar[0].email,Phone:ar[0].phone,Role:ar[0].role
+      Name:ar[0].name,Email:ar[0].email,Phone:ar[0].phone,Role:ar[0].role,Token:token
     });
   });
 });

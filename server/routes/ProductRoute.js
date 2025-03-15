@@ -106,7 +106,46 @@ router.get('/productslist', (req, res) => {
 
         if (results.length === 0) {
             return res.json({ products: [], totalDiscountAmount: "0.00", page, limit });
+
         }
+        if (results.length >= 1) {
+            let totalDiscountAmount = 0;
+            const productsWithDiscount = results.map((product) => {
+                let imageUrls = [];
+                try {
+                    if (product.image) {
+                        const parsedImage = JSON.parse(product.image);
+                        imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                    }
+                } catch (parseError) {
+                    console.error('Error parsing product image data:', parseError);
+                    imageUrls = [];
+                }
+                const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
+                // Calculate discount
+                const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+                const originalPrice = parseFloat(product.price) || 0;
+                const discountAmount = (discountPercentage / 100) * originalPrice;
+                const discountedPrice = originalPrice - discountAmount;
+
+                totalDiscountAmount += discountAmount;
+
+                return {
+                    ...product,
+                    originalPrice: originalPrice.toFixed(2), // Keep original price
+                    discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                    discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                    imageUrls: fullImageUrls,
+                };
+            });
+
+            return res.json({
+                products: productsWithDiscount,
+                totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+            });
+       }
+
 
         let totalDiscountAmount = 0;
 

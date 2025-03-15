@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
+import { Link,useLocation} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState,useRef,useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,9 @@ import {
 } from '../Redux/UserSlice';
 
 function SignIn() {
+  const location = useLocation();
+  const initialPage = useRef(location.pathname);
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState({});
  useSelector((state) => state.user);
   const [loading,setLoading]=useState(false); 
@@ -23,7 +26,11 @@ function SignIn() {
       [e.target.id]: e.target.value,
     });
   };
-
+  useEffect(() => {
+    if (success) {
+      navigate(initialPage.current); 
+    }
+  }, [success, navigate]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(signInStart());
@@ -36,7 +43,11 @@ function SignIn() {
             },
             body: JSON.stringify(formData),
         });
-
+    if(res.ok)
+    {
+       setSuccess(true);
+    }
+    
         const data = await res.json();
         setLoading(false);
         // Check if the response is valid and contains token and role
@@ -44,6 +55,8 @@ function SignIn() {
             throw new Error(data.message || 'Invalid response from server');
         }
         dispatch(setUser({ name: data.Name, email: data.Email, phone: data.Phone,role:data.Role }));
+       var em=data.Email;
+        localStorage.setItem("email",em)
         // Store token and role in localStorage
         localStorage.setItem('accessToken', data.user.token);
         localStorage.setItem('userRole', data.user.role);

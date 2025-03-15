@@ -143,6 +143,7 @@ export default function ProductList() {
         </div>
       )}
 
+
       {/* Pagination Controls */}
       <div className="flex justify-center mt-6">
         <button
@@ -160,6 +161,8 @@ export default function ProductList() {
           Next
         </button>
       </div>
+
+
     </div>
   );
 }
