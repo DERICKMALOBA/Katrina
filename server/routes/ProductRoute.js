@@ -49,6 +49,32 @@ router.post('/add-product', upload.array('images', 10), (req, res) => {
     });
 });
 
+
+
+
+const processProducts = (products) => {
+    return products.map((product) => {
+        let imageUrls = [];
+
+        try {
+            if (product.image) {
+                const parsedImage = JSON.parse(product.image);
+                imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+            }
+        } catch (parseError) {
+            console.error("Error parsing product image data:", parseError);
+            imageUrls = [];
+        }
+
+        const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
+        return {
+            ...product,
+            imageUrls: fullImageUrls,
+        };
+    });
+};
+
 // Edit Product Route
 router.put('/edit-product/:id', (req, res) => {
     const { id } = req.params;
@@ -72,12 +98,16 @@ router.get('/productslist', (req, res) => {
     const offset = (page - 1) * limit;
 
     const query = `SELECT * FROM products LIMIT ? OFFSET ?`;
-    
+
     db.query(query, [limit, offset], (err, results) => {
-        if (err) return res.status(500).json({ message: 'Database error', error: err });
-       if (results.length === 0) {
+        if (err) {
+            return res.status(500).json({ message: 'Database error', error: err });
+        }
+
+        if (results.length === 0) {
             return res.json({ products: [], totalDiscountAmount: "0.00", page, limit });
-       }
+
+        }
         if (results.length >= 1) {
             let totalDiscountAmount = 0;
             const productsWithDiscount = results.map((product) => {
@@ -116,26 +146,27 @@ router.get('/productslist', (req, res) => {
             });
        }
 
+
         let totalDiscountAmount = 0;
 
         const productsWithDiscount = results.map((product) => {
             let imageUrls = [];
 
-            // ✅ Safe Image Parsing
+            // Safe Image Parsing
             try {
                 if (product.image) {
-                    imageUrls = JSON.parse(product.image);
-                    imageUrls = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
+                    const parsedImage = JSON.parse(product.image);
+                    imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
                 }
             } catch (parseError) {
-                console.warn(`⚠️ Failed to parse image JSON for product ID ${product.id}:`, parseError);
+                console.error('Error parsing product image data:', parseError);
                 imageUrls = [];
             }
 
             const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
 
-            // ✅ Optimized Discount Calculation
-            const discountPercentage = parseFloat(product.discount) || 0;
+            // Calculate discount
+            const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
             const originalPrice = parseFloat(product.price) || 0;
             const discountAmount = (discountPercentage / 100) * originalPrice;
             const discountedPrice = originalPrice - discountAmount;
@@ -144,16 +175,16 @@ router.get('/productslist', (req, res) => {
 
             return {
                 ...product,
-                originalPrice: originalPrice.toFixed(2),
-                discountedPrice: discountedPrice.toFixed(2),
-                discountAmount: discountAmount.toFixed(2),
+                originalPrice: originalPrice.toFixed(2), // Keep original price
+                discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                discountAmount: discountAmount.toFixed(2), // Show how much was discounted
                 imageUrls: fullImageUrls,
             };
         });
 
-        res.json({
+        return res.json({
             products: productsWithDiscount,
-            totalDiscountAmount: totalDiscountAmount.toFixed(2),
+            totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
             page,
             limit,
         });
@@ -917,8 +948,9 @@ router.get("/discount", (req, res) => {
             console.error("Database error:", err);
             return res.status(500).json({ message: "Error fetching products", error: err });
         }
-        const productsWithDiscount = results.map((product) => {
-            let imageUrls =[];
+
+        const processedProducts = results.map((product) => {
+            let imageUrls = [];
 
             try {
                 if (product.image) {
@@ -932,15 +964,14 @@ router.get("/discount", (req, res) => {
             }
 
             const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
             return {
                 ...product,
                 imageUrls: fullImageUrls,
             };
         });
-        return res.json({
-          products: productsWithDiscount,
-   
-        });
+
+        res.json(processedProducts);
     });
 });
 
@@ -959,13 +990,35 @@ router.get("/price", (req, res) => {
         query += " AND price <= ?";
         queryParams.push(Number(maxPrice));
     }
-
     db.query(query, queryParams, (err, results) => {
         if (err) {
             console.error("Database error:", err);
             return res.status(500).json({ message: "Error fetching products", error: err });
         }
-        res.json(results);
+
+        const processedProducts = results.map((product) => {
+            let imageUrls = [];
+
+            try {
+                if (product.image) {
+                    const parsedImage = JSON.parse(product.image);
+                    // Ensure imageUrls is always an array
+                    imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                }
+            } catch (parseError) {
+                console.error('Error parsing product image data:', parseError);
+                imageUrls = [];
+            }
+
+            const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
+            return {
+                ...product,
+                imageUrls: fullImageUrls,
+            };
+        });
+
+        res.json(processedProducts);
     });
 });
 
@@ -978,48 +1031,130 @@ router.get("/price-asc", (req, res) => {
             console.error("Error fetching products:", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
-        res.json(results);
+
+        const processedProducts = processProducts(results);
+        res.json(processedProducts);
     });
 });
 
+// Route for fetching products sorted by price (descending)
 router.get("/price-desc", (req, res) => {
     const query = "SELECT * FROM products ORDER BY price DESC";
-    
+
     db.query(query, (err, results) => {
         if (err) {
             console.error("Error fetching products:", err);
             return res.status(500).json({ message: "Internal Server Error" });
         }
-        res.json(results);
+
+        const processedProducts = processProducts(results);
+        res.json(processedProducts);
     });
 });
 
-
-
+// Route for fetching products sorted by rating (highest first)
 router.get("/rating", (req, res) => {
-    const query = "SELECT * FROM products ORDER BY rating DESC"; // Highest rating first
+    const query = "SELECT * FROM products ORDER BY ratings DESC";
 
     db.query(query, (err, results) => {
         if (err) {
-            console.error("Database error: ", err);
+            console.error("Database error:", err);
             return res.status(500).json({ message: "Error fetching products", error: err });
         }
-        res.json(results);
+
+        const processedProducts = processProducts(results);
+        res.json(processedProducts);
     });
 });
 
-
+// Route for fetching newest products (by created_at)
 router.get("/newest", (req, res) => {
-    let query = "SELECT * FROM products ORDER BY created_at DESC";
+    const query = "SELECT * FROM products ORDER BY created_at DESC";
 
     db.query(query, (err, results) => {
         if (err) {
-            console.error("Database error: ", err);
+            console.error("Database error:", err);
             return res.status(500).json({ message: "Error fetching products", error: err });
         }
-        res.json(results);
+
+        const processedProducts = processProducts(results);
+        res.json(processedProducts);
     });
 });
+
+
+router.get("/size", (req, res) => {
+    const { size } = req.query; // Get the size from query parameters
+
+    if (!size) {
+        return res.status(400).json({ message: "Size parameter is required" });
+    }
+
+    const query = "SELECT * FROM products WHERE size = ?";
+    
+    db.query(query, [size], (err, results) => {
+        if (err) {
+            console.error("Database error:", err);
+            return res.status(500).json({ message: "Error fetching products", error: err });
+        }
+
+        // Process images (if stored as JSON in DB)
+        const processedProducts = results.map((product) => {
+            let imageUrls = [];
+            try {
+                if (product.image) {
+                    const parsedImage = JSON.parse(product.image);
+                    imageUrls = Array.isArray(parsedImage) ? parsedImage : [parsedImage];
+                }
+            } catch (parseError) {
+                console.error("Error parsing product image data:", parseError);
+                imageUrls = [];
+            }
+
+            return {
+                ...product,
+                imageUrls: imageUrls.map((image) => `/uploads/${image}`),
+            };
+        });
+
+        res.json(processedProducts);
+    });
+});
+
+
+
+router.post("/product/:id/review", async (req, res) => {
+    const { id } = req.params;
+    const { rating, review } = req.body;
+  
+    if (!rating || !review || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: "Invalid rating or review" });
+    }
+  
+    try {
+      // Fetch the current reviews
+      const [product] = await db.promise().query("SELECT reviews FROM products WHERE id = ?", [id]);
+  
+      if (!product.length) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      let existingReviews = product[0].reviews ? JSON.parse(product[0].reviews) : [];
+  
+      // Add new review
+      const newReview = { rating, review, date: new Date().toISOString() };
+      existingReviews.push(newReview);
+  
+      // Update the database
+      await db.promise().query("UPDATE products SET reviews = ? WHERE id = ?", [JSON.stringify(existingReviews), id]);
+  
+      res.status(201).json({ message: "Review added successfully", reviews: existingReviews });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
 
 
 

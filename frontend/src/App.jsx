@@ -46,6 +46,10 @@ import ResetPassword from "./Pages/Resetpassword";
 
 import Profile from "./Pages/test";
 import NotificationsPage from "./Pages/notifications";
+
+// import Navbar from "./components/CategoriesNav";
+
+
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -159,6 +163,8 @@ function App() {
           <Route path="/chats" element={<MessagePopup />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/forgot" element={<ForgotPassword />} />
+          {/* <Route path="/categories" element={<Navbar />} /> */}
+
           <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/profile" element={<Profile />} />
 

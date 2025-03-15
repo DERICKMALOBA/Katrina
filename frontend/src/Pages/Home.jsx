@@ -201,10 +201,22 @@ const Home = () => {
               onChange={(e) => setSize(e.target.value)}
             >
               <option value="">Select Size</option>
-              <option value="xl">XL</option>
-              <option value="xxl">XXL</option>
-              <option value="2_years">2 Years</option>
-              <option value="3_years">3 Years</option>
+              <option value="1 year">1 year</option>
+              <option value="2 years">2 Years</option>
+              <option value="3 years">3 Years</option>
+              <option value="4 years">4 Years</option>
+              <option value="5 years">5 year</option>
+              <option value="6 years">6 Years</option>
+              <option value="7 years">7 Years</option>
+              <option value="8 years">8 Years</option>
+              <option value="9 years">9 year</option>
+              <option value="10 years">10 Years</option>
+              <option value="11 years">11 Years</option>
+              <option value="12 years">12 Years</option>
+              <option value="13 years">13 year</option>
+              <option value="14 years">14 Years</option>
+              <option value="15 years">15 Years</option>
+              <option value="16 years">16 Years</option>
             </select>
           </div>
         </aside>
@@ -311,8 +323,8 @@ const Home = () => {
                     <div className="flex items-center mt-2">
                       {[...Array(5)].map((_, index) => (
                         <span key={index}>
-                          {product.rating > 0 ? (
-                            product.rating >= index + 1 ? (
+                          {product.ratings > 0 ? (
+                            product.ratings >= index + 1 ? (
                               <FaStar className="text-yellow-500" />
                             ) : product.rating > index &&
                               product.rating < index + 1 ? (

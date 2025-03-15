@@ -4,13 +4,16 @@ import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
 import io from "socket.io-client";
+
 const socket = io("http://localhost:5000");
+
 export default function ProductList() {
   const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [wishlist, setWishlist] = useState({});
+  const [page, setPage] = useState(1); // Added pagination state
 
   const toggleWishlist = (productId) => {
     setWishlist((prev) => ({
@@ -18,8 +21,7 @@ export default function ProductList() {
       [productId]: !prev[productId],
     }));
   };
-  var y=({Name:"matei limo"});
-  socket.emit("checknotify",(y));
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -38,9 +40,11 @@ export default function ProductList() {
       } finally {
         setLoading(false);
       }
-    }; 
+    };
+
     fetchProducts();
   }, []);
+
   if (loading) return <div className="text-center text-lg">Loading...</div>;
   if (error) return <div className="text-center text-red-500">Error: {error}</div>;
 
@@ -83,7 +87,7 @@ export default function ProductList() {
                 {/* Wishlist Icon */}
                 <button
                   onClick={() => toggleWishlist(product.id || product._id)}
-                  className={`absolute  right-0 p-2  rounded-full transition-all duration-300 shadow-lg
+                  className={`absolute right-0 p-2 rounded-full transition-all duration-300 shadow-lg
                     ${wishlist[product.id || product._id] ? "bg-primaryOrange text-white" : "border border-primaryOrange text-primaryOrange"}
                     hover:shadow-primaryOrange/50`}
                 >
@@ -102,18 +106,13 @@ export default function ProductList() {
               )}
 
               {/* Product Description */}
-
               <p className="text-primaryOrange mt-1 line-clamp-2">
-  {product.stock <= 5 ? (
-    <span className="text-red-500 font-semibold"> {product.stock} {product.stock === 1 ? "unit" : "units"} left</span>
-  ) : (
-    <>{product.stock} units left</>
-  )}
-</p>
-
-
-     
-             
+                {product.stock <= 5 ? (
+                  <span className="text-red-500 font-semibold"> {product.stock} {product.stock === 1 ? "unit" : "units"} left</span>
+                ) : (
+                  <>{product.stock} units left</>
+                )}
+              </p>
 
               {/* Ratings */}
               {product.rating && (
@@ -133,15 +132,37 @@ export default function ProductList() {
               )}
 
               {/* Add to Cart Button */}
-              <button  onClick={() => dispatch(addItem(product))}
-              className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
+              <button
+                onClick={() => dispatch(addItem(product))}
+                className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
+              >
                 Add to Cart
               </button>
             </div>
           ))}
         </div>
       )}
+
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center mt-6">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+          className="px-4 py-2 bg-gray-300 rounded-lg mr-2"
+        >
+          Prev
+        </button>
+        <span className="px-4 py-2">Page {page}</span>
+        <button
+          onClick={() => setPage(page + 1)}
+          className="px-4 py-2 bg-gray-300 rounded-lg ml-2"
+        >
+          Next
+        </button>
+      </div>
+
+
     </div>
-  
   );
 }
