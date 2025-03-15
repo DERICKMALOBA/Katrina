@@ -1,24 +1,24 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaStar, FaStarHalfAlt, FaHeart } from "react-icons/fa";
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import MessagePopup from './Chat'; // Adjust the path as necessary
 
 export default function ProductDetail() {
   const cart = useSelector((state) => state.cart);
-
   const [selectedImage, setSelectedImage] = useState(null);
   const [wishlist, setWishlist] = useState({});
   const dispatch = useDispatch();
-
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
+  const [isChatVisible, setIsChatVisible] = useState(false); // State to control chat visibility
 
   const toggleWishlist = (productId) => {
     setWishlist((prev) => ({
@@ -311,11 +311,17 @@ export default function ProductDetail() {
           <p className="text-gray-600 mb-4">
             Ask questions about this product:
           </p>
-          <Link to="/chats" className="mt-4 bg-primaryGreen text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+          <button 
+            onClick={() => setIsChatVisible(!isChatVisible)} 
+            className="mt-4 bg-primaryGreen text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+          >
             Send Message
-          </Link>
+          </button>
         </div>
       </div>
+
+      {/* Chat Popup */}
+      {isChatVisible && <MessagePopup />}
     </div>
   );
 }

@@ -687,3 +687,202 @@ export default function Nav() {
     </div>
   );
 }
+
+
+
+
+
+import { useState, useEffect } from "react";
+import MpesaPayment from "./Mpesa";
+import { useSelector } from "react-redux";
+
+const CheckoutPage = () => {
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
+
+  const [selectedCounty, setSelectedCounty] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [customerDetailsCleared, setCustomerDetailsCleared] = useState(false);
+  const [deliveryDetailsCleared, setDeliveryDetailsCleared] = useState(false);
+  const [paymentCleared, setPaymentCleared] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    altPhoneNumber: "",
+    address: "",
+    county: "",
+    city: "",
+    deliveryVehicle: "",
+    deliveryFee: "",
+    paymentMethod: "",
+    mpesaNumber: "",
+  });
+
+  // ... (other functions remain unchanged)
+
+  return (
+    <div className="mx-auto p-6 bg-gray-100 rounded-lg shadow-md space-y-6">
+      {/* Flex container for responsive layout */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Column: Customer Details, Delivery Details, Payment Details */}
+        <div className="w-full md:w-3/4 space-y-6">
+          {/* Customer Details */}
+          <div className={`p-4 border rounded-lg ${customerDetailsCleared ? "bg-green-100" : "bg-white"}`}>
+            <h1 className="text-xl font-semibold text-gray-800">Customer Details</h1>
+            {/* ... (Customer Details content) */}
+          </div>
+
+          {/* Delivery Details */}
+          {customerDetailsCleared && (
+            <div className={`p-4 border rounded-lg ${deliveryDetailsCleared ? "bg-green-100" : "bg-white"}`}>
+              <h1 className="text-xl font-semibold text-gray-800">Delivery Details</h1>
+              {/* ... (Delivery Details content) */}
+            </div>
+          )}
+
+          {/* Payment Details */}
+          {deliveryDetailsCleared && (
+            <div className={`p-4 border rounded-lg ${paymentCleared ? "bg-green-100" : "bg-white"}`}>
+              <h1 className="text-xl font-semibold text-gray-800">Payment Details</h1>
+              {/* ... (Payment Details content) */}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Order Summary */}
+        <div className="w-full md:w-1/4">
+          <div className="p-4 border rounded-lg bg-white shadow-md">
+            <h3 className="text-xl font-semibold">Order Summary</h3>
+            <div className="bg-white shadow-md rounded-lg p-4 mt-4">
+              <div className="space-y-4">
+                {/* Item Total */}
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-semibold text-gray-700">Item Total:</span>
+                  <span className="text-gray-900">Ksh {parseFloat(totalPrice) || 0}</span>
+                </div>
+
+                {/* Delivery Fee */}
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-semibold text-gray-700">Delivery Fee:</span>
+                  <span className="text-gray-900">Ksh {parseFloat(formData?.deliveryFee) || 0}</span>
+                </div>
+
+                {/* Total Cost */}
+                <div className="flex justify-between text-lg font-semibold text-gray-900">
+                  <div className="mt-4 font-bold text-lg">
+                    <span>Total Cost:</span>
+                    <span>
+                      Ksh{" "}
+                      {parseFloat(totalPrice) + (parseFloat(formData?.deliveryFee) || 0)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Complete Order Button */}
+                <button
+                  className="bg-purple-800 text-white p-3 rounded-lg hover:bg-purple-700 w-full transition duration-200"
+                  onClick={handleSubmit}
+                >
+                  Complete Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { useState } from "react";
+import { FaPaperPlane } from "react-icons/fa"; // Import the send icon
+import { IoClose } from "react-icons/io5"; // Import the close icon
+
+export default function ChatComponent({ user }) {
+  const [messages, setMessages] = useState([
+    { id: 1, msg: "Hello!", email: "user1@example.com" },
+    { id: 2, msg: "Hi there!", email: "user2@example.com" },
+  ]);
+  const [newMessage, setNewMessage] = useState("");
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (newMessage.trim()) {
+      setMessages([
+        ...messages,
+        { id: messages.length + 1, msg: newMessage, email: user.email },
+      ]);
+      setNewMessage("");
+    }
+  };
+
+  return (
+    <div className="fixed bottom-10 right-10 w-80 bg-white shadow-2xl rounded-lg overflow-hidden">
+      {/* Chat Header */}
+      <div className="flex justify-between items-center bg-blue-500 text-white p-4">
+        <h2 className="text-lg font-bold">Messages</h2>
+        <button
+          onClick={() => console.log("Close chat")} // Add close functionality
+          className="hover:bg-blue-600 p-1 rounded-full"
+        >
+          <IoClose className="text-xl" />
+        </button>
+      </div>
+
+      {/* Chat Messages */}
+      <div className="h-60 overflow-y-auto p-4 bg-gray-50 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-100">
+        {messages.map((msg) => {
+          const isSender = msg.email === user.email;
+
+          return (
+            <div
+              key={msg.id}
+              className={`flex ${isSender ? "justify-end" : "justify-start"} mb-3`}
+            >
+              <div
+                className={`p-3 rounded-lg max-w-[70%] ${
+                  isSender
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
+              >
+                {msg.msg}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Message Input */}
+      <form onSubmit={sendMessage} className="flex items-center p-4 border-t">
+        <input
+          type="text"
+          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Type a message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="p-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
+        >
+          <FaPaperPlane className="text-lg" />
+        </button>
+      </form>
+    </div>
+  );
+}

@@ -1125,9 +1125,9 @@ router.get("/size", (req, res) => {
 
 router.post("/product/:id/review", async (req, res) => {
     const { id } = req.params;
-    const { rating, review } = req.body;
+    const { ratings, reviews } = req.body;
   
-    if (!rating || !review || rating < 1 || rating > 5) {
+    if (!ratings || !reviews || ratings < 1 || ratings > 5) {
       return res.status(400).json({ message: "Invalid rating or review" });
     }
   

@@ -41,19 +41,15 @@ import Cart from "./Pages/Cart";
 import AdminMessagePanel from "./Pages/Adminmessages";
 import Admin from "./Pages/Adminreply";
 import ForgotPassword from "./Pages/Forgotpassword";
-
 import ResetPassword from "./Pages/Resetpassword";
-
 import Profile from "./Pages/test";
 import NotificationsPage from "./Pages/notifications";
 import Footer from "./components/Footer";
 
-// import Navbar from "./components/CategoriesNav";
-
-
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
+  
   // List of admin routes
   const adminRoutes = [
     "/overview",
@@ -69,19 +65,33 @@ const Layout = ({ children }) => {
     "/notify"
   ];
 
-  // Check if the current route is an admin route
-  const isAdminRoute = adminRoutes.includes(location.pathname);
+  // Routes where Footer should not be displayed
+  const noFooterRoutes = ["/sign-in", "/sign-up", ...adminRoutes];
+
+  // Routes where Nav should not be displayed
+  const noNavRoutes = ["/checkout", "/cart", "/profile"];
+
+  // Check if the current route is in the noFooterRoutes list
+  const shouldDisplayFooter = !noFooterRoutes.includes(location.pathname);
+
+  // Check if the current route is in the noNavRoutes list
+  const shouldDisplayNav = !noNavRoutes.includes(location.pathname);
+
+  // Check if the current route is NOT an admin route
+  const shouldDisplayHeader = !adminRoutes.includes(location.pathname);
+
   return (
     <>
-      {/* Show Header and Nav only if NOT on an admin route */}
-      {!isAdminRoute && (
-        <>
-          <Header />
-          <Nav />
-         
-        </>
-      )}
+      {/* Show Header only if NOT on an admin route */}
+      {shouldDisplayHeader && <Header />}
+
+      {/* Show Nav only if NOT on a noNavRoutes route and NOT on an admin route */}
+      {shouldDisplayNav && !adminRoutes.includes(location.pathname) && <Nav />}
+
       {children}
+
+      {/* Show Footer only if NOT on a noFooterRoutes route */}
+      {shouldDisplayFooter && <Footer />}
     </>
   );
 };
@@ -139,22 +149,6 @@ function App() {
           <Route path="/products/bottoms" element={<Bottoms />} />
           <Route path="/checkout" element={<CheckoutForm />} />
           <Route path="/products/dressers" element={<Dressers />} />
-
-          <Route path="/products/outer" element={<Outer/>} />
-          <Route path="/products/sleep" element={<Sleep/>} />
-          <Route path="/products/under" element={<Under/>} />
-          <Route path="/products/foot" element={<Foot/>} />
-          <Route path="/products/accessories" element={<Accessories/>} />
-          <Route path="/products/special" element={<Special/>} />
-          <Route path="/products/sports" element={<Sports/>} />
-          <Route path="/chats" element={<MessagePopup/>} />
-          <Route path="/cart" element={<Cart/>} />
-          <Route path="/adminmessages" element={<AdminMessagePanel/>} />
-          <Route path="/message/:email" element={<Admin/>}/>
-          <Route path="/forgot" element={<ForgotPassword/>}/>
-
-          <Route path="/resetpassword" element={<ResetPassword/>}/>
-          <Route path="/profile" element={<Profile/>}/>
           <Route path="/products/outer" element={<Outer />} />
           <Route path="/products/sleep" element={<Sleep />} />
           <Route path="/products/under" element={<Under />} />
@@ -164,11 +158,10 @@ function App() {
           <Route path="/products/sports" element={<Sports />} />
           <Route path="/chats" element={<MessagePopup />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/adminmessages" element={<AdminMessagePanel />} />
+          <Route path="/message/:email" element={<Admin />} />
           <Route path="/forgot" element={<ForgotPassword />} />
-          {/* <Route path="/categories" element={<Navbar />} /> */}
-
           <Route path="/resetpassword" element={<ResetPassword />} />
-        
           <Route path="/profile" element={<Profile />} />
 
           {/* Admin Routes */}
@@ -189,11 +182,11 @@ function App() {
                 </AdminLayout>
               }
             />
-               <Route
+            <Route
               path="/notify"
               element={
                 <AdminLayout>
-                  <NotificationsPage/>
+                  <NotificationsPage />
                 </AdminLayout>
               }
             />
@@ -263,9 +256,7 @@ function App() {
             />
           </Route>
         </Routes>
-        <Footer/>
       </Layout>
-      
     </Router>
   );
 }

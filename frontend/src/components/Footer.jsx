@@ -32,13 +32,13 @@ function Footer() {
           <div className="flex flex-col items-center">
             <h2 className="text-lg font-bold mb-2">Subscribe to Our Newsletter</h2>
             <p className="text-sm mb-4">Stay updated with the latest news, offers, and discounts</p>
-            <form onSubmit={handleEmailSubmit} className="flex items-center gap-2">
+            <form onSubmit={handleEmailSubmit} className="flex flex-col md:flex-row items-center gap-2">
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-white text-black p-2 rounded-lg w-64"
+                className="bg-white text-black p-2 rounded-lg w-full md:w-64"
                 required
               />
               <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
@@ -48,7 +48,7 @@ function Footer() {
           </div>
 
           {/* Useful Links Section */}
-          <div className='ml-auto'>
+          <div className="text-center md:text-left">
             <h3 className="font-bold text-lg mb-4">Useful Links</h3>
             <ul className="space-y-2">
               <li><a href="/about" className="hover:text-green-400">About Us</a></li>
@@ -62,11 +62,11 @@ function Footer() {
         {/* Second Row: Social Media Section */}
         <div className="mt-8 text-center">
           <h3 className="font-bold text-lg mb-2">Follow Us</h3>
-          <div className="flex justify-center gap-6 text-2xl ">
+          <div className="flex justify-center gap-6 text-2xl">
             <a href="#" className="hover:text-blue-400"><FaFacebook size={40} /></a>
-            <a href="#" className="hover:text-red-400"><FaInstagram size={40}  /></a>
-            <a href="#" className="hover:text-green-400"><FaWhatsapp size={40}  /></a>
-            <a href="#" className="hover:text-gray-400"><FaTiktok size={40}  /></a>
+            <a href="#" className="hover:text-red-400"><FaInstagram size={40} /></a>
+            <a href="#" className="hover:text-green-400"><FaWhatsapp size={40} /></a>
+            <a href="#" className="hover:text-gray-400"><FaTiktok size={40} /></a>
           </div>
         </div>
 
