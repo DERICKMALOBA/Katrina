@@ -456,19 +456,74 @@ const ProductDetails = () => {
                 onChange={handleEditChange}
                 value={editProduct.category}
               >
-                <option value="">Select Category</option>
-                <option value="Tops">Tops</option>
-                <option value="Bottoms">Bottoms</option>
-                <option value="Dressers">Dressers</option>
-                <option value="Outer Wear">Outer Wear</option>
-                <option value="Sleep Wear">Sleep Wear</option>
-                <option value="Under Wear">Under Wear</option>
-                <option value="Foot Wear">Foot Wear</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Special Occasions">Special Occasions</option>
-                <option value="SportsWear">SportsWear</option>
-                <option value="Everyday Wear">Everyday Wear</option>
-                <option value="Casuals">Casuals</option>
+      <option value="">Select Category</option>
+               <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>1.Outfits</b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold"}}><b>Boys Outfits</b></option>
+                <option value="boys trouser set">Boys touser sets</option>
+                <option value="boys short set">Boys short sets</option>
+                <option value="boys trouser">Boys trouser</option>
+                <option value="boys tshirts">Boys tshirts</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls Outfits</b></option>
+                <option value="girls trouser set">Girls trouser set</option>
+                <option value="girls short set">Girls short set</option>
+                <option value="skirt set">Skirt set</option>
+                <option value="dressers">Dressers</option>
+                <option value="fanay wear">Fanay wear</option>
+                <option value="girls trouser">Girls trouser</option>
+                <option value="tops">Tops</option>
+                <option value="leggings">Leggings</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Swimming wear </b></option>
+                <option value="boys costumes">Boys costumes</option>
+                <option value="girls costumes">Girls costumes</option>
+                
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Inner wears </b></option>
+                <option value="vests">Vests</option>
+                <option value="boxers">Boxers</option>
+                <option value="panties">Panties</option>
+                <option value="boob tops">Boob tops</option>
+                
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>2.Bags </b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>School bags</b></option>
+                <option value="3 in 1 trolley bag">3 in 1 Trolley bag</option>
+                <option value="3 in 1 back pack">3 in 1 Back pack</option>
+                <option value="2 in 1 back pack">2 in 1 Back pack</option>
+                <option value="single back pack">Single Back pack</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Travelling bags</b></option>
+                <option value="3 in 1 suitcase">3 in 1 suitcase</option>
+                <option value="single suitcase">Single suitcase</option>
+                <option value="girls handbags" style={{ color: "cyan", fontWeight: "300" }}>Girls handbags</option>
+                <option value="monkey bags" style={{ color: "cyan", fontWeight: "300" }}>Monkey bags</option>
+                <option value="lunch bags" style={{ color: "cyan", fontWeight: "300" }} >Lunch bags</option>
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>3.Shoes</b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Boys shoes</b></option>
+                <option value="boys sneakers">Boys sneakers</option>
+                <option value="converse">Converse</option>
+                <option value="boys open shoes">Boys open shoes</option>
+                <option value="boys school shoes">Boys school shoes</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls shoes</b></option>
+                <option value="girls sneakers">Girls sneakers</option>
+                <option value="doll">Doll shoes</option>
+                <option value="heels">Heels</option>
+                <option value="girls open shoes">Girls open shoes</option>
+                <option value="girls school shoes">Girls school shoes</option>
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>4.Kid's hygiene</b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Perfumes</b></option>
+                <option value="boys scents">Boys scents</option>
+                <option value="girls scents">Girls scents</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Body mists</b></option>
+                <option value="boys scents">Boys scents</option>
+                <option value="girls scents">Girls scents</option>
+                <option value="body wash" style={{ color: "cyan", fontWeight: "300" }}><b>Body wash</b></option>
+                <option value="lotions" style={{ color: "cyan", fontWeight: "300" }}><b>Lotions</b></option>
+                <option value="make up kit" style={{ color: "cyan", fontWeight: "300" }}><b>Make up kit</b></option>
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>5.Kid's accessories</b></option>
+                <option value="wathes">Watches</option>
+                <option value="hair accessories">Hair accessories</option>
+                <option value="" disabled  style={{ color: "orange", fontWeight: "bold" }}><b>6.Others</b></option>
+                <option value="pencil poaches">Pencil poaches</option>
+                <option value="cosplay costumes">cosplay costumes</option>
+                <option value="raincoats">Raincoats</option>
+                <option value="swimming bags">Swimming bags</option>
               </select>
               <input
                 type="file"
@@ -548,19 +603,76 @@ const ProductDetails = () => {
                 onChange={handleInputChange}
                 value={newProduct.category}
               >
-                <option value="">Select Category</option>
-                <option value="Tops">Tops</option>
-                <option value="Bottoms">Bottoms</option>
-                <option value="Dressers">Dressers</option>
-                <option value="Outer Wear">Outer Wear</option>
-                <option value="Sleep Wear">Sleep Wear</option>
-                <option value="Under Wear">Under Wear</option>
-                <option value="Foot Wear">Foot Wear</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Special Occasions">Special Occasions</option>
-                <option value="SportsWear">SportsWear</option>
-                <option value="Everyday Wear">Everyday Wear</option>
-                <option value="Casuals">Casuals</option>
+                            <option value="">Select Category</option>
+               <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>1.Outfits</b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold"}}><b>Boys Outfits</b></option>
+                <option value="boys trouser set">Boys touser sets</option>
+                <option value="boys short set">Boys short sets</option>
+                <option value="boys trouser">Boys trouser</option>
+                <option value="boys tshirts">Boys tshirts</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls Outfits</b></option>
+                <option value="girls trouser set">Girls trouser set</option>
+                <option value="girls short set">Girls short set</option>
+                <option value="skirt set">Skirt set</option>
+                <option value="dressers">Dressers</option>
+                <option value="fanay wear">Fanay wear</option>
+                <option value="girls trouser">Girls trouser</option>
+                <option value="tops">Tops</option>
+                <option value="leggings">Leggings</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Swimming wear </b></option>
+                <option value="boys costumes">Boys costumes</option>
+                <option value="girls costumes">Girls costumes</option>
+                
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Inner wears </b></option>
+                <option value="vests">Vests</option>
+                <option value="boxers">Boxers</option>
+                <option value="panties">Panties</option>
+                <option value="boob tops">Boob tops</option>
+                
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>2.Bags </b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>School bags</b></option>
+                <option value="3 in 1 trolley bag">3 in 1 Trolley bag</option>
+                <option value="3 in 1 back pack">3 in 1 Back pack</option>
+                <option value="2 in 1 back pack">2 in 1 Back pack</option>
+                <option value="single back pack">Sinle Back pack</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Travelling bags</b></option>
+                <option value="3 in 1 suitcase">3 in suitcase</option>
+                <option value="single suitcase">Single suitcase</option>
+                <option value="2 in 1 back pack">2 in 1 Back pack</option>
+                <option value="single back pack">Single Back pack</option><br/>
+                <option value="girls handbags" style={{ color: "cyan", fontWeight: "300" }}>Girls handbags</option>
+                <option value="monkey bags" style={{ color: "cyan", fontWeight: "300" }}>Monkey bags</option>
+                <option value="lunch bags" style={{ color: "cyan", fontWeight: "300" }} >Lunch bags</option>
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>3.Shoes</b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Boys shoes</b></option>
+                <option value="boys sneakers">Boys sneakers</option>
+                <option value="converse">Converse</option>
+                <option value="boys open shoes">Boys open shoes</option>
+                <option value="boys school shoes">Boys school shoes</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls shoes</b></option>
+                <option value="girls sneakers">Girls sneakers</option>
+                <option value="doll">Doll shoes</option>
+                <option value="heels">Heels</option>
+                <option value="girls open shoes">Girls open shoes</option>
+                <option value="girls open shoes">Girls school shoes</option>
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>4.Kid's hygiene</b></option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Perfumes</b></option>
+                <option value="boys scents">Boys scents</option>
+                <option value="girls scents">Girls scents</option>
+                <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Body mists</b></option>
+                <option value="boys scents">Boys scents</option>
+                <option value="girls scents">Girls scents</option>
+                <option value="body wash" style={{ color: "cyan", fontWeight: "300" }}><b>Body wash</b></option>
+                <option value="lotions" style={{ color: "cyan", fontWeight: "300" }}><b>Lotions</b></option>
+                <option value="make up kit" style={{ color: "cyan", fontWeight: "300" }}><b>Make up kit</b></option>
+                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>5.Kid's accessories</b></option>
+                <option value="wathes">Watches</option>
+                <option value="hair accessories">Hair accessories</option>
+                <option value="" disabled  style={{ color: "orange", fontWeight: "bold" }}><b>6.Others</b></option>
+                <option value="pencil poaches">Pencil poaches</option>
+                <option value="cosplay costumes">cosplay costumes</option>
+                <option value="raincoats">Raincoats</option>
+                <option value="swimming bags">Swimming bags</option>
               </select>
 
               <input

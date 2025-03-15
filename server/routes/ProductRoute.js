@@ -247,72 +247,42 @@ router.get('/productscategory', (req, res) => {
       if (err) return res.status(500).json({ message: 'Database error', error: err });
       const l=results.length;
       var j=0;
-      var top=0;
-      var bot=0;
-      var dre=0;
-      var out=0;
-      var sle=0;
-      var und=0;
-      var foo=0;
-      var acc=0;
-      var spe=0;
-      var spo=0;
-      var every=0;
-      var cas=0;
+      var outfits=0;
+      var bags=0;
+      var shoes=0;
+      var hygiene=0;
+      var accessories=0;
+      var others=0;
       var af=JSON.parse(JSON.stringify(results));
       for(j;j<l;j++)
           {
-            if(af[j].category=="Tops")
+            if(af[j].category=="boys trouser set"||af[j].category=="boys shot set"||af[j].category=="boys trouser"||af[j].category=="boys tshirts"||af[j].category=="girls trouser set"||af[j].category=="girls short set"||af[j].category=="skirt set"||af[j].category=="dressers"||af[j].category=="fanay wear"||af[j].category=="tops"||af[j].category=="leggings"||af[j].category=="boys costumes"||af[j].category=="girls costumes"||af[j].category=="vests"||af[j].category=="boxers"||af[j].category=="panties"||af[j].category=="boob tops")
             {
-              top=top+1;
+              outfits=outfits+1;
             }
-            if(af[j].category=="Bottoms")
+            if(af[j].category=="3 in 1 trolley bag"||af[j].category=="3 in 1 back pack"||af[j].category=="2 in 1 back pack"||af[j].category=="single back pack"||af[j].category=="3 in 1 suitcase"||af[j].category=="single suitcase"||af[j].category=="girls handbags"||af[j].category=="monkey bags"||af[j].category=="lunch bags")
               {
-                bot=bot+1;
+                bags=bags+1;
               }
-              if(af[j].category=="Dressers")
+              if(af[j].category=="boys sneakers"||af[j].category=="converse"||af[j].category=="boys open shoes"||af[j].category=="boys school shoes"||af[j].category=="girls sneakers"||af[j].category=="doll"||af[j].category=="heels"||af[j].category=="girls open shoes"||af[j].category=="girls school shoes")
                 {
-                  dre=dre+1;
+                  shoes=shoes+1;
                 }  
-                if(af[j].category=="Outer Wear")
+                if(af[j].category=="boys scents"||af[j].category=="girls scents"||af[j].category=="body wash"||af[j].category=="lotions"||af[j].category=="make up kit")
                   {
-                    out=out+1;
+                    hygiene=hygiene+1;
                   }
-                  if(af[j].category=="Sleep Wear")
+                  if(af[j].category=="watches"||af[j].category=="hair accessories")
                     {
-                      sle=sle+1;
+                      accessories=accessories+1;
                     } 
-                    if(af[j].category=="Under Wear")
+                    if(af[j].category=="pencil poaches"||af[j].category=="cosplay costumes"||af[j].category=="raincoats"||af[j].category=="swimming bags")
                       {
-                        und=und+1;
+                        others=others+1;
                       } 
-                      if(af[j].category=="Foot Wear")
-                        {
-                          foo=foo+1;
-                        }  
-                        if(af[j].category=="Accessories")
-                          {
-                            acc=acc+1;
-                          } 
-                          if(af[j].category=="Special Occasion Wear")
-                            {
-                              spe=spe+1;
-                            }  
-                            if(af[j].category=="SportsWear")
-                              {
-                                spo=spo+1;
-                              }  
-                              if(af[j].category=="Everyday Wear")
-                                {
-                                  every=every+1;
-                                }  
-                                if(af[j].category=="Casuals")
-                                  {
-                                    cas=cas+1;
-                                  }  
           }
-    console.log(top);
-    res.json({Top:top,Bot:bot,Dre:dre,Out:out,Sle:sle,Und:und,Foo:foo,Acc:acc,Spe:spe,Spo:spo,Every:every,Cas:cas});
+    console.log(bags);
+    res.json({Outfits:outfits,Bags:bags,Shoes:shoes,Hygiene:hygiene,Accessories:accessories,Others:others});
   });
   });
   router.get('/tops', (req, res) => {
