@@ -55,6 +55,8 @@ function SignIn() {
             throw new Error(data.message || 'Invalid response from server');
         }
         dispatch(setUser({ name: data.Name, email: data.Email, phone: data.Phone,role:data.Role }));
+       var em=data.Email;
+        localStorage.setItem("email",em)
         // Store token and role in localStorage
         localStorage.setItem('accessToken', data.user.token);
         localStorage.setItem('userRole', data.user.role);

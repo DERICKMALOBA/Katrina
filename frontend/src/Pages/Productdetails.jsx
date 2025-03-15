@@ -1,58 +1,28 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
-import { useParams, useLocation,useNavigate } from "react-router-dom";
+import { useParams,Link,useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { FaStar, FaStarHalfAlt, FaHeart } from "react-icons/fa"; // Rating stars
+import { FaStar, FaStarHalfAlt, FaHeart } from "react-icons/fa"; 
 import { Navigation, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import io from "socket.io-client";
-const socket = io("http://localhost:5000");
+
 export default function ProductDetail() {
-  const navigate=useNavigate();
- var [messages,setMessages]=useState([]);
- var [newmessage,setNewmessage]=useState([]);
-  const cart = useSelector((state) => state.cart); // cart is an object
-  const user = useSelector((state) => state.auth.user);
+  const cart = useSelector((state) => state.cart);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const [wishlist, setWishlist] = useState({});
   const dispatch = useDispatch();
-   var email=user.email;
-   socket.emit("register",email);
-   socket.on("usermessages",(data)=>{
-     setMessages(data);
-   });
   const toggleWishlist = (productId) => {
     setWishlist((prev) => ({
       ...prev,
       [productId]: !prev[productId],
     }));
   };
-    useEffect(()=>{
-      socket.on("receiverbyuser",(data)=>{
-        setMessages((prev) => [...prev, data]);
-  });
-});
-  const sendMessage=async(e)=>{
-   if(user.email==null)
-   {
-    navigate("sign-up");
-   }
-   else
-   {
-      e.preventDefault();
-    if (!newmessage.trim()) return;
+ 
 
-    const messageData = { text: newmessage,sender:user.name,Email:user.email,Role:user.role};
-     socket.emit("sendtoadmin",messageData);
-     setNewmessage("");
-  }
-};
-  socket.on("sendbacktouser",(data)=>{
-    setMessages((prev) => [...prev, data]);
-});
   const { id } = useParams();
   const location = useLocation();
   const [product, setProduct] = useState(location.state || {});
@@ -156,7 +126,7 @@ export default function ProductDetail() {
                                   ${
                                     wishlist[product.id || product._id]
                                       ? "bg-primaryOrange text-white"
-                                      : "border border-purple-800 text-purple-600"
+                                      : "border border-primaryOrange text-primaryOrange"
                                   }
                                   hover:shadow-primaryOrange/50`}
               >
@@ -276,46 +246,14 @@ export default function ProductDetail() {
 
         {/*  Chat Section */}
         <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-300">
-          <div className="fixed bottom-10 right-10 w-80 bg-white shadow-lg rounded-lg p-4">
           <h2 className="text-2xl font-bold mb-3">Need Help?</h2>
           <p className="text-gray-600 mb-4">
             Ask questions about this product:
           </p>
-
-    <div className="h-40 overflow-y-auto border p-2 rounded">
-      {messages.map((msg) => {
-        const Client = msg.email === user.email;
-
-        return (
-          <div
-            key={msg.id}
-            className={`flex ${Client ? "justify-end" : "justify-start"}`}
-          >
-            <div
-              className={`p-2 my-1 rounded max-w-[70%] ${
-                Client ? "bg-blue-200 text-black" : "bg-gray-200 text-black"
-              }`}
-            >
-              {msg.msg}
-            </div>
-          </div>
-        );
-      })}
+          <Link to="/chats" className="mt-4 bg-primaryGreen text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+            Send Message
+          </Link>
     </div>
-  <form onSubmit={sendMessage} className="flex mt-2">
-      <input
-        type="text"
-        className="flex-1 p-2 border rounded-l"
-        placeholder="Type a message..."
-        value={newmessage}
-        onChange={(e) => setNewmessage(e.target.value)}
-      />
-      <button type="submit" className="p-2 bg-blue-500 text-white rounded-r">
-        Send
-      </button>
-    </form>
-</div>
-        </div>
     </div>
   );
-}
+  };
