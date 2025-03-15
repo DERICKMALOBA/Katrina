@@ -340,3 +340,350 @@ useEffect(() => {
   </div>
 </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+
+const categories = [
+  {
+    name: "Outfits",
+    subcategories: [
+      { name: "Boys Outfits", items: ["Trouser sets", "Short sets", "Trousers", "T-Shirts"] },
+      { name: "Girls Outfits", items: ["Trouser set", "Short set", "Skirt set", "Dresses", "Fancy wear", "Trousers", "Tops", "Leggings"] },
+      { name: "Swimming Wear", items: ["Boys Costumes", "Girls Costumes"] },
+      { name: "Inner Wears", items: ["Vests", "Boxers", "Panties", "Boob Tops"] },
+    ],
+  },
+  {
+    name: "Bags",
+    subcategories: [
+      { name: "School Bags", items: ["3 in 1 Trolley Bag", "3 in 1 Backpack", "2 in 1 Backpack", "Single Backpack"] },
+      { name: "Travelling Bags", items: ["3 in 1 Suitcase", "Single Suitcase"] },
+      { name: "Girls Handbags", items: [] },
+      { name: "Monkey Bags", items: [] },
+      { name: "Lunch Bags", items: [] },
+    ],
+  },
+];
+
+export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openCategory, setOpenCategory] = useState(null);
+  const menuRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutsideDropdown(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenCategory(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutsideDropdown);
+    return () => document.removeEventListener("mousedown", handleClickOutsideDropdown);
+  }, []);
+
+  return (
+    <div className="relative">
+      <div className="flex justify-between items-center p-4 bg-blue-500 text-white">
+        <button className="sm:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      <div
+        ref={menuRef}
+        className={`fixed inset-y-0 left-0 w-64 bg-blue-600 text-white p-4 transition-transform transform ${
+          menuOpen ? "translate-x-0" : "-translate-x-full"
+        } sm:hidden z-50`}
+      >
+        <ul className="mt-10 space-y-4">
+          {categories.map((category, index) => (
+            <li key={index}>
+              <button
+                onClick={() => setOpenCategory(openCategory === category.name ? null : category.name)}
+                className="w-full text-left font-semibold hover:bg-blue-700 p-2 rounded"
+              >
+                {category.name}
+              </button>
+              {openCategory === category.name && (
+                <ul className="pl-4 mt-2 text-sm space-y-1">
+                  {category.subcategories.map((sub, subIndex) => (
+                    <li key={subIndex}>
+                      <Link
+                        to={`/category/${category.name.toLowerCase().replace(/\s+/g, "-")}/${sub.name.toLowerCase().replace(/\s+/g, "-")}`}
+                        className="font-medium hover:underline"
+                      >
+                        {sub.name}
+                      </Link>
+                      <ul className="pl-4 text-xs">
+                        {sub.items.map((item, itemIndex) => (
+                          <li key={itemIndex}>
+                            <Link
+                              to={`/category/${category.name.toLowerCase().replace(/\s+/g, "-")}/${sub.name.toLowerCase().replace(/\s+/g, "-")}/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                              className="hover:underline"
+                            >
+                              • {item}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react'; // Use Lucide-react for icons
+
+function Nav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <div className="max-w-6xl mx-auto p-3">
+      {/* Top Bar */}
+      <div className="flex justify-between items-center">
+        <button
+          className="sm:hidden text-customGray"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      {/* Navigation Links */}
+      <div
+        className={`${
+          menuOpen ? "block" : "hidden"
+        } sm:flex sm:items-center sm:justify-between sm:gap-10 sm:block`}
+      >
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mt-4 sm:mt-0">
+          <Link to="/products/tops" className="text-gray-700 font-medium text-sm sm:text-base">
+            Tops
+          </Link>
+          <Link to="/products/bottoms" className="text-gray-700 font-semibold text-sm sm:text-base">
+            Bottoms
+          </Link>
+          <Link to="/products/dressers" className="text-gray-700 font-medium text-sm sm:text-base">
+            Dressers
+          </Link>
+          <Link to="/products/outer" className="text-gray-700 font-medium text-sm sm:text-base">
+            Outer Wear
+          </Link>
+          <Link to="/products/sleep" className="text-gray-700 font-medium text-sm sm:text-base">
+            Sleep Wear
+          </Link>
+          <Link to="/products/under" className="text-gray-700 font-medium text-sm sm:text-base">
+            Under Wear
+          </Link>
+          <Link to="/products/foot" className="text-gray-700 font-medium text-sm sm:text-base">
+            Foot Wear
+          </Link>
+          <Link to="/products/accessories" className="text-gray-700 font-medium text-sm sm:text-base">
+            Accessories
+          </Link>
+          <Link to="/products/special" className="text-gray-700 font-medium text-sm sm:text-base">
+            Special Occasions
+          </Link>
+          <Link to="/products/sports" className="text-gray-700 font-medium text-sm sm:text-base">
+            SportsWear
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Nav;
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { Menu, X } from "lucide-react";
+
+const categories = [
+  {
+    name: "Outfits",
+    subcategories: [
+      { name: "Boys Outfits", items: ["Trouser sets", "Short sets", "Trousers", "T-Shirts"] },
+      { name: "Girls Outfits", items: ["Trouser set", "Short set", "Skirt set", "Dresses", "Fancy wear", "Trousers", "Tops", "Leggings"] },
+      { name: "Swimming Wear", items: ["Boys Costumes", "Girls Costumes"] },
+      { name: "Inner Wears", items: ["Vests", "Boxers", "Panties", "Boob Tops"] },
+    ],
+  },
+  {
+    name: "Bags",
+    subcategories: [
+      { name: "School Bags", items: ["3 in 1 Trolley Bag", "3 in 1 Backpack", "2 in 1 Backpack", "Single Backpack"] },
+      { name: "Travelling Bags", items: ["3 in 1 Suitcase", "Single Suitcase"] },
+      { name: "Girls Handbags", items: [] },
+      { name: "Monkey Bags", items: [] },
+      { name: "Lunch Bags", items: [] },
+    ],
+  },
+];
+
+export default function Nav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openCategory, setOpenCategory] = useState(null);
+  const menuRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutsideDropdown(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpenCategory(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutsideDropdown);
+    return () => document.removeEventListener("mousedown", handleClickOutsideDropdown);
+  }, []);
+
+  return (
+    <div className="relative">
+      <div className="flex justify-between items-center p-4 bg-white text-purple-800">
+        <button className="sm:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
+      <div ref={menuRef} className={`fixed inset-y-0 left-0 w-64 bg-purple-800 text-white p-4 transition-transform transform ${menuOpen ? "translate-x-0" : "-translate-x-full"} sm:hidden z-50`}>
+        <div className="mt-10 space-y-4 overflow-y-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-600">
+          <ul>
+            {categories.map((category, index) => (
+              <li key={index} className="items">
+                <button onClick={() => setOpenCategory(openCategory === category.name ? null : category.name)} className="w-full text-left font-semibold hover:bg-gray-700 p-2 rounded transition duration-300">
+                  {category.name}
+                </button>
+                {openCategory === category.name && (
+                  <ul className="pl-4 mt-2 text-sm space-y-1">
+                    {category.subcategories.map((sub, subIndex) => (
+                      <li key={subIndex}>
+                        <Link to={`/subcategories/${sub.name.toLowerCase().replace(/\s+/g, "-")}`} className="text-base border-b pb-1 text-white hover:underline">
+                          {sub.name}
+                        </Link>
+                        <ul className="pl-4 text-xs">
+                          {sub.items.map((item, itemIndex) => (
+                            <li key={itemIndex}>
+                              <Link to={`/items/${item.toLowerCase().replace(/\s+/g, "-")}`} className="hover:underline text-lg gap-4 text-primaryOrange">
+                                {item}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <nav className="hidden sm:flex text-2xl bg-whitesmoke items-center text-purple-800 p-4 space-x-6 justify-center w-full">
+        <div className="flex space-x-6">
+          {categories.map((category, index) => (
+            <div key={index} className="relative flex items-center" ref={dropdownRef}>
+              <button onClick={() => setOpenCategory(openCategory === category.name ? null : category.name)} className="hover:bg-gray-800 p-2 rounded">
+                {category.name}
+              </button>
+              {openCategory === category.name && (
+                <div className="absolute left-1/2 transform -translate-x-1/2 top-10 bg-white text-black p-4 rounded shadow-lg z-50 w-auto">
+                  <div className="flex gap-6 rounded-lg">
+                    {category.subcategories.map((sub, subIndex) => (
+                      <div key={subIndex} className="whitespace-nowrap">
+                        <Link to={`/subcategories/${sub.name.toLowerCase().replace(/\s+/g, "-")}`} className="hover:underline text-lg">
+                          <h3 className="text-base border-b pb-1 text-purple-800">{sub.name}</h3>
+                        </Link>
+                        <ul className="mt-1 text-sm">
+                          {sub.items.map((item, itemIndex) => (
+                            <li key={itemIndex}>
+                              <Link to={`/items/${item.toLowerCase().replace(/\s+/g, "-")}`} className="hover:underline text-lg gap-4 text-primaryOrange">
+                                {item}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </nav>
+    </div>
+  );
+}

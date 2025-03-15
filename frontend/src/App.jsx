@@ -56,6 +56,7 @@ import Profile from "./Pages/test";
 
 
 import NotificationsPage from "./Pages/notifications";
+// import Navbar from "./components/CategoriesNav";
 
 // Component to conditionally render the layout
 
@@ -155,6 +156,8 @@ function App() {
           <Route path="/products/sports" element={<Sports />} />
           <Route path="/chats" element={<MessagePopup />} />
           <Route path="/forgot" element={<ForgotPassword />} />
+          {/* <Route path="/categories" element={<Navbar />} /> */}
+
           <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/profile" element={<Profile />} />
 
