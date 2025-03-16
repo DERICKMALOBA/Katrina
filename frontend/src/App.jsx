@@ -45,13 +45,10 @@ import ResetPassword from "./Pages/Resetpassword";
 import Profile from "./Pages/test";
 import NotificationsPage from "./Pages/notifications";
 import Footer from "./components/Footer";
-<<<<<<< HEAD
 import Subcategories from "./Pages/Subcategory";
 // import Navbar from "./components/CategoriesNav";
-=======
-import Chat from "./Pages/Chat";
 
->>>>>>> 960bab433677800675133e595a4696c36de76721
+import Chat from "./Pages/Chat";
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -88,7 +85,6 @@ const Layout = ({ children }) => {
 
   return (
     <>
-<<<<<<< HEAD
       {/* Show Header and Nav only if NOT on an admin route */}
       {!isAdminRoute && (
         <>
@@ -97,14 +93,12 @@ const Layout = ({ children }) => {
           <Footer/>
         </>
       )}
-=======
       {/* Show Header only if NOT on an admin route */}
       {shouldDisplayHeader && <Header />}
 
       {/* Show Nav only if NOT on a noNavRoutes route and NOT on an admin route */}
       {shouldDisplayNav && !adminRoutes.includes(location.pathname) && <Nav />}
 
->>>>>>> 960bab433677800675133e595a4696c36de76721
       {children}
 
       {/* Show Footer only if NOT on a noFooterRoutes route */}
