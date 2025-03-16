@@ -35,7 +35,7 @@ import Foot from "./Pages/Foot";
 import Accessories from "./Pages/Accessories";
 import Special from "./Pages/Special";
 import Sports from "./Pages/Sports";
-import MessagePopup from "./Pages/Chat";
+// import MessagePopup from "./Pages/Chat";
 import ProtectedRoute from "./components/PrivateRoute";
 import Cart from "./Pages/Cart";
 import AdminMessagePanel from "./Pages/Adminmessages";
@@ -45,6 +45,7 @@ import ResetPassword from "./Pages/Resetpassword";
 import Profile from "./Pages/test";
 import NotificationsPage from "./Pages/notifications";
 import Footer from "./components/Footer";
+import Chat from "./Pages/Chat";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -69,7 +70,7 @@ const Layout = ({ children }) => {
   const noFooterRoutes = ["/sign-in", "/sign-up", ...adminRoutes];
 
   // Routes where Nav should not be displayed
-  const noNavRoutes = ["/checkout", "/cart", "/profile"];
+  const noNavRoutes = ["/checkout", "/cart", "/profile", "/product/:id"];
 
   // Check if the current route is in the noFooterRoutes list
   const shouldDisplayFooter = !noFooterRoutes.includes(location.pathname);
@@ -156,7 +157,7 @@ function App() {
           <Route path="/products/accessories" element={<Accessories />} />
           <Route path="/products/special" element={<Special />} />
           <Route path="/products/sports" element={<Sports />} />
-          <Route path="/chats" element={<MessagePopup />} />
+          <Route path="/chats" element={<Chat/>} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/adminmessages" element={<AdminMessagePanel />} />
           <Route path="/message/:email" element={<Admin />} />

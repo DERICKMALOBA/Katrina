@@ -5,12 +5,15 @@ import { useParams, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaStar, FaStarHalfAlt, FaHeart } from "react-icons/fa";
 import { Navigation, Pagination } from "swiper/modules";
+
+
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import MessagePopup from './Chat'; // Adjust the path as necessary
 
 export default function ProductDetail() {
+  const user = useSelector((state) => state.auth.user);
   const cart = useSelector((state) => state.cart);
   const [selectedImage, setSelectedImage] = useState(null);
   const [wishlist, setWishlist] = useState({});
@@ -89,10 +92,18 @@ export default function ProductDetail() {
   const remainingStock = product.stock - quantityInCart;
 
   const handleReviewSubmit = async () => {
-    if (!rating || !review) return alert("Please provide a rating and review");
-
-    const newReview = { rating, review };
-
+    // Validate rating and review
+    if (typeof rating !== 'number' || typeof review !== 'string') {
+      return alert("Please provide a valid rating (number) and review (text)");
+    }
+  
+    if (rating < 1 || rating > 5) {
+      return alert("Rating must be between 1 and 5");
+    }
+  
+    // Include user_id in the request body
+    const newReview = { ratings: rating, reviews: review, user_id:  user.userid }; // Replace `currentUser.userid` with the actual user ID
+  
     try {
       const response = await fetch(`/api/products/product/${id}/review`, {
         method: "POST",
@@ -101,11 +112,12 @@ export default function ProductDetail() {
         },
         body: JSON.stringify(newReview),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to submit review");
       }
-
+  
+      // Update the local state with the new review
       setReviews([...reviews, newReview]);
       setRating(0);
       setReview("");
@@ -113,6 +125,8 @@ export default function ProductDetail() {
       alert(err.message);
     }
   };
+
+  
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">

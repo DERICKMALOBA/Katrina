@@ -2,7 +2,7 @@ import { useState,useEffect} from "react";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
 const socket = io("http://localhost:5000");
-const MessagePopup = () => {
+const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const user = useSelector((state) => state.auth.user);
@@ -66,4 +66,4 @@ return (
 );
 };
 
-export default MessagePopup;
+export default Chat;

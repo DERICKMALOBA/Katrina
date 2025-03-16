@@ -1,8 +1,10 @@
 import { FaFacebook, FaInstagram, FaWhatsapp, FaTiktok } from 'react-icons/fa';
 import { useState } from 'react';
+import Chat from '../Pages/Chat'; // Import the Chat component
 
 function Footer() {
   const [email, setEmail] = useState('');
+  const [showChat, setShowChat] = useState(false); // State to control chat visibility
 
   const handleEmailSubmit = (e) => {
     e.preventDefault();
@@ -12,8 +14,12 @@ function Footer() {
     }
   };
 
+  const toggleChat = () => {
+    setShowChat(!showChat); // Toggle chat visibility
+  };
+
   return (
-    <footer className="bg-gray-700 text-white py-12">
+    <footer className="bg-gray-700 text-white py-12 relative">
       <div className="max-w-6xl mx-auto px-6">
         {/* First Row: Three Columns */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
@@ -22,7 +28,11 @@ function Footer() {
             <h2 className="text-2xl font-bold mb-4">Katrina Kid's Closet</h2>
             <h3 className="font-semibold">Need Help?</h3>
             <ul className="mt-2 space-y-2">
-              <li><a href="/chats" className="hover:text-green-400">Chat with Us</a></li>
+              <li>
+                <button onClick={toggleChat} className="hover:text-green-400">
+                  Chat with Us
+                </button>
+              </li>
               <li><a href="/contact" className="hover:text-green-400">Contact Us</a></li>
               <li><a href="/help-center" className="hover:text-green-400">Help Center</a></li>
             </ul>
@@ -75,6 +85,9 @@ function Footer() {
           <p>&copy; {new Date().getFullYear()} Katrina Kid's Closet. All rights reserved.</p>
         </div>
       </div>
+
+      {/* Conditionally render the Chat component */}
+      {showChat && <Chat />}
     </footer>
   );
 }
