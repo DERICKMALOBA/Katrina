@@ -25,7 +25,7 @@ import Header from "./components/Header";
 import AdmiHeader from "./AdminComponents/AdminHeader";
 import ProductDetail from "./Pages/Productdetails";
 import Tops from "./Pages/Tops";
-import Bottoms from "./Pages/Bottoms";
+import Bottoms from "./Pages/Subcategory";
 import CheckoutForm from "./Pages/Checkout";
 import Dressers from "./Pages/Dressers";
 import Outer from "./Pages/Outer";
@@ -46,10 +46,9 @@ import ResetPassword from "./Pages/Resetpassword";
 
 import Profile from "./Pages/test";
 import NotificationsPage from "./Pages/notifications";
-
+import Footer from "./components/Footer";
+import Subcategories from "./Pages/Subcategory";
 // import Navbar from "./components/CategoriesNav";
-
-
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -77,6 +76,7 @@ const Layout = ({ children }) => {
         <>
           <Header />
           <Nav />
+          <Footer/>
         </>
       )}
       {children}
@@ -122,8 +122,8 @@ function App() {
       <Layout>
         <Routes>
           {/* Public Routes */}
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/sign-in" element={<SignIn/>} />
+          <Route path="/sign-up" element={<SignUp/>} />
           <Route path="/" element={<Home />} />
           <Route path="/product" element={<ProductList />} />
           <Route
@@ -166,8 +166,9 @@ function App() {
           {/* <Route path="/categories" element={<Navbar />} /> */}
 
           <Route path="/resetpassword" element={<ResetPassword />} />
+        
           <Route path="/profile" element={<Profile />} />
-
+          <Route path="/subcategories/:sub" element={<Subcategories/>} />
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route
@@ -260,7 +261,9 @@ function App() {
             />
           </Route>
         </Routes>
+        <Footer/>
       </Layout>
+      
     </Router>
   );
 }

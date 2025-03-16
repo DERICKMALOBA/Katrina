@@ -90,7 +90,6 @@ router.put('/edit-product/:id', (req, res) => {
         res.status(200).json({ message: 'Product updated successfully' });
     });
 });
-
 router.get('/productslist', (req, res) => {
     let { page = 1, limit = 12 } = req.query;
     page = parseInt(page);
@@ -367,16 +366,17 @@ router.get('/productscategory', (req, res) => {
       res.json({tops: [], totalDiscountAmount: "0.00" });
   });
 });
-router.get('/bottoms', (req, res) => {
-  var category="Bottoms";
-  const query = 'SELECT * FROM products WHERE category=?';
-    db.query(query,category,(err, results) => {
+router.get('/subcategories/:sub', (req, res) =>{
+    const {sub} = req.params;
+    console.log(sub);
+    if(sub=="Boys Outfits"||sub=="Girls Outfits"||sub=="Swimming Wear"||sub=="Inner Wears")
+    { const query = `SELECT * FROM products WHERE category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=? OR category=?`;
+    db.query(query, ["boys trouser set","boys short set","boys trouser","boys tshirts","girls trouser set","girls short set","skirt set","dressers","fanay wear","girls trouser","tops","leggings","boys costumes","girls costumes","vests","boxers","panties","boob tops"], (err,results) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err });
-
         if (results.length >= 1) {
             let totalDiscountAmount = 0;
-
-            const productsWithDiscount = results.map((product) => {
+             console.log(results)
+            const productsWithDiscount = results.map((product) =>{
                 let imageUrls = [];
 
                 try {
@@ -410,13 +410,14 @@ router.get('/bottoms', (req, res) => {
             });
 
             return res.json({
-                bottoms: productsWithDiscount,
+                sub: productsWithDiscount,
                 totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
             });
         }
 
-        res.json({bottoms: [], totalDiscountAmount: "0.00" });
+        res.json({sub: [], totalDiscountAmount: "0.00" });
     });
+}
 });
 router.get('/dressers', (req, res) => {
     var category="Dressers";
