@@ -687,3 +687,296 @@ export default function Nav() {
     </div>
   );
 }
+
+
+
+
+
+import { useState, useEffect } from "react";
+import MpesaPayment from "./Mpesa";
+import { useSelector } from "react-redux";
+
+const CheckoutPage = () => {
+  const totalPrice = useSelector((state) => state.cart.totalPrice);
+
+  const [selectedCounty, setSelectedCounty] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
+  const [customerDetailsCleared, setCustomerDetailsCleared] = useState(false);
+  const [deliveryDetailsCleared, setDeliveryDetailsCleared] = useState(false);
+  const [paymentCleared, setPaymentCleared] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    altPhoneNumber: "",
+    address: "",
+    county: "",
+    city: "",
+    deliveryVehicle: "",
+    deliveryFee: "",
+    paymentMethod: "",
+    mpesaNumber: "",
+  });
+
+  // ... (other functions remain unchanged)
+
+  return (
+    <div className="mx-auto p-6 bg-gray-100 rounded-lg shadow-md space-y-6">
+      {/* Flex container for responsive layout */}
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* Left Column: Customer Details, Delivery Details, Payment Details */}
+        <div className="w-full md:w-3/4 space-y-6">
+          {/* Customer Details */}
+          <div className={`p-4 border rounded-lg ${customerDetailsCleared ? "bg-green-100" : "bg-white"}`}>
+            <h1 className="text-xl font-semibold text-gray-800">Customer Details</h1>
+            {/* ... (Customer Details content) */}
+          </div>
+
+          {/* Delivery Details */}
+          {customerDetailsCleared && (
+            <div className={`p-4 border rounded-lg ${deliveryDetailsCleared ? "bg-green-100" : "bg-white"}`}>
+              <h1 className="text-xl font-semibold text-gray-800">Delivery Details</h1>
+              {/* ... (Delivery Details content) */}
+            </div>
+          )}
+
+          {/* Payment Details */}
+          {deliveryDetailsCleared && (
+            <div className={`p-4 border rounded-lg ${paymentCleared ? "bg-green-100" : "bg-white"}`}>
+              <h1 className="text-xl font-semibold text-gray-800">Payment Details</h1>
+              {/* ... (Payment Details content) */}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Order Summary */}
+        <div className="w-full md:w-1/4">
+          <div className="p-4 border rounded-lg bg-white shadow-md">
+            <h3 className="text-xl font-semibold">Order Summary</h3>
+            <div className="bg-white shadow-md rounded-lg p-4 mt-4">
+              <div className="space-y-4">
+                {/* Item Total */}
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-semibold text-gray-700">Item Total:</span>
+                  <span className="text-gray-900">Ksh {parseFloat(totalPrice) || 0}</span>
+                </div>
+
+                {/* Delivery Fee */}
+                <div className="flex justify-between border-b pb-2">
+                  <span className="font-semibold text-gray-700">Delivery Fee:</span>
+                  <span className="text-gray-900">Ksh {parseFloat(formData?.deliveryFee) || 0}</span>
+                </div>
+
+                {/* Total Cost */}
+                <div className="flex justify-between text-lg font-semibold text-gray-900">
+                  <div className="mt-4 font-bold text-lg">
+                    <span>Total Cost:</span>
+                    <span>
+                      Ksh{" "}
+                      {parseFloat(totalPrice) + (parseFloat(formData?.deliveryFee) || 0)}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Complete Order Button */}
+                <button
+                  className="bg-purple-800 text-white p-3 rounded-lg hover:bg-purple-700 w-full transition duration-200"
+                  onClick={handleSubmit}
+                >
+                  Complete Order
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CheckoutPage;
+
+
+
+
+
+
+
+
+
+
+
+
+
+import { useState } from "react";
+import { FaPaperPlane } from "react-icons/fa"; // Import the send icon
+import { IoClose } from "react-icons/io5"; // Import the close icon
+
+export default function ChatComponent({ user }) {
+  const [messages, setMessages] = useState([
+    { id: 1, msg: "Hello!", email: "user1@example.com" },
+    { id: 2, msg: "Hi there!", email: "user2@example.com" },
+  ]);
+  const [newMessage, setNewMessage] = useState("");
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (newMessage.trim()) {
+      setMessages([
+        ...messages,
+        { id: messages.length + 1, msg: newMessage, email: user.email },
+      ]);
+      setNewMessage("");
+    }
+  };
+
+  return (
+    <div className="fixed bottom-10 right-10 w-80 bg-white shadow-2xl rounded-lg overflow-hidden">
+      {/* Chat Header */}
+      <div className="flex justify-between items-center bg-blue-500 text-white p-4">
+        <h2 className="text-lg font-bold">Messages</h2>
+        <button
+          onClick={() => console.log("Close chat")} // Add close functionality
+          className="hover:bg-blue-600 p-1 rounded-full"
+        >
+          <IoClose className="text-xl" />
+        </button>
+      </div>
+
+      {/* Chat Messages */}
+      <div className="h-60 overflow-y-auto p-4 bg-gray-50 scrollbar-thin scrollbar-thumb-blue-200 scrollbar-track-gray-100">
+        {messages.map((msg) => {
+          const isSender = msg.email === user.email;
+
+          return (
+            <div
+              key={msg.id}
+              className={`flex ${isSender ? "justify-end" : "justify-start"} mb-3`}
+            >
+              <div
+                className={`p-3 rounded-lg max-w-[70%] ${
+                  isSender
+                    ? "bg-blue-500 text-white"
+                    : "bg-gray-200 text-gray-800"
+                }`}
+              >
+                {msg.msg}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Message Input */}
+      <form onSubmit={sendMessage} className="flex items-center p-4 border-t">
+        <input
+          type="text"
+          className="flex-1 p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Type a message..."
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="p-3 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 transition-colors"
+        >
+          <FaPaperPlane className="text-lg" />
+        </button>
+      </form>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+import { FaFacebook, FaInstagram, FaWhatsapp, FaTiktok } from 'react-icons/fa';
+import { useState } from 'react';
+
+function Footer() {
+  const [email, setEmail] = useState('');
+
+  const handleEmailSubmit = (e) => {
+    e.preventDefault();
+    if (email) {
+      alert(`Subscribed with email: ${email}`);
+      setEmail('');
+    }
+  };
+
+  return (
+    <footer className="bg-gray-700 text-white py-12">
+      <div className="max-w-6xl mx-auto px-6">
+        {/* First Row: Three Columns */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+          {/* Brand and Help Section */}
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Katrina Kid's Closet</h2>
+            <h3 className="font-semibold">Need Help?</h3>
+            <ul className="mt-2 space-y-2">
+              <li><a href="/chats" className="hover:text-green-400">Chat with Us</a></li>
+              <li><a href="/contact" className="hover:text-green-400">Contact Us</a></li>
+              <li><a href="/help-center" className="hover:text-green-400">Help Center</a></li>
+            </ul>
+          </div>
+
+          {/* Email Subscription Section */}
+          <div className="flex flex-col items-center">
+            <h2 className="text-lg font-bold mb-2">Subscribe to Our Newsletter</h2>
+            <p className="text-sm mb-4">Stay updated with the latest news, offers, and discounts</p>
+            <form onSubmit={handleEmailSubmit} className="flex flex-col md:flex-row items-center gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white text-black p-2 rounded-lg w-full md:w-64"
+                required
+              />
+              <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                Subscribe
+              </button>
+            </form>
+          </div>
+
+          {/* Useful Links Section */}
+          <div className="text-center md:text-left">
+            <h3 className="font-bold text-lg mb-4">Useful Links</h3>
+            <ul className="space-y-2">
+              <li><a href="/about" className="hover:text-green-400">About Us</a></li>
+              <li><a href="/faq" className="hover:text-green-400">FAQ</a></li>
+              <li><a href="/terms" className="hover:text-green-400">Terms & Conditions</a></li>
+              <li><a href="/privacy" className="hover:text-green-400">Privacy Policy</a></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Second Row: Social Media Section */}
+        <div className="mt-8 text-center">
+          <h3 className="font-bold text-lg mb-2">Follow Us</h3>
+          <div className="flex justify-center gap-6 text-2xl">
+            <a href="#" className="hover:text-blue-400"><FaFacebook size={40} /></a>
+            <a href="#" className="hover:text-red-400"><FaInstagram size={40} /></a>
+            <a href="#" className="hover:text-green-400"><FaWhatsapp size={40} /></a>
+            <a href="#" className="hover:text-gray-400"><FaTiktok size={40} /></a>
+          </div>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="text-center text-sm mt-8">
+          <p>&copy; {new Date().getFullYear()} Katrina Kid's Closet. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+export default Footer;

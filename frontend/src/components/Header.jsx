@@ -2,13 +2,16 @@ import { FaSearch } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
 import { FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { Link} from 'react-router-dom';
-import { useState} from 'react';
+import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import Profile from './Profile'; // Import the Profile component
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  
+  const user = useSelector((state) => state.auth.user); // Get user from auth slice
+
   const handleSearchClick = () => {
     const urlParams = new URLSearchParams();
     if (searchTerm) urlParams.set('searchTerm', searchTerm);
@@ -19,13 +22,18 @@ function Header() {
       handleSearchClick();
     }
   };
+
+  const toggleProfile = () => {
+    setIsProfileOpen(!isProfileOpen);
+  };
+
   return (
     <header className="bg-purple-800 sticky top-0 z-10 shadow-md">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3 gap-10">
         {/* Logo Section - Left */}
         <Link to='/'>
           <h1 className="font-bold text-sm sm:text-xl flex gap-2">
-            <span className="text-white">Katrina Kids  Closet</span>
+            <span className="text-white">Katrina Kids Closet</span>
           </h1>
         </Link>
 
@@ -46,23 +54,42 @@ function Header() {
             />
           </div>
         </div>
-        <FaUserCircle size={30} color="white" />
+
+        {/* User Icon or Sign-In Link */}
+        {user ? (
+          <Link to='/profile'>
+          <div className="relative">
+            <FaUserCircle 
+              size={30} 
+              color="white" 
+              // onClick={toggleProfile} 
+              // className="cursor-pointer"
+            />
+            {/* {isProfileOpen && <Profile onClose={toggleProfile} />} */}
+          </div>
+          </Link>
+        ) : (
+          <Link to="/signin" className="text-white hover:opacity-70 transition duration-200">
+            Sign In
+          </Link>
+        )}
+
         {/* Links Section - Right */}
         <ul className="flex gap-6 items-center relative">
-      <li className=" text-white  hover:opacity-70 active:text-white transition duration-200">
-        <Link to="/">HELP?</Link>
-      </li>
+          <li className="text-white hover:opacity-70 active:text-white transition duration-200">
+            <Link to="/">HELP?</Link>
+          </li>
 
-      <Link to="/cart" className="relative">
-        <FaShoppingCart size={28} className="text-white hover:text-green-600 transition duration-200" />
-        
-        {totalQuantity > 0 && (
-          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
-            {totalQuantity}
-          </span>
-        )}
-      </Link>
-    </ul>
+          <Link to="/cart" className="relative">
+            <FaShoppingCart size={28} className="text-white hover:text-green-600 transition duration-200" />
+            
+            {totalQuantity > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
+                {totalQuantity}
+              </span>
+            )}
+          </Link>
+        </ul>
       </div>
     </header>
   );
