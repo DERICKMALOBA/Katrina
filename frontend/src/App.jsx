@@ -270,7 +270,7 @@ function App() {
             />
           </Route>
         </Routes>
-        <Footer/>
+        {/* <Footer/> */}
       </Layout>
       
     </Router>
