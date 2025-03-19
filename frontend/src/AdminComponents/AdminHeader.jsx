@@ -1,5 +1,6 @@
 import { MessageCircle, Bell } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from 'react-redux';
 import io from "socket.io-client";
 const socket = io("http://localhost:5000");
 import AdminMessagePanel from "../Pages/Adminmessages";
@@ -13,6 +14,7 @@ const AdmiHeader = () => {
   const [totall, setTotall] = useState('');
   const [showMessages, setShowMessages] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+   const user = useSelector((state) => state.auth.user);
 
   // Ref for the NotificationsPage component
   const notificationsRef = useRef(null);
@@ -111,7 +113,7 @@ const AdmiHeader = () => {
 
         <div className="flex items-center space-x-2 gap-4">
           <AdminProfile />
-          <span className="text-white hidden sm:block">Admin Name</span>
+          <span className="text-white hidden sm:block">{user.name}</span>
         </div>
       </div>
       <div className="md:hidden flex items-center space-x-4">
