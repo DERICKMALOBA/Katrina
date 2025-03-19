@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import {useParams,Link } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 
-export default function Bottoms() {
-  const [bottoms, setBottoms] = useState([]);
+export default function Subcategories() {
+  const [category, setCategory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [wishlist, setWishlist] = useState({});
-
-  const toggleWishlist = (productId) => {
+ const {sub}=useParams();
+  const toggleWishlist = (productId) =>{
     setWishlist((prev) => ({
       ...prev,
       [productId]: !prev[productId],
@@ -18,17 +18,18 @@ export default function Bottoms() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("/api/products/bottoms");
+        const response = await fetch(`/api/products/subcategories/${sub}`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
         const data = await response.json();
         console.log("Fetched data:", data); // Debugging log
-
+        console.log(data);
+            alert(data);
         // Extract the products array from the response object
-        setBottoms(Array.isArray(data.bottoms) ? data.bottoms : []);
+        setCategory(Array.isArray(data.sub) ? data.sub : []);
       } catch (err) {
-        console.error("Fetch error:", err.message);
+        console.log("Fetch error:", err.message);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -42,11 +43,11 @@ export default function Bottoms() {
 
   return (
     <div className="p-4">
-      {bottoms.length === 0 ? (
+      {category.length === 0 ? (
         <p className="text-center text-gray-600">No products available.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-          {bottoms.map((product) => (
+          {category.map((product) => (
             <div
               key={product.id || product._id}
               className="relative bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
