@@ -3474,68 +3474,39 @@ router.get("/size", (req, res) => {
     });
 });
 
-
-
-// POST endpoint to add a review for a product
 router.post("/product/:id/review", async (req, res) => {
-    const { id } = req.params;
-    const { ratings, reviews, user_id } = req.body;
-  
+    const { id } = req.params; // product_id from URL
+    const { ratings, reviews } = req.body; // Extract ratings and reviews from the request body
+
     // Validate input
-    if (typeof ratings !== 'number' || typeof reviews !== 'string' || typeof user_id !== 'number') {
-      return res.status(400).json({ message: "Invalid input: ratings (number), reviews (string), and user_id (number) are required" });
+    if (typeof ratings !== 'number' || typeof reviews !== 'string') {
+        return res.status(400).json({ message: "Invalid input: ratings must be a number and reviews must be a string" });
     }
-  
+
     if (ratings < 1 || ratings > 5) {
-      return res.status(400).json({ message: "Rating must be between 1 and 5" });
+        return res.status(400).json({ message: "Rating must be between 1 and 5" });
     }
-  
+
     try {
-      // Check if the product exists
-      const [product] = await db.promise().query("SELECT id FROM products WHERE id = ?", [id]);
-      if (!product.length) {
-        return res.status(404).json({ message: "Product not found" });
-      }
-  
-      // Check if the user exists
-      const [user] = await db.promise().query("SELECT userid FROM customers WHERE userid = ?", [user_id]);
-      if (!user.length) {
-        return res.status(404).json({ message: "User not found" });
-      }
-  
-      // Insert the review into the reviews table
-      await db.promise().query(
-        "INSERT INTO reviews (product_id, user_id, ratings, reviews) VALUES (?, ?, ?, ?)",
-        [id, user_id, ratings, reviews]
-      );
-  
-      res.status(201).json({ message: "Review added successfully" });
+        // Check if the product exists
+        const [product] = await db.promise().query("SELECT id FROM products WHERE id = ?", [id]);
+        if (product.length === 0) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        // Insert the review into the reviews table
+        await db.promise().query(
+            "INSERT INTO reviews (product_id, ratings, reviews) VALUES (?, ?, ?)",
+            [id, ratings, reviews]
+        );
+
+        res.status(201).json({ message: "Review added successfully" });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
     }
-  });
-  
-  // GET endpoint to fetch all reviews for a product
-  router.get("/product/:id/reviews", async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      // Fetch all reviews for the product, including user information
-      const [reviews] = await db.promise().query(
-        `SELECT r.id, r.ratings, r.reviews, r.created_at, c.userid, c.username
-         FROM reviews r
-         JOIN customers c ON r.user_id = c.userid
-         WHERE r.product_id = ?`,
-        [id]
-      );
-  
-      res.status(200).json(reviews);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
-    }
-  });
+});
+
 
 
 
@@ -3544,3 +3515,10 @@ router.post("/product/:id/review", async (req, res) => {
 
 
 module.exports = router;
+
+
+
+
+
+
+

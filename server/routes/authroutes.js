@@ -33,11 +33,13 @@ router.post('/signup', async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const m = new Date().getMonth() + 1;
     const y = new Date().getFullYear();
-    const fq = [name, email, phone, hashedPassword, m, y, role]; // Add the role to the insert query
+    const fq = [name, email, phone, hashedPassword, m, y, role]; 
     const insertQuery = 'INSERT INTO customers (name, email, phone, password, month, year, role) VALUES (?, ?, ?, ?, ?, ?, ?)';
     db.query(insertQuery, fq, (err, result) => {
       if (err) {
+        console.log(err)
         return res.status(500).json({ message: 'Database error', error: err });
+       
       }
 
       const token = jwt.sign({ id: result.insertId, email, role }, process.env.JWT_SECRET, {

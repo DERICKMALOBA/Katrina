@@ -94,37 +94,42 @@ export default function ProductDetail() {
   const handleReviewSubmit = async () => {
     // Validate rating and review
     if (typeof rating !== 'number' || typeof review !== 'string') {
-      return alert("Please provide a valid rating (number) and review (text)");
+        return alert("Please provide a valid rating (number) and review (text)");
     }
-  
+
     if (rating < 1 || rating > 5) {
-      return alert("Rating must be between 1 and 5");
+        return alert("Rating must be between 1 and 5");
     }
-  
+
     // Include user_id in the request body
-    const newReview = { ratings: rating, reviews: review, user_id:  user.userid }; // Replace `currentUser.userid` with the actual user ID
-  
+    const newReview = { 
+        ratings: Number(rating), // Ensure rating is a number
+        reviews: review, // Ensure review is a string
+        user_id: Number(user.userid) // Ensure user_id is a number
+    };
+
     try {
-      const response = await fetch(`/api/products/product/${id}/review`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newReview),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to submit review");
-      }
-  
-      // Update the local state with the new review
-      setReviews([...reviews, newReview]);
-      setRating(0);
-      setReview("");
+        const response = await fetch(`/api/products/product/${id}/review`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newReview),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Failed to submit review");
+        }
+
+        // Update the local state with the new review
+        setReviews([...reviews, newReview]);
+        setRating(0);
+        setReview("");
     } catch (err) {
-      alert(err.message);
+        alert(err.message);
     }
-  };
+};
 
   
 
