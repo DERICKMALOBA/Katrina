@@ -49,6 +49,7 @@ import Subcategories from "./Pages/Subcategory";
 // import Navbar from "./components/CategoriesNav";
 
 import Chat from "./Pages/Chat";
+import Itemlist from "./Pages/Itemlist";
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -86,7 +87,7 @@ const Layout = ({ children }) => {
   return (
     <>
       {/* Show Header and Nav only if NOT on an admin route */}
-      {!isAdminRoute && (
+      {!adminRoutes&& (
         <>
           <Header />
           <Nav />
@@ -176,6 +177,7 @@ function App() {
         
           <Route path="/profile" element={<Profile />} />
           <Route path="/subcategories/:sub" element={<Subcategories/>} />
+          <Route path="/items/:item" element={<Itemlist/>} />
           {/* Admin Routes */}
           <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
             <Route

@@ -6,8 +6,8 @@ const categories = [
   {
     name: "Outfits",
     subcategories: [
-      { name: "Boys Outfits", items: ["Trouser sets", "Short sets", "Trousers", "T-Shirts"] },
-      { name: "Girls Outfits", items: ["Trouser set", "Short set", "Skirt set", "Dresses", "Fancy wear", "Trousers", "Tops", "Leggings"] },
+      { name: "Boys Outfits", items: ["Boys Trouser sets", "Boys Short sets", "Trousers", "T-Shirts"] },
+      { name: "Girls Outfits", items: ["Girls Trouser set", "Girls Short set", "Skirt set", "Dresses", "Fanay wear", "Trousers", "Tops", "Leggings"] },
       { name: "Swimming Wear", items: ["Boys Costumes", "Girls Costumes"] },
       { name: "Inner Wears", items: ["Vests", "Boxers", "Panties", "Boob Tops"] },
     ],
@@ -25,8 +25,8 @@ const categories = [
   {
     name: "Shoes",
     subcategories: [
-      { name: "Boys' Shoes", items: ["Sneakers", "Converse", "Open Shoes", "School Shoes"] },
-      { name: "Girls' Shoes", items: ["Sneakers", "Doll Shoes", "Heels", "Open Shoes", "School Shoes"] },
+      { name: "Boys' Shoes", items: ["Boys Sneakers", "Converse", "Boys Open Shoes", "Boys School Shoes"] },
+      { name: "Girls' Shoes", items: ["Girls Sneakers", "Doll Shoes", "Heels", "Girls Open Shoes", "Girls School Shoes"] },
     ],
   },
   {
@@ -36,6 +36,7 @@ const categories = [
       { name: "Body Mists", items: ["Boys Scents", "Girls Scents"] },
       { name: "Body Wash", items: [] },
       { name: "Lotions", items: [] },
+      { name: "Make Up Kit", items: [] },
     ],
   },
   {
