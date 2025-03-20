@@ -1,16 +1,20 @@
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaTimes } from 'react-icons/fa'; // Import FaTimes for the close icon
 import { FaUserCircle } from 'react-icons/fa';
 import { FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import Profile from './Profile'; // Import the Profile component
+import { useState, useRef, useEffect } from 'react'; // Added useRef and useEffect
+import Profile from '../components/Profile'; // Import the Profile component
+import { Menu } from "lucide-react"; // Import Menu icon from lucide-react
+import Nav from './Navbar';
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false); // State for menu open/close
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const user = useSelector((state) => state.auth.user); // Get user from auth slice
+  const menuRef = useRef(null); // Ref for detecting clicks outside the menu
 
   const handleSearchClick = () => {
     const urlParams = new URLSearchParams();
@@ -27,9 +31,91 @@ function Header() {
     setIsProfileOpen(!isProfileOpen);
   };
 
+  // Close the menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <header className="bg-purple-800 sticky top-0 z-10 shadow-md">
-      <div className="flex justify-between items-center max-w-6xl mx-auto p-3 gap-10">
+      {/* Small Devices: Stacked Layout */}
+      <div className="sm:hidden flex flex-col p-3 gap-4">
+        {/* First Row: Menu Icon, Logo, Profile Icon, and Cart Icon */}
+        <div className="flex justify-between items-center">
+          {/* Menu Icon - Left */}
+          <button onClick={() => setMenuOpen(!menuOpen)}>
+            {menuOpen ? <FaTimes size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
+          </button>
+
+          {/* Logo Section - Center */}
+          <Link to='/' className="flex-grow text-center">
+            <h1 className="font-bold text-lg sm:text-xl"> {/* Changed text-sm to text-lg */}
+              <span className="text-white">Katrina Kid's Closet</span>
+            </h1>
+          </Link>
+
+          {/* Icons Section - Right */}
+          <div className="flex items-center gap-4">
+            {/* User Icon or Sign-In Link */}
+            {user ? (
+              <Link to='/profile'>
+                <div className="relative">
+                  <FaUserCircle 
+                    size={30} 
+                    color="white" 
+                  />
+                </div>
+              </Link>
+            ) : (
+              <Link to="/signin" className="text-white hover:opacity-70 transition duration-200">
+                Sign In
+              </Link>
+            )}
+
+            {/* Cart Icon */}
+            <Link to="/cart" className="relative">
+              <FaShoppingCart size={28} className="text-white hover:text-green-600 transition duration-200" />
+              {totalQuantity > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
+                  {totalQuantity}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
+
+        {/* Second Row: Search Input */}
+        <div className="w-full">
+          <div className="bg-slate-300 size-10 p-4 rounded-2xl flex items-center w-full">
+            <div className="relative w-full">
+              <input 
+                type="text" 
+                placeholder="Search by an item..." 
+                className="bg-transparent focus:outline-none size-5 w-full pl-4 pr-10" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)} 
+                onKeyDown={handleKeyPress}  // Trigger search on Enter key press
+              />
+              <FaSearch 
+                className="absolute right-2 size-6 top-1/2 transform -translate-y-1/2 text-gray-600 text-2xl cursor-pointer"
+                onClick={handleSearchClick} 
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Larger and Medium Devices: Original Layout */}
+      <div className="hidden sm:flex justify-between items-center max-w-6xl mx-auto p-3 gap-10">
         {/* Logo Section - Left */}
         <Link to='/'>
           <h1 className="font-bold text-sm sm:text-xl flex gap-2">
@@ -58,15 +144,12 @@ function Header() {
         {/* User Icon or Sign-In Link */}
         {user ? (
           <Link to='/profile'>
-          <div className="relative">
-            <FaUserCircle 
-              size={30} 
-              color="white" 
-              // onClick={toggleProfile} 
-              // className="cursor-pointer"
-            />
-            {/* {isProfileOpen && <Profile onClose={toggleProfile} />} */}
-          </div>
+            <div className="relative">
+              <FaUserCircle 
+                size={30} 
+                color="white" 
+              />
+            </div>
           </Link>
         ) : (
           <Link to="/signin" className="text-white hover:opacity-70 transition duration-200">
@@ -82,7 +165,6 @@ function Header() {
 
           <Link to="/cart" className="relative">
             <FaShoppingCart size={28} className="text-white hover:text-green-600 transition duration-200" />
-            
             {totalQuantity > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
                 {totalQuantity}
@@ -91,6 +173,13 @@ function Header() {
           </Link>
         </ul>
       </div>
+
+      {/* Navbar Component - Only for Small Screens */}
+      {menuOpen && (
+        <div className="sm:hidden" ref={menuRef}>
+          <Nav menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        </div>
+      )}
     </header>
   );
 }

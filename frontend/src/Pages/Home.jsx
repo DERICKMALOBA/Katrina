@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-// Ensure correct import
-
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -98,9 +96,6 @@ const Home = () => {
       }));
       setProducts(processedProducts);
       console.log(processedProducts);
-
-      // setProducts(Array.isArray(data) ? data : data.products || []);
-      // console.log(data);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -142,8 +137,73 @@ const Home = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
+      {/* Filters for Small Devices */}
+      <div className="sm:hidden p-4 bg-white shadow-md">
+        <div className="flex flex-wrap gap-2">
+          {/* Discount Filter */}
+          <div className="flex-1">
+            <select
+              className="w-full border p-2 rounded-md focus:ring-2 focus:ring-primaryOrange"
+              value={discount}
+              onChange={(e) => setDiscount(e.target.value)}
+            >
+              <option value="">Discount</option>
+              <option value="10">Over 10%</option>
+              <option value="20">Over 20%</option>
+              <option value="30">Over 30%</option>
+              <option value="40">Over 40%</option>
+              <option value="50">Over 50%</option>
+            </select>
+          </div>
+
+          {/* Size Filter */}
+          <div className="flex-1">
+            <select
+              className="w-full border p-2 rounded-md focus:ring-2 focus:ring-primaryOrange"
+              value={size}
+              onChange={(e) => setSize(e.target.value)}
+            >
+              <option value="">Size</option>
+              <option value="1 year">1 year</option>
+              <option value="2 years">2 Years</option>
+              <option value="3 years">3 Years</option>
+              <option value="4 years">4 Years</option>
+              <option value="5 years">5 year</option>
+              <option value="6 years">6 Years</option>
+              <option value="7 years">7 Years</option>
+              <option value="8 years">8 Years</option>
+              <option value="9 years">9 year</option>
+              <option value="10 years">10 Years</option>
+              <option value="11 years">11 Years</option>
+              <option value="12 years">12 Years</option>
+              <option value="13 years">13 year</option>
+              <option value="14 years">14 Years</option>
+              <option value="15 years">15 Years</option>
+              <option value="16 years">16 Years</option>
+            </select>
+          </div>
+
+          {/* Sort By */}
+          <div className="flex-1">
+            <select
+              className="w-full border p-2 rounded-md focus:ring-2 focus:ring-primaryOrange"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="">Sort By</option>
+              <option value="rating">Rating</option>
+              <option value="newest">Newest</option>
+              <option value="low_to_high">Price: Low to High</option>
+              <option value="high_to_low">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content */}
       <div className="flex min-h-screen bg-white">
-        <aside className="w-1/5 sm:w-1/5 md:w-1/5 lg:w-1/6 bg-white shadow-md p-6 space-y-6">
+        {/* Sidebar for Larger Screens */}
+        <aside className="hidden sm:block w-1/5 bg-white shadow-md p-6 space-y-6">
           {/* Price Range */}
           <div>
             <h3 className="font-medium text-gray-700">Price Range</h3>
@@ -221,9 +281,10 @@ const Home = () => {
           </div>
         </aside>
 
-        <main className="w-full sm:w-3/4 md:w-3/4 lg:w-3/4 p-6">
-          {/* Sort & Filter */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        {/* Products Grid */}
+        <main className="w-full sm:w-3/4 p-6">
+          {/* Sort & Filter for Larger Screens */}
+          <div className="hidden sm:flex justify-between items-center gap-4 mb-4">
             <select
               className="border p-2 rounded-md focus:ring-2 focus:ring-primaryOrange"
               value={sortBy}
@@ -238,9 +299,8 @@ const Home = () => {
           </div>
 
           {/* Display Products */}
-
           <div className="p-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6">
               {Array.isArray(products) ? (
                 products.map((product) => (
                   <div
