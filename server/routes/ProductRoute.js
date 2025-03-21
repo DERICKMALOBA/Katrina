@@ -71,7 +71,12 @@ const processProducts = (products) => {
       console.error("Error parsing product image data:", parseError);
       imageUrls = [];
     }
-
+    const { description, name, price, stock, category,discount } = req.body;
+    var categorisation=JSON.parse(category);
+    const fileNames = req.files.map((file) => file.filename);
+    // Create a SQL query to insert product details and image filenames into the database
+    const query = "INSERT INTO products (description, name, price, stock, category,super,subcat,discount, image) VALUES(?,?,?,?,?,?,?,?,?)";
+    const values = [description, name, price, stock,categorisation.cat,categorisation.super,categorisation.subcat,discount, JSON.stringify(fileNames)];
     const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
 
     return {
@@ -79,9 +84,7 @@ const processProducts = (products) => {
       imageUrls: fullImageUrls,
     };
   });
-};
-
-// Edit Product Route
+};// Edit Product Route
 router.put("/edit-product/:id", (req, res) => {
   const { id } = req.params;
   const { name, description, price, stock, category, discount, image } =

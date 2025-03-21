@@ -606,8 +606,8 @@ const ProductDetails = () => {
                             <option value="">Select Category</option>
                <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>1.Outfits</b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold"}}><b>Boys Outfits</b></option>
-                <option value="boys trouser set">Boys touser sets</option>
-                <option value="boys short set">Boys short sets</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys trouser set"}'>Boys touser sets</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys short set"}'>Boys short sets</option>
                 <option value="boys trouser">Boys trouser</option>
                 <option value="boys tshirts">Boys tshirts</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls Outfits</b></option>
