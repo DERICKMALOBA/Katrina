@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import {useParams,Link } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 
-export default function Subcategories() {
+export default function Itemlist() {
   const [category, setCategory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [wishlist, setWishlist] = useState({});
- const {sub}=useParams();
+ const {item}=useParams();
   const toggleWishlist = (productId) =>{
     setWishlist((prev) => ({
       ...prev,
@@ -18,7 +18,7 @@ export default function Subcategories() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`/api/products/subcategories/${sub}`);
+        const response = await fetch(`/api/products/itemslist/${item}`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -26,7 +26,7 @@ export default function Subcategories() {
         console.log("Fetched data:", data); // Debugging log
         console.log(data);
         // Extract the products array from the response object
-        setCategory(Array.isArray(data.sub) ? data.sub : []);
+        setCategory(Array.isArray(data.item) ? data.item : []);
       } catch (err) {
         console.log("Fetch error:", err.message);
         setError(err.message);
@@ -129,7 +129,7 @@ export default function Subcategories() {
               )}
 
               {/* Add to Cart Button */}
-              <button className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
+              <button className="bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
                 Add to Cart
               </button>
             </div>

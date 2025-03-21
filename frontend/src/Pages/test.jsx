@@ -70,3 +70,62 @@ const cartSlice = createSlice({
 
 export const { addItem, removeItem, removeProduct } = cartSlice.actions;
 export default cartSlice.reducer;
+
+
+
+
+
+const categories = [
+  {
+    name: "Outfits",
+    subcategories: [
+      { name: "Boys Outfits", items: ["Boys Trouser sets", "Boys Short sets", "Trousers", "T-Shirts"] },
+      { name: "Girls Outfits", items: ["Girls Trouser set", "Girls Short set", "Skirt set", "Dresses", "Fanay wear", "Trousers", "Tops", "Leggings"] },
+      { name: "Swimming Wear", items: ["Boys Costumes", "Girls Costumes"] },
+      { name: "Inner Wears", items: ["Vests", "Boxers", "Panties", "Boob Tops"] },
+    ],
+  },
+  {
+    name: "Bags",
+    subcategories: [
+      { name: "School Bags", items: ["3 in 1 Trolley Bag", "3 in 1 Backpack", "2 in 1 Backpack", "Single Backpack"] },
+      { name: "Travelling Bags", items: ["3 in 1 Suitcase", "Single Suitcase"] },
+      { name: "Girls Handbags", items: [] },
+      { name: "Monkey Bags", items: [] },
+      { name: "Lunch Bags", items: [] },
+    ],
+  },
+  {
+    name: "Shoes",
+    subcategories: [
+      { name: "Boys' Shoes", items: ["Boys Sneakers", "Converse", "Boys Open Shoes", "Boys School Shoes"] },
+      { name: "Girls' Shoes", items: ["Girls Sneakers", "Doll Shoes", "Heels", "Girls Open Shoes", "Girls School Shoes"] },
+    ],
+  },
+  {
+    name: "Kids Hygiene",
+    subcategories: [
+      { name: "Perfumes", items: ["Boys Scents", "Girls Scents"] },
+      { name: "Body Mists", items: ["Boys Scents", "Girls Scents"] },
+      { name: "Body Wash", items: [] },
+      { name: "Lotions", items: [] },
+      { name: "Make Up Kit", items: [] },
+    ],
+  },
+  {
+    name: "Kids Accessories",
+    subcategories: [
+      { name: "Watches", items: [] },
+      { name: "Hair Accessories", items: [] },
+    ],
+  },
+  {
+    name: "Others",
+    subcategories: [
+      { name: "Pencil Pouches", items: [] },
+      { name: "Cosplay Costumes", items: [] },
+      { name: "Raincoats", items: [] },
+      { name: "Swimming Bags", items: [] },
+    ],
+  },
+];

@@ -1,13 +1,13 @@
-import { useState} from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { X } from "lucide-react"; // Import X icon from lucide-react
 
 const categories = [
   {
     name: "Outfits",
     subcategories: [
-      { name: "Boys Outfits", items: ["Trouser sets", "Short sets", "Trousers", "T-Shirts"] },
-      { name: "Girls Outfits", items: ["Trouser set", "Short set", "Skirt set", "Dresses", "Fancy wear", "Trousers", "Tops", "Leggings"] },
+      { name: "Boys Outfits", items: ["Boys Trouser sets", "Boys Short sets", "Trousers", "T-Shirts"] },
+      { name: "Girls Outfits", items: ["Girls Trouser set", "Girls Short set", "Skirt set", "Dresses", "Fanay wear", "Trousers", "Tops", "Leggings"] },
       { name: "Swimming Wear", items: ["Boys Costumes", "Girls Costumes"] },
       { name: "Inner Wears", items: ["Vests", "Boxers", "Panties", "Boob Tops"] },
     ],
@@ -25,8 +25,8 @@ const categories = [
   {
     name: "Shoes",
     subcategories: [
-      { name: "Boys' Shoes", items: ["Sneakers", "Converse", "Open Shoes", "School Shoes"] },
-      { name: "Girls' Shoes", items: ["Sneakers", "Doll Shoes", "Heels", "Open Shoes", "School Shoes"] },
+      { name: "Boys' Shoes", items: ["Boys Sneakers", "Converse", "Boys Open Shoes", "Boys School Shoes"] },
+      { name: "Girls' Shoes", items: ["Girls Sneakers", "Doll Shoes", "Heels", "Girls Open Shoes", "Girls School Shoes"] },
     ],
   },
   {
@@ -36,6 +36,7 @@ const categories = [
       { name: "Body Mists", items: ["Boys Scents", "Girls Scents"] },
       { name: "Body Wash", items: [] },
       { name: "Lotions", items: [] },
+      { name: "Make Up Kit", items: [] },
     ],
   },
   {
@@ -56,25 +57,53 @@ const categories = [
   },
 ];
 
-export default function Nav() {
-  const [menuOpen, setMenuOpen] = useState(false);
+
+export default function Nav({ menuOpen, setMenuOpen }) {
   const [openCategory, setOpenCategory] = useState(null);
+  const navRef = useRef(null);
+
+  // Close the navbar when clicking outside (for both mobile and desktop)
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        if (typeof setMenuOpen === "function") {
+          setMenuOpen(false); // Close the mobile sidebar
+        }
+        setOpenCategory(null); // Close any open category dropdowns
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [setMenuOpen]);
+
+  // Close the popup when a subcategory or item is clicked
+  const handleLinkClick = () => {
+    if (typeof setMenuOpen === "function") {
+      setMenuOpen(false);
+    }
+    setOpenCategory(null);
+  };
 
   return (
-    <div className="relative">
-      <div className="flex justify-between items-center p-4 bg-white text-purple-800">
-        <button className="sm:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Sidebar Menu */}
+    <div className="relative" ref={navRef}>
+      {/* Mobile Sidebar Menu */}
       <div
         className={`fixed inset-y-0 left-0 w-64 bg-purple-800 text-white p-4 transition-transform transform ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         } sm:hidden z-50`}
       >
-        <div className="mt-10 space-y-4 overflow-y-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-600">
+        {/* Close Button (X Icon) */}
+        <div className="flex items-left">
+          <button onClick={() => setMenuOpen(false)}>
+            <X size={24} className="text-white" />
+          </button>
+        </div>
+
+        {/* Categories List */}
+        <div className="mt-4 space-y-4 overflow-y-auto max-h-screen scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-600">
           <ul>
             {categories.map((category, index) => (
               <li key={index}>
@@ -90,13 +119,21 @@ export default function Nav() {
                   <ul className="pl-4 mt-2 text-sm space-y-1">
                     {category.subcategories.map((sub, subIndex) => (
                       <li key={subIndex}>
-                        <Link to={`/subcategories/${sub.name}`} className="text-base border-b pb-1 text-white hover:underline">
+                        <Link
+                          to={`/subcategories/${sub.name}`}
+                          onClick={handleLinkClick}
+                          className="text-base border-b pb-1 text-white hover:underline"
+                        >
                           {sub.name}
                         </Link>
                         <ul className="pl-4 text-xs">
                           {sub.items.map((item, itemIndex) => (
                             <li key={itemIndex}>
-                              <Link to={`/items/${item}`} className="hover:underline text-lg gap-4 text-primaryOrange">
+                              <Link
+                                to={`/items/${item}`}
+                                onClick={handleLinkClick}
+                                className="hover:underline text-lg gap-4 text-primaryOrange"
+                              >
                                 {item}
                               </Link>
                             </li>
@@ -130,13 +167,21 @@ export default function Nav() {
                   <div className="flex gap-6 rounded-lg">
                     {category.subcategories.map((sub, subIndex) => (
                       <div key={subIndex} className="whitespace-nowrap">
-                        <Link to={`/subcategories/${sub.name}`} className="hover:bg-green-800 text-lg">
+                        <Link
+                          to={`/subcategories/${sub.name}`}
+                          onClick={handleLinkClick}
+                          className="hover:bg-green-800 text-lg"
+                        >
                           <h3 className="text-base border-b pb-1 text-purple-800">{sub.name}</h3>
                         </Link>
                         <ul className="mt-1 text-sm">
                           {sub.items.map((item, itemIndex) => (
                             <li key={itemIndex}>
-                              <Link to={`/items/${item}`} className="hover:underline text-lg gap-4 text-primaryOrange">
+                              <Link
+                                to={`/items/${item}`}
+                                onClick={handleLinkClick}
+                                className="hover:underline text-lg gap-4 text-primaryOrange"
+                              >
                                 {item}
                               </Link>
                             </li>
