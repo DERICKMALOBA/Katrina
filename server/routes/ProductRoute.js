@@ -29,18 +29,19 @@ router.post("/add-product", upload.array("images", 10), (req, res) => {
   }
 
   const { description, name, price, stock, category, discount } = req.body;
-  // Create an array of filenames for uploaded images
+  var categorisation=JSON.parse(category);
   const fileNames = req.files.map((file) => file.filename);
 
   // Create a SQL query to insert product details and image filenames into the database
-  const query =
-    "INSERT INTO products (description, name, price, stock, category,discount, image) VALUES(?,?,?,?,?,?,?)";
+  const query ="INSERT INTO products (description, name, price, stock, category,super,subcat,discount, image) VALUES(?,?,?,?,?,?,?,?,?)";
   const values = [
     description,
     name,
     price,
     stock,
-    category,
+    categorisation.cat,
+    categorisation.super,
+    categorisation.subcat,
     discount,
     JSON.stringify(fileNames),
   ];
@@ -72,7 +73,6 @@ const processProducts = (products) => {
       imageUrls = [];
     }
     const { description, name, price, stock, category,discount } = req.body;
-    var categorisation=JSON.parse(category);
     const fileNames = req.files.map((file) => file.filename);
     // Create a SQL query to insert product details and image filenames into the database
     const query = "INSERT INTO products (description, name, price, stock, category,super,subcat,discount, image) VALUES(?,?,?,?,?,?,?,?,?)";
