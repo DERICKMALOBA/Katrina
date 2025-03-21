@@ -84,8 +84,7 @@ const processProducts = (products) => {
       imageUrls: fullImageUrls,
     };
   });
-};
-// Edit Product Route
+};// Edit Product Route
 router.put("/edit-product/:id", (req, res) => {
   const { id } = req.params;
   const { name, description, price, stock, category, discount, image } =
