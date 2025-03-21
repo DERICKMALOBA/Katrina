@@ -86,7 +86,7 @@ const Layout = ({ children }) => {
   return (
     <>
       {/* Show Header and Nav only if NOT on an admin route */}
-      {!isAdminRoute && (
+      {!adminRoutes && (
         <>
           <Header />
           <Nav />
