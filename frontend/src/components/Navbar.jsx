@@ -57,6 +57,7 @@ const categories = [
   },
 ];
 
+
 export default function Nav({ menuOpen, setMenuOpen }) {
   const [openCategory, setOpenCategory] = useState(null);
   const navRef = useRef(null);
@@ -65,7 +66,9 @@ export default function Nav({ menuOpen, setMenuOpen }) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
-        setMenuOpen(false); // Close the mobile sidebar
+        if (typeof setMenuOpen === "function") {
+          setMenuOpen(false); // Close the mobile sidebar
+        }
         setOpenCategory(null); // Close any open category dropdowns
       }
     };
@@ -78,7 +81,9 @@ export default function Nav({ menuOpen, setMenuOpen }) {
 
   // Close the popup when a subcategory or item is clicked
   const handleLinkClick = () => {
-    setMenuOpen(false);
+    if (typeof setMenuOpen === "function") {
+      setMenuOpen(false);
+    }
     setOpenCategory(null);
   };
 

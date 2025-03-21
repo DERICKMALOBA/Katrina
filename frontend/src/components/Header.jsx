@@ -1,29 +1,37 @@
-import { FaSearch, FaTimes } from 'react-icons/fa'; // Import FaTimes for the close icon
+import { FaSearch, FaTimes } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
 import { FaShoppingCart } from "react-icons/fa";
-import { useSelector } from "react-redux";
-import { Link } from 'react-router-dom';
-import { useState, useRef, useEffect } from 'react'; // Added useRef and useEffect
-import Profile from '../components/Profile'; // Import the Profile component
-import { Menu } from "lucide-react"; // Import Menu icon from lucide-react
+import { useSelector, useDispatch } from "react-redux";
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useState, useRef, useEffect } from 'react';
+import Profile from '../components/Profile';
+import { Menu } from "lucide-react";
 import Nav from './Navbar';
+import { fetchSearchResults } from '../Redux/SearchSlice';
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false); // State for menu open/close
+  const [menuOpen, setMenuOpen] = useState(false);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const user = useSelector((state) => state.auth.user); // Get user from auth slice
-  const menuRef = useRef(null); // Ref for detecting clicks outside the menu
+  const user = useSelector((state) => state.auth.user);
+  const menuRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSearchClick = () => {
-    const urlParams = new URLSearchParams();
-    if (searchTerm) urlParams.set('searchTerm', searchTerm);
+    if (searchTerm.trim()) {
+      dispatch(fetchSearchResults({ name: searchTerm })).then(() => {
+        navigate('/search-results'); // Redirect to the SearchResults component
+      });
+    }
   };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      handleSearchClick();
+    if (event.key === 'Enter' && searchTerm.trim()) {
+      dispatch(fetchSearchResults({ name: searchTerm })).then(() => {
+        navigate('/search-results'); // Redirect to the SearchResults component
+      });
     }
   };
 
@@ -31,7 +39,6 @@ function Header() {
     setIsProfileOpen(!isProfileOpen);
   };
 
-  // Close the menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -58,7 +65,7 @@ function Header() {
 
           {/* Logo Section - Center */}
           <Link to='/' className="flex-grow text-center">
-            <h1 className="font-bold text-lg sm:text-xl"> {/* Changed text-sm to text-lg */}
+            <h1 className="font-bold text-lg sm:text-xl">
               <span className="text-white">Katrina Kid's Closet</span>
             </h1>
           </Link>
@@ -69,10 +76,7 @@ function Header() {
             {user ? (
               <Link to='/profile'>
                 <div className="relative">
-                  <FaUserCircle 
-                    size={30} 
-                    color="white" 
-                  />
+                  <FaUserCircle size={30} color="white" />
                 </div>
               </Link>
             ) : (
@@ -103,7 +107,7 @@ function Header() {
                 className="bg-transparent focus:outline-none size-5 w-full pl-4 pr-10" 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)} 
-                onKeyDown={handleKeyPress}  // Trigger search on Enter key press
+                onKeyDown={handleKeyPress}
               />
               <FaSearch 
                 className="absolute right-2 size-6 top-1/2 transform -translate-y-1/2 text-gray-600 text-2xl cursor-pointer"
@@ -132,7 +136,7 @@ function Header() {
               className="bg-transparent focus:outline-none size-5 w-full sm:w-64 pl-4 pr-10" 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)} 
-              onKeyDown={handleKeyPress}  // Trigger search on Enter key press
+              onKeyDown={handleKeyPress}
             />
             <FaSearch 
               className="absolute right-2 size-6 top-1/2 transform -translate-y-1/2 text-gray-600 text-2xl cursor-pointer"
@@ -145,10 +149,7 @@ function Header() {
         {user ? (
           <Link to='/profile'>
             <div className="relative">
-              <FaUserCircle 
-                size={30} 
-                color="white" 
-              />
+              <FaUserCircle size={30} color="white" />
             </div>
           </Link>
         ) : (

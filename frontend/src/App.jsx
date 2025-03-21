@@ -50,6 +50,7 @@ import Subcategories from "./Pages/Subcategory";
 
 import Chat from "./Pages/Chat";
 import Itemlist from "./Pages/Itemlist";
+import SearchResults from "./components/SearchResult";
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -174,6 +175,7 @@ function App() {
           <Route path="/message/:email" element={<Admin />} />
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
+          <Route path="/search-results" element={SearchResults} />
         
           <Route path="/profile" element={<Profile />} />
           <Route path="/subcategories/:sub" element={<Subcategories/>} />
