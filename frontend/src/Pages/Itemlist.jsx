@@ -129,7 +129,7 @@ export default function Itemlist() {
               )}
 
               {/* Add to Cart Button */}
-              <button className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
+              <button className="bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
                 Add to Cart
               </button>
             </div>
