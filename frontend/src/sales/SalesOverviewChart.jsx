@@ -32,7 +32,7 @@ const SalesOverviewChart = () => {
 		{ month: "Dec", sales: dec },
 	];
 	useEffect(() => {
-		const fetchUsers = async () => {
+		const fetchSales = async () => {
 		  try {
 			const response = await fetch("/api/sales/salesgrowth"); // Change this to your actual API endpoint
 			if (!response.ok) {
@@ -57,7 +57,7 @@ const SalesOverviewChart = () => {
 			console.log(error);
 		  } 
 		};
-		fetchUsers();
+		fetchSales();
 		}, []);
 	return (
 		<motion.div
