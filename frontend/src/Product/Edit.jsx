@@ -457,73 +457,73 @@ const ProductDetails = () => {
                 value={editProduct.category}
               >
       <option value="">Select Category</option>
-               <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>1.Outfits</b></option>
+      <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>1.Outfits</b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold"}}><b>Boys Outfits</b></option>
-                <option value="boys trouser set">Boys touser sets</option>
-                <option value="boys short set">Boys short sets</option>
-                <option value="boys trouser">Boys trouser</option>
-                <option value="boys tshirts">Boys tshirts</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys trouser set"}'>Boys touser sets</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys short set"}'>Boys short sets</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys trouser"}'>Boys trouser</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys tshirts"}'>Boys tshirts</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls Outfits</b></option>
-                <option value="girls trouser set">Girls trouser set</option>
-                <option value="girls short set">Girls short set</option>
-                <option value="skirt set">Skirt set</option>
-                <option value="dressers">Dressers</option>
-                <option value="fanay wear">Fanay wear</option>
-                <option value="girls trouser">Girls trouser</option>
-                <option value="tops">Tops</option>
-                <option value="leggings">Leggings</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"girls trouser set"}'>Girls trouser set</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"girls short set"}'>Girls short set</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"skirt set"}'>Skirt set</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"dressers"}'>Dressers</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"fanay wear"}'>Fanay wear</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"girls trouser"}'>Girls trouser</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"tops"}'>Tops</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"leggings"}'>Leggings</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Swimming wear </b></option>
-                <option value="boys costumes">Boys costumes</option>
-                <option value="girls costumes">Girls costumes</option>
-                
+                <option value='{"super":"Outfits","subcat":"Boys costumes","cat":"boys costumes"}'>Boys costumes</option>
+                <option value='{"super":"Outfits","subcat":"Girls costumes","cat":"girls costumes"}'>Girls costumes</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Inner wears </b></option>
-                <option value="vests">Vests</option>
-                <option value="boxers">Boxers</option>
-                <option value="panties">Panties</option>
-                <option value="boob tops">Boob tops</option>
-                
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"vests"}'>Vests</option>
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"boxers"}'>Boxers</option>
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"panties"}'>Panties</option>
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"boob tops"}'>Boob tops</option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>2.Bags </b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>School bags</b></option>
-                <option value="3 in 1 trolley bag">3 in 1 Trolley bag</option>
-                <option value="3 in 1 back pack">3 in 1 Back pack</option>
-                <option value="2 in 1 back pack">2 in 1 Back pack</option>
-                <option value="single back pack">Single Back pack</option>
+                <option value='{"super":"Bags","subcat":"School bags","cat":"3 in 1 trolley bag"}'>3 in 1 Trolley bag</option>
+                <option value='{"super":"Bags","subcat":"School bags","cat":"3 in 1 back pack"}'>3 in 1 Back pack</option>
+                <option value='{"super":"Bags","subcat":"School bags","cat":"2 in 1 back pack"}'>2 in 1 Back pack</option>
+                <option value="single back pack">Sinle Back pack</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Travelling bags</b></option>
-                <option value="3 in 1 suitcase">3 in 1 suitcase</option>
-                <option value="single suitcase">Single suitcase</option>
-                <option value="girls handbags" style={{ color: "cyan", fontWeight: "300" }}>Girls handbags</option>
-                <option value="monkey bags" style={{ color: "cyan", fontWeight: "300" }}>Monkey bags</option>
-                <option value="lunch bags" style={{ color: "cyan", fontWeight: "300" }} >Lunch bags</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"3 in 1 suitcase"}'>3 in suitcase</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"single suitcase"}'>Single suitcase</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"2 in 1 back pack"}'>2 in 1 Back pack</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"single back pack"}'>Single Back pack</option><br/>
+                <option value='{"super":"Bags","subcat":" ","cat":"girls handbags"}' style={{ color: "cyan", fontWeight: "300" }}>Girls handbags</option>
+                <option value='{"super":"Bags","subcat":" ","cat":"monkey bags"}' style={{ color: "cyan", fontWeight: "300" }}>Monkey bags</option>
+                <option value='{"super":"Bags","subcat":" ","cat":"lunch bags"}' style={{ color: "cyan", fontWeight: "300" }} >Lunch bags</option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>3.Shoes</b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Boys shoes</b></option>
-                <option value="boys sneakers">Boys sneakers</option>
-                <option value="converse">Converse</option>
-                <option value="boys open shoes">Boys open shoes</option>
-                <option value="boys school shoes">Boys school shoes</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"boys sneakers"}'>Boys sneakers</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"converse"}'>Converse</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"boys open shoes"}'>Boys open shoes</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"boys school shoes"}'>Boys school shoes</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls shoes</b></option>
-                <option value="girls sneakers">Girls sneakers</option>
-                <option value="doll">Doll shoes</option>
-                <option value="heels">Heels</option>
-                <option value="girls open shoes">Girls open shoes</option>
-                <option value="girls school shoes">Girls school shoes</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"girls sneakers"}'>Girls sneakers</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"doll"}'>Doll shoes</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"heels"}'>Heels</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"girls open shoes"}'>Girls open shoes</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"girls open shoes"}'>Girls school shoes</option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>4.Kid's hygiene</b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Perfumes</b></option>
-                <option value="boys scents">Boys scents</option>
-                <option value="girls scents">Girls scents</option>
+                <option value='{"super":"Kids hygiene","subcat":"Perfumes","cat":"boys scents"}'>Boys scents</option>
+                <option value='{"super":"Kids hygiene","subcat":"Perfumes","cat":""girls scents"}'>Girls scents</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Body mists</b></option>
-                <option value="boys scents">Boys scents</option>
-                <option value="girls scents">Girls scents</option>
-                <option value="body wash" style={{ color: "cyan", fontWeight: "300" }}><b>Body wash</b></option>
-                <option value="lotions" style={{ color: "cyan", fontWeight: "300" }}><b>Lotions</b></option>
-                <option value="make up kit" style={{ color: "cyan", fontWeight: "300" }}><b>Make up kit</b></option>
+                <option value='{"super":"Kids hygiene","subcat":"Body mists","cat":"boys scents"}'>Boys scents</option>
+                <option value='{"super":"Kids hygiene","subcat":"Body mists","cat":"girls scents"}'>Girls scents</option>
+                <option value='{"super":"Kids hygiene","subcat":" ","cat":"body wash"}' style={{ color: "cyan", fontWeight: "300" }}><b>Body wash</b></option>
+                <option value='{"super":"Kids hygiene","subcat":" ","cat":"lotions"}' style={{ color: "cyan", fontWeight: "300" }}><b>Lotions</b></option>
+                <option value='{"super":"Kids hygiene","subcat":" ","cat":"make up kit"}' style={{ color: "cyan", fontWeight: "300" }}><b>Make up kit</b></option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>5.Kid's accessories</b></option>
-                <option value="wathes">Watches</option>
-                <option value="hair accessories">Hair accessories</option>
+                <option value='{"super":"Kids accessories","subcat":" ","cat":"wathes"}'>Watches</option>
+                <option value='{"super":"Kids accessories","subcat":" ","cat":"hair accessories"}'>Hair accessories</option>
                 <option value="" disabled  style={{ color: "orange", fontWeight: "bold" }}><b>6.Others</b></option>
-                <option value="pencil poaches">Pencil poaches</option>
-                <option value="cosplay costumes">cosplay costumes</option>
-                <option value="raincoats">Raincoats</option>
-                <option value="swimming bags">Swimming bags</option>
+                <option value='{"super":"Others","subcat":" ","cat":"pencil poaches"}'>Pencil poaches</option>
+                <option value='{"super":"Others","subcat":" ","cat":"cosplay costumes"}'>cosplay costumes</option>
+                <option value='{"super":"Others","subcat":" ","cat":"raincoats"}'>Raincoats</option>
+                <option value='{"super":"Others","subcat":" ","cat":"swimming bags"}'>Swimming bags</option>
               </select>
               <input
                 type="file"
@@ -608,73 +608,70 @@ const ProductDetails = () => {
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold"}}><b>Boys Outfits</b></option>
                 <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys trouser set"}'>Boys touser sets</option>
                 <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys short set"}'>Boys short sets</option>
-                <option value="boys trouser">Boys trouser</option>
-                <option value="boys tshirts">Boys tshirts</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys trouser"}'>Boys trouser</option>
+                <option value='{"super":"Outfits","subcat":"Boys Outfits","cat":"boys tshirts"}'>Boys tshirts</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls Outfits</b></option>
-                <option value="girls trouser set">Girls trouser set</option>
-                <option value="girls short set">Girls short set</option>
-                <option value="skirt set">Skirt set</option>
-                <option value="dressers">Dressers</option>
-                <option value="fanay wear">Fanay wear</option>
-                <option value="girls trouser">Girls trouser</option>
-                <option value="tops">Tops</option>
-                <option value="leggings">Leggings</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"girls trouser set"}'>Girls trouser set</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"girls short set"}'>Girls short set</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"skirt set"}'>Skirt set</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"dressers"}'>Dressers</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"fanay wear"}'>Fanay wear</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"girls trouser"}'>Girls trouser</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"tops"}'>Tops</option>
+                <option value='{"super":"Outfits","subcat":"Girls Outfits","cat":"leggings"}'>Leggings</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Swimming wear </b></option>
-                <option value="boys costumes">Boys costumes</option>
-                <option value="girls costumes">Girls costumes</option>
-                
+                <option value='{"super":"Outfits","subcat":"Boys costumes","cat":"boys costumes"}'>Boys costumes</option>
+                <option value='{"super":"Outfits","subcat":"Girls costumes","cat":"girls costumes"}'>Girls costumes</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Inner wears </b></option>
-                <option value="vests">Vests</option>
-                <option value="boxers">Boxers</option>
-                <option value="panties">Panties</option>
-                <option value="boob tops">Boob tops</option>
-                
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"vests"}'>Vests</option>
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"boxers"}'>Boxers</option>
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"panties"}'>Panties</option>
+                <option value='{"super":"Outfits","subcat":"Inner Wears","cat":"boob tops"}'>Boob tops</option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>2.Bags </b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>School bags</b></option>
-                <option value="3 in 1 trolley bag">3 in 1 Trolley bag</option>
-                <option value="3 in 1 back pack">3 in 1 Back pack</option>
-                <option value="2 in 1 back pack">2 in 1 Back pack</option>
+                <option value='{"super":"Bags","subcat":"School bags","cat":"3 in 1 trolley bag"}'>3 in 1 Trolley bag</option>
+                <option value='{"super":"Bags","subcat":"School bags","cat":"3 in 1 back pack"}'>3 in 1 Back pack</option>
+                <option value='{"super":"Bags","subcat":"School bags","cat":"2 in 1 back pack"}'>2 in 1 Back pack</option>
                 <option value="single back pack">Sinle Back pack</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Travelling bags</b></option>
-                <option value="3 in 1 suitcase">3 in suitcase</option>
-                <option value="single suitcase">Single suitcase</option>
-                <option value="2 in 1 back pack">2 in 1 Back pack</option>
-                <option value="single back pack">Single Back pack</option><br/>
-                <option value="girls handbags" style={{ color: "cyan", fontWeight: "300" }}>Girls handbags</option>
-                <option value="monkey bags" style={{ color: "cyan", fontWeight: "300" }}>Monkey bags</option>
-                <option value="lunch bags" style={{ color: "cyan", fontWeight: "300" }} >Lunch bags</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"3 in 1 suitcase"}'>3 in suitcase</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"single suitcase"}'>Single suitcase</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"2 in 1 back pack"}'>2 in 1 Back pack</option>
+                <option value='{"super":"Bags","subcat":"Travelling bags","cat":"single back pack"}'>Single Back pack</option><br/>
+                <option value='{"super":"Bags","subcat":" ","cat":"girls handbags"}' style={{ color: "cyan", fontWeight: "300" }}>Girls handbags</option>
+                <option value='{"super":"Bags","subcat":" ","cat":"monkey bags"}' style={{ color: "cyan", fontWeight: "300" }}>Monkey bags</option>
+                <option value='{"super":"Bags","subcat":" ","cat":"lunch bags"}' style={{ color: "cyan", fontWeight: "300" }} >Lunch bags</option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>3.Shoes</b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Boys shoes</b></option>
-                <option value="boys sneakers">Boys sneakers</option>
-                <option value="converse">Converse</option>
-                <option value="boys open shoes">Boys open shoes</option>
-                <option value="boys school shoes">Boys school shoes</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"boys sneakers"}'>Boys sneakers</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"converse"}'>Converse</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"boys open shoes"}'>Boys open shoes</option>
+                <option value='{"super":"Shoes","subcat":"Boys shoes","cat":"boys school shoes"}'>Boys school shoes</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Girls shoes</b></option>
-                <option value="girls sneakers">Girls sneakers</option>
-                <option value="doll">Doll shoes</option>
-                <option value="heels">Heels</option>
-                <option value="girls open shoes">Girls open shoes</option>
-                <option value="girls open shoes">Girls school shoes</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"girls sneakers"}'>Girls sneakers</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"doll"}'>Doll shoes</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"heels"}'>Heels</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"girls open shoes"}'>Girls open shoes</option>
+                <option value='{"super":"Shoes","subcat":"Girls shoes","cat":"girls open shoes"}'>Girls school shoes</option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>4.Kid's hygiene</b></option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Perfumes</b></option>
-                <option value="boys scents">Boys scents</option>
-                <option value="girls scents">Girls scents</option>
+                <option value='{"super":"Kids hygiene","subcat":"Perfumes","cat":"boys scents"}'>Boys scents</option>
+                <option value='{"super":"Kids hygiene","subcat":"Perfumes","cat":""girls scents"}'>Girls scents</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Body mists</b></option>
-                <option value="boys scents">Boys scents</option>
-                <option value="girls scents">Girls scents</option>
-                <option value="body wash" style={{ color: "cyan", fontWeight: "300" }}><b>Body wash</b></option>
-                <option value="lotions" style={{ color: "cyan", fontWeight: "300" }}><b>Lotions</b></option>
-                <option value="make up kit" style={{ color: "cyan", fontWeight: "300" }}><b>Make up kit</b></option>
+                <option value='{"super":"Kids hygiene","subcat":"Body mists","cat":"boys scents"}'>Boys scents</option>
+                <option value='{"super":"Kids hygiene","subcat":"Body mists","cat":"girls scents"}'>Girls scents</option>
+                <option value='{"super":"Kids hygiene","subcat":" ","cat":"body wash"}' style={{ color: "cyan", fontWeight: "300" }}><b>Body wash</b></option>
+                <option value='{"super":"Kids hygiene","subcat":" ","cat":"lotions"}' style={{ color: "cyan", fontWeight: "300" }}><b>Lotions</b></option>
+                <option value='{"super":"Kids hygiene","subcat":" ","cat":"make up kit"}' style={{ color: "cyan", fontWeight: "300" }}><b>Make up kit</b></option>
                 <option value="" disabled style={{ color: "orange", fontWeight: "bold" }}><b>5.Kid's accessories</b></option>
-                <option value="wathes">Watches</option>
-                <option value="hair accessories">Hair accessories</option>
+                <option value='{"super":"Kids accessories","subcat":" ","cat":"wathes"}'>Watches</option>
+                <option value='{"super":"Kids accessories","subcat":" ","cat":"hair accessories"}'>Hair accessories</option>
                 <option value="" disabled  style={{ color: "orange", fontWeight: "bold" }}><b>6.Others</b></option>
-                <option value="pencil poaches">Pencil poaches</option>
-                <option value="cosplay costumes">cosplay costumes</option>
-                <option value="raincoats">Raincoats</option>
-                <option value="swimming bags">Swimming bags</option>
+                <option value='{"super":"Others","subcat":" ","cat":"pencil poaches"}'>Pencil poaches</option>
+                <option value='{"super":"Others","subcat":" ","cat":"cosplay costumes"}'>cosplay costumes</option>
+                <option value='{"super":"Others","subcat":" ","cat":"raincoats"}'>Raincoats</option>
+                <option value='{"super":"Others","subcat":" ","cat":"swimming bags"}'>Swimming bags</option>
               </select>
-
               <input
                 type="file"
                 multiple
