@@ -1,21 +1,62 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { motion } from "framer-motion";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-
-const revenueData = [
-	{ month: "Jan", revenue: 4000, target: 3800 },
-	{ month: "Feb", revenue: 3000, target: 3200 },
-	{ month: "Mar", revenue: 5000, target: 4500 },
-	{ month: "Apr", revenue: 4500, target: 4200 },
-	{ month: "May", revenue: 6000, target: 5500 },
-	{ month: "Jun", revenue: 5500, target: 5800 },
-	{ month: "Jul", revenue: 7000, target: 6500 },
-];
-
 const RevenueChart = () => {
-	
-	const [selectedTimeRange, setSelectedTimeRange] = useState("This Month");
-
+	const [error, setError] = useState(null);
+		const [jan, setJan] = useState(null);
+		const [feb, setFeb] = useState(null);
+		const [mar, setMar] = useState(null);
+		const [apr, setApr] = useState(null);
+		const [may, setMay] = useState(null);
+		const [jun, setJun] = useState(null);
+		const [jul, setJul] = useState(null);
+		const [aug, setAug] = useState(null);
+		const [sep, setSep] = useState(null);
+		const [oct, setOct] = useState(null);
+		const [nov, setNov] = useState(null);
+		const [dec, setDec] = useState(null);
+		const revenueData  = [
+			{ month: "Jan", revenue: jan },
+			{ month: "Feb", revenue: feb },
+			{ month: "Mar", revenue: mar },
+			{ month: "Apr", revenue: apr },
+			{ month: "May", revenue: may },
+			{ month: "Jun", revenue: jun },
+			{ month: "Jul", revenue: jul },
+			{ month: "Aug", revenue: aug },
+			{ month: "Sep", revenue: sep },
+			{ month: "Oct", revenue: oct },
+			{ month: "Nov", revenue: nov },
+			{ month: "Dec", revenue: dec },
+		];
+		useEffect(() => {
+			const fetchSales = async () => {
+			  try {
+				const response = await fetch("/api/sales/salesgrowth"); // Change this to your actual API endpoint
+				if (!response.ok) {
+				  throw new Error("Failed to fetch products");
+				}
+				const data = await response.json();
+				console.log("Data is:"+data);
+				setJan(data.Jan); 
+				setFeb(data.Feb);
+				setMar(data.Mar); 
+				setApr(data.Apr);
+				setMay(data.May); 
+				setJun(data.Jun);
+				setJul(data.Jul); 
+				setAug(data.Aug);
+				setSep(data.Sep); 
+				setOct(data.Oct);
+				setNov(data.Nov); 
+				setDec(data.Dec);
+			  } catch (err) {
+				setError(err.message); 
+				console.log(error);
+			  } 
+			};
+			fetchSales();
+			}, []);
 	return (
 		<motion.div
 			className='bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-lg shadow-lg rounded-xl p-6 border border-gray-700 mb-8'
@@ -24,17 +65,7 @@ const RevenueChart = () => {
 			transition={{ delay: 0.2 }}
 		>
 			<div className='flex justify-between items-center mb-6'>
-				<h2 className='text-xl font-semibold text-gray-100'>Revenue vs Target</h2>
-				<select
-					className='bg-gray-700 text-white rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500'
-					value={selectedTimeRange}
-					onChange={(e) => setSelectedTimeRange(e.target.value)}
-				>
-					<option>This Week</option>
-					<option>This Month</option>
-					<option>This Quarter</option>
-					<option>This Year</option>
-				</select>
+				<h2 className='text-xl font-semibold text-gray-100'>Revenue</h2>
 			</div>
 
 			<div style={{ width: "100%", height: 400 }}>

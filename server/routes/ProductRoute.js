@@ -29,8 +29,10 @@ router.post("/add-product", upload.array("images", 10), (req, res) => {
   }
 
   const { description, name, price, stock, category, discount } = req.body;
+
   // Create an array of filenames for uploaded images
   // const fileNames = req.files.map((file) => file.filename);
+
 
   var categorisation=JSON.parse(category);
   const fileNames = req.files.map((file) => file.filename);
@@ -76,7 +78,6 @@ const processProducts = (products) => {
       imageUrls = [];
     }
     const { description, name, price, stock, category,discount } = req.body;
-    var categorisation=JSON.parse(category);
     const fileNames = req.files.map((file) => file.filename);
     // Create a SQL query to insert product details and image filenames into the database
     const query = "INSERT INTO products (description, name, price, stock, category,super,subcat,discount, image) VALUES(?,?,?,?,?,?,?,?,?)";
@@ -3949,6 +3950,7 @@ router.get('/search', (req, res) => {
 
     res.json({ product: [], totalDiscountAmount: "0.00" });
   });
+
 });
 
 
@@ -3960,5 +3962,67 @@ router.get('/search', (req, res) => {
 
 
 
+
+
+  router.get("/super/:sup", (req, res) => {
+    const { sup } = req.params;
+    console.log(sup);
+      const query = `SELECT * FROM products WHERE super=?`;
+      db.query(
+        query,
+        sup,
+        (err, results) => {
+          if (err)
+            return res
+              .status(500)
+              .json({ message: "Database error", error: err });
+          if (results.length >= 1) {
+            let totalDiscountAmount = 0;
+            console.log(results);
+            const productsWithDiscount = results.map((product) => {
+              let imageUrls = [];
+  
+              try {
+                if (product.image) {
+                  const parsedImage = JSON.parse(product.image);
+                  // Ensure imageUrls is always an array
+                  imageUrls = Array.isArray(parsedImage)
+                    ? parsedImage
+                    : [parsedImage];
+                }
+              } catch (parseError) {
+                console.error("Error parsing product image data:", parseError);
+                imageUrls = [];
+              }
+  
+              const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+  
+              // Calculate discount
+              const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+              const originalPrice = parseFloat(product.price) || 0;
+              const discountAmount = (discountPercentage / 100) * originalPrice;
+              const discountedPrice = originalPrice - discountAmount;
+  
+              totalDiscountAmount += discountAmount;
+  
+              return {
+                ...product,
+                originalPrice: originalPrice.toFixed(2), // Keep original price
+                discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+                discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+                imageUrls: fullImageUrls,
+              };
+            });
+  
+            return res.json({
+              super: productsWithDiscount,
+              totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+            });
+          }
+  
+          res.json({ super: [], totalDiscountAmount: "0.00" });
+        }
+      );
+    });
 
 module.exports = router;

@@ -83,7 +83,6 @@ const Home = () => {
         const fullUrl = `${apiUrl}?${queryParams.toString()}`;
         const response = await fetch(fullUrl);
         if (!response.ok) throw new Error("Failed to fetch products");
-
         const data = await response.json();
         const processedProducts = (
           Array.isArray(data) ? data : data.products || []
