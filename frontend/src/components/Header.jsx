@@ -4,10 +4,9 @@ import { FaShoppingCart } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useState, useRef, useEffect } from 'react';
-import Profile from '../components/Profile';
 import { Menu } from "lucide-react";
 import Nav from './Navbar';
-import { fetchSearchResults } from '../Redux/SearchSlice';
+// import { fetchSearchResults } from '../Redux/SearchSlice';
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,19 +18,31 @@ function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const handleSearchClick = () => {
+  const handleSearchClick = async () => {
     if (searchTerm.trim()) {
-      dispatch(fetchSearchResults({ name: searchTerm })).then(() => {
-        navigate('/search-results'); // Redirect to the SearchResults component
-      });
+      // Construct the URL with search parameters
+      const searchParams = new URLSearchParams({ name: searchTerm });
+      const url = `/products/search?${searchParams.toString()}`;
+
+      // Dispatch the thunk to fetch search results
+      // await dispatch(fetchSearchResults({ name: searchTerm }));
+
+      // Navigate to the search results page with the updated URL
+      navigate(url);
     }
   };
 
-  const handleKeyPress = (event) => {
+  const handleKeyPress = async (event) => {
     if (event.key === 'Enter' && searchTerm.trim()) {
-      dispatch(fetchSearchResults({ name: searchTerm })).then(() => {
-        navigate('/search-results'); // Redirect to the SearchResults component
-      });
+      // Construct the URL with search parameters
+      const searchParams = new URLSearchParams({ name: searchTerm });
+      const url = `/products/search?${searchParams.toString()}`;
+
+      // Dispatch the thunk to fetch search results
+      // await dispatch(fetchSearchResults({ name: searchTerm }));
+
+      // Navigate to the search results page with the updated URL
+      navigate(url);
     }
   };
 
@@ -80,8 +91,8 @@ function Header() {
                 </div>
               </Link>
             ) : (
-              <Link to="/signin" className="text-white hover:opacity-70 transition duration-200">
-                Sign In
+              <Link to="/sign-in" className="text-white hover:opacity-70 transition duration-200">
+                Sign in
               </Link>
             )}
 
@@ -153,7 +164,7 @@ function Header() {
             </div>
           </Link>
         ) : (
-          <Link to="/signin" className="text-white hover:opacity-70 transition duration-200">
+          <Link to="/sign-in" className="text-white hover:opacity-70 transition duration-200">
             Sign In
           </Link>
         )}

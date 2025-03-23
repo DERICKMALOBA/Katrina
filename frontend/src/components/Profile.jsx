@@ -1,118 +1,138 @@
-// import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import {logoutUser} from "../Redux/AuthSlice"
+import { addItem, removeFromWishlist } from "../Redux/CartSlice"; // Import actions
+import {
+  FaUser,
+  
+  FaShoppingBag,
+  FaHeart,
+  FaHistory,
+  FaSignOutAlt,
+  FaTrash,
+} from "react-icons/fa";
+import { Trash2 } from "lucide-react";
+import { useNavigate } from 'react-router-dom'; 
 
-function Profile({ onClose }) {
-//   const user = useSelector((state) => state.auth.user); // Get user from auth slice
+
+const Profile = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); 
+  const viewedProducts = useSelector((state) => state.viewedProducts.products);
+  const user = useSelector((state) => state.auth.user);
+  const token = user?.token; 
+  console.log('Viewed Products:', viewedProducts);
+  const wishlist = useSelector((state) => state.cart.wishlist); // Get wishlist from Redux store
+  const [activeSection, setActiveSection] = useState("myAccount"); // State to manage active section
 
   // Example data (replace with actual data from your backend or Redux store)
   const orders = [
-    { id: 1, date: '2023-10-01', items: 2, total: 50.0, status: 'Delivered' },
-    { id: 2, date: '2023-09-25', items: 1, total: 30.0, status: 'Shipped' },
-  ];
-
-  const addresses = [
-    { id: 1, name: 'Home', address: '123 Main St, Apt 4B, New York, NY 10001' },
-    { id: 2, name: 'Work', address: '456 Broadway, Suite 200, New York, NY 10002' },
-  ];
-
-  const paymentMethods = [
-    { id: 1, type: 'Visa', last4: '1234', expires: '12/2025' },
-    { id: 2, type: 'MasterCard', last4: '5678', expires: '06/2024' },
-  ];
-
-  const wishlistItems = [
-    { id: 1, name: 'Product A', price: 20.0, image: 'product-a.jpg' },
-    { id: 2, name: 'Product B', price: 35.0, image: 'product-b.jpg' },
+    { id: 1, date: "2023-10-01", items: 2, total: 50.0, status: "Delivered" },
+    { id: 2, date: "2023-09-25", items: 1, total: 30.0, status: "Shipped" },
   ];
 
   const recentActivity = [
-    { id: 1, action: 'Viewed Product C on 2023-10-05' },
-    { id: 2, action: 'Added Product D to cart on 2023-10-04' },
+    { id: 1, action: "Viewed Product C on 2023-10-05" },
+    { id: 2, action: "Added Product D to cart on 2023-10-04" },
   ];
 
+
+  const handleLogout = () => {
+    dispatch(logoutUser()); // Clear user state in Redux
+    localStorage.removeItem('token'); // Clear token from localStorage (if applicable)
+    navigate("/"); // Redirect to the home page
+  };
+
+  const handleDeleteAccount = async () => {
+    const token = localStorage.getItem('accessToken'); 
+    console.log(token)// Retrieve the token from localStorage
+  
+    if (!token) {
+      alert('You must be logged in to delete your account.');
+      return;
+    }
+  
+    try {
+      const response = await fetch('/api/auth/delete-account', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`, // Include the token in the header
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log(data.message); // "User deleted successfully"
+        // Clear Redux state and localStorage
+        dispatch(logoutUser());
+        localStorage.removeItem('accessToken'); // Remove the token from localStorage
+        localStorage.removeItem('userRole'); // Remove the role from localStorage
+        navigate('/'); // Redirect to the home page
+      } else {
+        console.error('Failed to delete account:', data.message || 'Unknown error');
+        alert(data.message || 'Failed to delete account. Please try again.');
+      }
+    } catch (error) {
+      console.error('Failed to delete account:', error.message);
+      alert('Failed to delete account. Please try again.');
+    }
+  };
+
+
   // If user is not logged in, display a message or redirect
-  if (!user) {
+  if (!user || Object.keys(user).length === 0) {
     return (
-      <div className="absolute right-0 mt-2 w-[800px] bg-white rounded-lg shadow-lg p-6">
+      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
         <p className="text-center text-red-600">Please sign in to view your profile.</p>
-        <Link to="/signin" className="block text-center text-purple-800 hover:underline mt-4">
+        <Link to="/sign-in" className="block text-center text-purple-800 hover:underline mt-4">
           Go to Sign In
         </Link>
       </div>
     );
   }
 
-  return (
-    <div className="absolute right-0 mt-2 w-[800px] bg-white rounded-lg shadow-lg p-6">
-      {/* Close Button */}
-      <button 
-        onClick={onClose}
-        className="absolute top-2 right-2 bg-purple-800 text-white py-1 px-3 rounded-lg hover:bg-purple-700 transition duration-200"
-      >
-        X
-      </button>
+  // Render content based on active section
+  const renderContent = () => {
+    switch (activeSection) {
+      case "myAccount":
+        return (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Personal Details */}
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h3 className="text-xl font-semibold mb-4">Personal Details</h3>
+              <p>
+                <strong>Name:</strong> {user.name || "Not provided"}
+              </p>
+              <p>
+                <strong>Email:</strong> {user.email || "Not provided"}
+              </p>
+              <p>
+                <strong>Phone:</strong> {user.phone || "Not provided"}
+              </p>
+              <button className="mt-4 w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
+                Edit
+              </button>
+            </div>
 
-      {/* Grid Layout for Sections */}
-      <div className="grid grid-cols-2 gap-6">
-        {/* Left Column */}
-        <div className="space-y-6">
-          {/* Personal Information */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Personal Information</h2>
-            <p><strong>Name:</strong> {user.name || 'Not provided'}</p>
-            <p><strong>Email:</strong> {user.email || 'Not provided'}</p>
-            <p><strong>Phone:</strong> {user.phone || 'Not provided'}</p>
-            <button className="mt-2 w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-              Edit
-            </button>
+            {/* Default Address */}
+            <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
+              <h3 className="text-xl font-semibold mb-4">Default Address</h3>
+              <p>
+                <strong>Address:</strong> 123 Main St, Apt 4B, New York, NY 10001
+              </p>
+              <button className="mt-4 w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
+                Edit Address
+              </button>
+            </div>
           </div>
-
-          {/* Address Book */}
+        );
+      case "orders":
+        return (
           <div>
-            <h2 className="text-xl font-semibold mb-2">Saved Addresses</h2>
-            {addresses.map((address) => (
-              <div key={address.id} className="mb-4 p-4 border rounded-lg">
-                <p><strong>{address.name}</strong></p>
-                <p>{address.address}</p>
-                <button className="mt-2 w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-                  Edit
-                </button>
-                <button className="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-500 transition duration-200">
-                  Delete
-                </button>
-              </div>
-            ))}
-            <button className="w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-              Add New Address
-            </button>
-          </div>
-
-          {/* Payment Methods */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Payment Methods</h2>
-            {paymentMethods.map((payment) => (
-              <div key={payment.id} className="mb-4 p-4 border rounded-lg">
-                <p><strong>{payment.type} ending in {payment.last4}</strong></p>
-                <p>Expires {payment.expires}</p>
-                <button className="mt-2 w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-                  Edit
-                </button>
-                <button className="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-500 transition duration-200">
-                  Delete
-                </button>
-              </div>
-            ))}
-            <button className="w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-              Add New Payment Method
-            </button>
-          </div>
-        </div>
-
-        {/* Right Column */}
-        <div className="space-y-6">
-          {/* Order History */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Order History</h2>
+            <h2 className="text-xl font-semibold mb-4">Order History</h2>
             <table className="w-full">
               <thead>
                 <tr>
@@ -129,88 +149,225 @@ function Profile({ onClose }) {
                     <td>#{order.id}</td>
                     <td>{order.date}</td>
                     <td>{order.items} Items</td>
-                    <td>${order.total.toFixed(2)}</td>
+                    <td>ksh {order.total.toFixed(2)}</td>
                     <td>{order.status}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-          {/* Wishlist */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Wishlist</h2>
-            {wishlistItems.map((item) => (
-              <div key={item.id} className="mb-4 p-4 border rounded-lg flex items-center">
-                <img src={item.image} alt={item.name} className="w-16 h-16 mr-4" />
-                <div>
-                  <p>{item.name}</p>
-                  <p>${item.price.toFixed(2)}</p>
-                  <button className="mt-2 w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-                    Move to Cart
-                  </button>
-                  <button className="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-500 transition duration-200">
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ))}
+        );
+      case "wishlist":
+        return (
+          <div className="flex flex-col gap-6">
+          {/* Centered Heading */}
+          <div className="flex justify-center items-center">
+            <h3 className="text-2xl font-semibold">Your Wishlist</h3>
           </div>
-
-          {/* Recent Activity */}
-          <div>
-            <h2 className="text-xl font-semibold mb-2">Recent Activity</h2>
-            {recentActivity.map((activity) => (
-              <div key={activity.id} className="mb-2">
-                <p>{activity.action}</p>
-              </div>
-            ))}
+        
+          {/* Wishlist Items */}
+          <div className="flex-1 bg-slate-100 rounded-lg">
+            {wishlist.length === 0 ? (
+              <p className="text-center text-gray-500 py-6">No products in your wishlist.</p>
+            ) : (
+              wishlist.map((item) => (
+                <div key={item.id} className="flex justify-between items-center border-b py-4">
+                  {/* Left Section: Image, Name, Remove Button */}
+                  <div className="flex items-center gap-4 ml-4">
+                    <img
+                      src={`http://localhost:5000${item.imageUrls[0]}`} // Use the first image URL
+                      alt={item.name}
+                      className="w-20 h-20 object-cover rounded-md"
+                    />
+                    <div>
+                      <p className="font-semibold">{item.name}</p>
+                      <button
+                        onClick={() => dispatch(removeFromWishlist(item.id))} // Remove from wishlist
+                        className="text-red-500 flex items-center gap-1 mt-1 hover:text-red-700"
+                      >
+                        <Trash2 size={16} /> Remove
+                      </button>
+                    </div>
+                  </div>
+        
+                  {/* Middle Section: Price, Discount, Move to Cart Button */}
+                  <div className="text-center mr-4">
+                    <p className="text-lg font-bold">Ksh {item.discountedPrice}</p>
+                    {item.discount > 0 && (
+                      <div className="text-primaryBlack font-semibold text-sm mt-2">
+                        <span className="line-through text-gray-500">Kshs. {item.price.toFixed(2)}</span>{" "}
+                        Kshs. {item.discountedPrice}
+                      </div>
+                    )}
+                    {/* Move to Cart Button */}
+                    <button
+                      onClick={() => dispatch(addItem(item))} // Move to cart
+                      className="mt-2 px-4 py-1.5 bg-purple-800 text-white rounded-md hover:bg-purple-700 transition duration-200"
+                    >
+                      Move to Cart
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
+        );
+      case "recentViewed":
+        return (
+          <div className="flex flex-col gap-6">
+          {/* Centered Heading */}
+          <div className="flex justify-center items-center">
+            <h3 className="text-2xl font-semibold">Recent Viewed</h3>
+          </div>
+        
+          {/* Viewed Products */}
+          <div className="flex-1 bg-slate-100 rounded-lg">
+            {viewedProducts.length === 0 ? (
+              <p className="text-center text-gray-500 py-6">No recently viewed products.</p>
+            ) : (
+              viewedProducts.map((item) => (
+                <div key={item.id} className="flex justify-between items-center border-b py-4">
+                  {/* Left Section: Image, Name */}
+                  <div className="flex items-center gap-4 ml-4">
+                    <img
+                      src={`http://localhost:5000${item.imageUrls[0]}`} // Use the first image URL
+                      alt={item.name}
+                      className="w-20 h-20 object-cover rounded-md"
+                    />
+                    <div>
+                      <p className="font-semibold">{item.name}</p>
+                      {/* Optional: Add a "Remove" button if needed */}
+                      <button
+                        onClick={() => dispatch(removeViewedProduct(item.id))} // Remove from viewed products
+                        className="text-red-500 flex items-center gap-1 mt-1 hover:text-red-700"
+                      >
+                        <Trash2 size={16} /> Remove
+                      </button>
+                    </div>
+                  </div>
+        
+                  {/* Middle Section: Price, Discount */}
+                  <div className="text-center mr-4">
+                    <p className="text-lg font-bold">Ksh {item.discountedPrice}</p>
+                    {item.discount > 0 && (
+                      <div className="text-primaryBlack font-semibold text-sm mt-2">
+                        <span className="line-through text-gray-500">Kshs. {item.price.toFixed(2)}</span>{" "}
+                        Kshs. {item.discountedPrice}
+                      </div>
+                    )}
+                    {/* Optional: Add a "View Product" button */}
+                    <Link
+                      to={`/product/${item.id}`}
+                      className="mt-10 mb-10 px-2 py-1 bg-purple-800 text-white rounded-md hover:bg-purple-700 transition duration-200"
+                    >
+                      View Product
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
+      {/* Profile Header */}
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-semibold text-gray-800">User Profile</h1>
+        <p className="text-gray-600">Welcome back, {user.name || "User"}!</p>
       </div>
 
-      {/* Bottom Row (Full Width) */}
-      <div className="mt-6">
-        {/* Account Settings */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Account Settings</h2>
-          <button className="w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-            Change Password
-          </button>
-          <button className="mt-2 w-full bg-purple-800 text-white py-2 rounded-lg hover:bg-purple-700 transition duration-200">
-            Notification Preferences
-          </button>
-          <button className="mt-2 w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-500 transition duration-200">
-            Delete Account
-          </button>
-        </div>
-
-        {/* Loyalty Points */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Loyalty Points</h2>
-          <p>You have <strong>500 points</strong>.</p>
-          <p>Redeem your points for discounts on your next purchase!</p>
-        </div>
-
-        {/* Support and Help */}
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Support</h2>
-          <ul>
-            <li><Link to="/contact" className="text-purple-800 hover:underline">Contact Us</Link></li>
-            <li><Link to="/faq" className="text-purple-800 hover:underline">FAQs</Link></li>
-            <li><Link to="/returns" className="text-purple-800 hover:underline">Return Policy</Link></li>
+      {/* Main Content */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        {/* Left Side: Navigation Menu */}
+        <div className="md:col-span-1 bg-gray-50 p-6 rounded-lg shadow-sm">
+          <ul className="space-y-4">
+            <li>
+              <button
+                onClick={() => setActiveSection("myAccount")}
+                className={`w-full flex items-center space-x-2 p-2 rounded-lg ${
+                  activeSection === "myAccount"
+                    ? "bg-purple-800 text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-purple-800 hover:text-white"
+                } transition duration-200`}
+              >
+                <FaUser />
+                <span>My Account</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveSection("orders")}
+                className={`w-full flex items-center space-x-2 p-2 rounded-lg ${
+                  activeSection === "orders"
+                    ? "bg-purple-800 text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-purple-800 hover:text-white"
+                } transition duration-200`}
+              >
+                <FaShoppingBag />
+                <span>Orders</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveSection("wishlist")}
+                className={`w-full flex items-center space-x-2 p-2 rounded-lg ${
+                  activeSection === "wishlist"
+                    ? "bg-purple-800 text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-purple-800 hover:text-white"
+                } transition duration-200`}
+              >
+                <FaHeart />
+                <span>Wishlist</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setActiveSection("recentViewed")}
+                className={`w-full flex items-center space-x-2 p-2 rounded-lg ${
+                  activeSection === "recentViewed"
+                    ? "bg-purple-800 text-white"
+                    : "bg-gray-200 text-gray-800 hover:bg-purple-800 hover:text-white"
+                } transition duration-200`}
+              >
+                <FaHistory />
+                <span>Recent Viewed</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center space-x-2 p-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition duration-200"
+              >
+                <FaSignOutAlt />
+                <span>Log Out</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleDeleteAccount}
+                className="w-full flex items-center space-x-2 p-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition duration-200"
+              >
+                <FaTrash />
+                <span>Delete Account</span>
+              </button>
+            </li>
           </ul>
         </div>
 
-        {/* Logout Button */}
-        <div>
-          <button className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-500 transition duration-200">
-            Log Out
-          </button>
+        {/* Right Side: Content */}
+        <div className="md:col-span-3 p-6">
+          {renderContent()}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Profile;

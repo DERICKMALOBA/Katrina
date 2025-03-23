@@ -30,17 +30,21 @@ router.post("/add-product", upload.array("images", 10), (req, res) => {
 
   const { description, name, price, stock, category, discount } = req.body;
   // Create an array of filenames for uploaded images
+  // const fileNames = req.files.map((file) => file.filename);
+
+  var categorisation=JSON.parse(category);
   const fileNames = req.files.map((file) => file.filename);
 
   // Create a SQL query to insert product details and image filenames into the database
-  const query =
-    "INSERT INTO products (description, name, price, stock, category,discount, image) VALUES(?,?,?,?,?,?,?)";
+  const query ="INSERT INTO products (description, name, price, stock, category,super,subcat,discount, image) VALUES(?,?,?,?,?,?,?,?,?)";
   const values = [
     description,
     name,
     price,
     stock,
-    category,
+    categorisation.cat,
+    categorisation.super,
+    categorisation.subcat,
     discount,
     JSON.stringify(fileNames),
   ];
@@ -3877,40 +3881,76 @@ router.post("/product/:id/review", async (req, res) => {
 
 //search
 router.get('/search', (req, res) => {
-    const { name, category, subcategory } = req.query;
-  
-    // Base SQL query
-    let sql = 'SELECT * FROM products WHERE 1=1';
-    const params = [];
-  
-    // Add conditions based on provided query parameters
-    if (name) {
-      sql += ' AND name LIKE ?';
-      params.push(`%${name}%`);
+  const { name, category, subcategory } = req.query;
+
+  let sql = 'SELECT * FROM products WHERE 1=1';
+  const params = [];
+
+  // Add conditions based on provided query parameters
+  if (name) {
+      sql += ' AND LOWER(category) LIKE ?'; // Search in the `category` column (product name) for partial matches
+      params.push(`%${name.toLowerCase()}%`);
+  }
+  if (category) {
+      sql += ' AND LOWER(super) LIKE ?'; // Search in the `super` column (main category) for partial matches
+      params.push(`%${category.toLowerCase()}%`);
+  }
+  if (subcategory) {
+      sql += ' AND LOWER(subcat) LIKE ?'; // Search in the `subcat` column (subcategory) for partial matches
+      params.push(`%${subcategory.toLowerCase()}%`);
+  }
+
+  // Execute the query using the `db` object
+  db.query(sql, params, (err, results) =>  {
+    if (err)
+      return res.status(500).json({ message: "Database error", error: err });
+    if (results.length >= 1) {
+      let totalDiscountAmount = 0;
+      console.log(results);
+      const productsWithDiscount = results.map((product) => {
+        let imageUrls = [];
+        try {
+          if (product.image) {
+            const parsedImage = JSON.parse(product.image);
+            // Ensure imageUrls is always an array
+            imageUrls = Array.isArray(parsedImage)
+              ? parsedImage
+              : [parsedImage];
+          }
+        } catch (parseError) {
+          console.error("Error parsing product image data:", parseError);
+          imageUrls = [];
+        }
+
+        const fullImageUrls = imageUrls.map((image) => `/uploads/${image}`);
+
+        // Calculate discount
+        const discountPercentage = parseFloat(product.discount) || 0; // Default to 0 if no discount
+        const originalPrice = parseFloat(product.price) || 0;
+        const discountAmount = (discountPercentage / 100) * originalPrice;
+        const discountedPrice = originalPrice - discountAmount;
+
+        totalDiscountAmount += discountAmount;
+
+        return {
+          ...product,
+          originalPrice: originalPrice.toFixed(2), // Keep original price
+          discountedPrice: discountedPrice.toFixed(2), // Show price after discount
+          discountAmount: discountAmount.toFixed(2), // Show how much was discounted
+          imageUrls: fullImageUrls,
+        };
+      });
+
+      return res.json({
+        product: productsWithDiscount,
+        totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
+      });
     }
-    if (category) {
-      sql += ' AND category = ?';
-      params.push(category);
-    }
-    if (subcategory) {
-      sql += ' AND subcategory = ?';
-      params.push(subcategory);
-    }
-  
-    // Execute the query using the `db` object
-    db.query(sql, params, (err, results) => {
-      if (err) {
-        console.error('Error executing query:', err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-      }
-  
-      // Process the results (if needed)
-      const processedProducts = processProducts(results);
-  
-      // Send the response
-      res.json(processedProducts);
-    });
+
+    res.json({ product: [], totalDiscountAmount: "0.00" });
   });
+});
+
 
 
 

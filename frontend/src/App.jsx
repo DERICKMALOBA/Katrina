@@ -42,9 +42,10 @@ import AdminMessagePanel from "./Pages/Adminmessages";
 import Admin from "./Pages/Adminreply";
 import ForgotPassword from "./Pages/Forgotpassword";
 import ResetPassword from "./Pages/Resetpassword";
-import Profile from "./Pages/test";
+// import Profile from "./Pages/test";
 import NotificationsPage from "./Pages/notifications";
 import Footer from "./components/Footer";
+import Profile from "./components/Profile";
 import Subcategories from "./Pages/Subcategory";
 // import Navbar from "./components/CategoriesNav";
 
@@ -179,9 +180,9 @@ function App() {
           <Route path="/message/:email" element={<Admin />} />
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
-          <Route path="/search-results" element={SearchResults} />
+          <Route path="/products/search" element={SearchResults} />
         
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<Profile/>} />
           <Route path="/subcategories/:sub" element={<Subcategories/>} />
           <Route path="/items/:item" element={<Itemlist/>} />
           {/* Admin Routes */}

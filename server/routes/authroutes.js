@@ -77,9 +77,11 @@ router.post('/signin', (req, res) => {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, {
-      expiresIn: '1d',
-    });
+    const token = jwt.sign(
+      { userid: user.userid, email: user.email, role: user.role }, // Include userid here
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
   
   var ar=JSON.parse(JSON.stringify(results));
     res.status(200).json({
@@ -145,5 +147,50 @@ router.post("/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
+
+
+// DELETE user route
+router.delete('/delete-account', (req, res) => {
+  // Extract the token from the Authorization header
+  const token = req.headers.authorization?.split(' ')[1]; // Format: "Bearer <token>"
+
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized: No token provided' });
+  }
+
+  try {
+    // Verify the token and extract the user data
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userid = decoded.userid; // Extract userid from the decoded token
+
+    // Validate userid
+    if (!userid) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+
+    // SQL query to delete the user
+    const query = 'DELETE FROM customers WHERE userid = ?'; // Use userid here
+
+    // Execute the query
+    db.query(query, [userid], (err, result) => {
+      if (err) {
+        console.error('Error deleting user:', err);
+        return res.status(500).json({ message: 'Failed to delete user' });
+      }
+
+      // Check if the user was actually deleted
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+
+      // Success response
+      res.status(200).json({ message: 'User deleted successfully' });
+    });
+  } catch (error) {
+    // Handle token verification errors
+    console.error('Token verification failed:', error);
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+  }
+});
 
 module.exports = router;

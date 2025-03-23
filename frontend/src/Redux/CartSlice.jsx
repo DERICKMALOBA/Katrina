@@ -9,7 +9,7 @@ const calculateDiscountedPrice = (product) => {
   const discountAmount = (discountPercentage / 100) * originalPrice;
   const discountedPrice = originalPrice - discountAmount;
 
-  return Math.round(discountedPrice * 100) / 100; 
+  return Math.round(discountedPrice * 100) / 100;
 };
 
 const cartSlice = createSlice({
@@ -18,6 +18,7 @@ const cartSlice = createSlice({
     items: [],
     totalQuantity: 0,
     totalPrice: 0,
+    wishlist: [], // Ensure wishlist is initialized as an array
   },
   reducers: {
     addItem: (state, action) => {
@@ -79,8 +80,33 @@ const cartSlice = createSlice({
         toast.warning(`${existingItem.name} removed from cart.`);
       }
     },
+
+    // Add to Wishlist
+    addToWishlist: (state, action) => {
+      const product = action.payload;
+      const existingItem = (state.wishlist || []).find((item) => item.id === product.id); // Fallback for wishlist
+
+      if (!existingItem) {
+        state.wishlist = state.wishlist || []; // Ensure wishlist is an array
+        state.wishlist.push(product);
+        toast.success(`${product.name} added to wishlist!`);
+      } else {
+        toast.info(`${product.name} is already in your wishlist.`);
+      }
+    },
+
+    // Remove from Wishlist
+    removeFromWishlist: (state, action) => {
+      const id = action.payload;
+      const existingItem = (state.wishlist || []).find((item) => item.id === id); // Fallback for wishlist
+
+      if (existingItem) {
+        state.wishlist = state.wishlist.filter((item) => item.id !== id);
+        toast.info(`${existingItem.name} removed from wishlist.`);
+      }
+    },
   },
 });
 
-export const { addItem, removeItem, removeProduct } = cartSlice.actions;
+export const { addItem, removeItem, removeProduct, addToWishlist, removeFromWishlist } = cartSlice.actions;
 export default cartSlice.reducer;

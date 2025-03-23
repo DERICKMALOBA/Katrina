@@ -3,15 +3,17 @@ import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import userReducer from './userSlice';
 import cartReducer from './CartSlice';
-import authReducer from './authSlice';
-import searchReducer from './SearchSlice'; // Import the search slice
+import authReducer from './AuthSlice';
+import viewedProductsReducer from './viewedProductsSlice';
+// import searchReducer from './SearchSlice'; // Import the search slice
 
 // Combine reducers
 const rootReducer = combineReducers({
     user: userReducer,
     cart: cartReducer,
     auth: authReducer,
-    search: searchReducer, // Add the search reducer
+    // search: searchReducer,
+    viewedProducts: viewedProductsReducer, // Add the search reducer
 });
 
 // Persist config

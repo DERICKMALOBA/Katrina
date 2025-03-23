@@ -1,75 +1,57 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+// import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// Async thunk to fetch search results
-export const fetchSearchResults = createAsyncThunk(
-    'search/fetchSearchResults',
-    async (searchParams, { rejectWithValue }) => {
-        try {
-            // Convert searchParams to a query string
-            const queryString = new URLSearchParams(searchParams).toString();
-            const response = await fetch(`/api/products/search?${queryString}`);
+// // Async thunk for fetching search results
+// export const fetchSearchResults = createAsyncThunk(
+//   "search/fetchSearchResults",
+//   async (searchParams, { rejectWithValue }) => {
+//     try {
+//       const queryString = new URLSearchParams(searchParams).toString();
+//       console.log("Fetching search results with:", queryString);
 
-            // Check if the response is OK
-            if (!response.ok) {
-                throw new Error('Failed to fetch search results');
-            }
+//       const response = await fetch(
+//         `/api/products/search?${queryString}`
+//       );
 
-            // Parse the JSON response
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            return rejectWithValue(error.message);
-        }
-    }
-);
+//       if (!response.ok) {
+//         const errorText = await response.text();
+//         console.error("API Fetch Error:", errorText);
+//         throw new Error(errorText || "Failed to fetch search results");
+//       }
 
-// Initial state
-const initialState = {
-    searchParams: {
-        name: '',
-        category: '',
-        subcategory: '',
-    },
-    results: [],
-    loading: false,
-    error: null,
-};
+//       const data = await response.json();
+//       console.log("Fetched Data:", data);
+//   dispatch(setItem(data));
+//       return data; // This will be handled in the `fulfilled` case
+//     } catch (error) {
+//       console.error("Fetch Error:", error.message);
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
 
-// Create slice
-const searchSlice = createSlice({
-    name: 'search',
-    initialState,
-    reducers: {
-        // Action to update search parameters
-        setSearchParams: (state, action) => {
-            state.searchParams = { ...state.searchParams, ...action.payload };
-        },
-        // Action to clear search results
-        clearSearchResults: (state) => {
-            state.results = [];
-            state.error = null;
-        },
-    },
-    extraReducers: (builder) => {
-        // Handle fetchSearchResults lifecycle
-        builder
-            .addCase(fetchSearchResults.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(fetchSearchResults.fulfilled, (state, action) => {
-                state.loading = false;
-                state.results = action.payload;
-            })
-            .addCase(fetchSearchResults.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            });
-    },
-});
+// const searchSlice = createSlice({
+//   name: "search",
+//   initialState: {
+//     results: [],
+//     loading: false,
+//     error: null,
+//   },
+//   reducers: {}, // No manual setSearchResults needed
+//   extraReducers: (builder) => {
+//     builder
+//       .addCase(fetchSearchResults.pending, (state) => {
+//         state.loading = true;
+//         state.error = null;
+//       })
+//       .addCase(fetchSearchResults.fulfilled, (state, action) => {
+//         state.loading = false;
+//         state.results = action.payload; // Update the search results state
+//       })
+//       .addCase(fetchSearchResults.rejected, (state, action) => {
+//         state.loading = false;
+//         state.error = action.payload;
+//       });
+//   },
+// });
 
-// Export actions
-export const { setSearchParams, clearSearchResults } = searchSlice.actions;
-
-// Export reducer
-export default searchSlice.reducer;
+// export default searchSlice.reducer;
