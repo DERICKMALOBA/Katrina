@@ -526,18 +526,19 @@ const Home = () => {
 
           {/* Shop by Categories */}
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Shop by Categories</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {categories.map((category) => (
-                <div
-                  key={category}
-                  className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300"
-                >
-                  <h3 className="text-lg font-semibold">{category}</h3>
-                </div>
-              ))}
-            </div>
+      <h2 className="text-2xl font-semibold mb-4">Shop by Categories</h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+        {categories.map((category) => (
+          <div
+            key={category}
+            onClick={() => navigate(`/category/${category}`)}
+            className="cursor-pointer bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300"
+          >
+            <h3 className="text-lg font-semibold">{category}</h3>
           </div>
+        ))}
+      </div>
+    </div>
 
           {/* Horizontally Scrollable Category Items */}
           {categories.map((category) => (
