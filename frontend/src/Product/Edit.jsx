@@ -270,7 +270,17 @@ const ProductDetails = () => {
   const handleShowAll = () => {
     setShowAll(!showAll); // Toggle between showing all or just 10 products
   };
-
+ /*function prod(p){
+  var receive=JSON.parse(p);
+ var type=typeof(receive);
+ if(type!=')
+ {
+  return receive.cat
+ }
+ else{
+  return p;
+ }*/
+ //}
   return (
     <motion.div
       className="bg-gray-800 bg-opacity-50 backdrop-blur-md shadow-lg rounded-xl p-6 border border-gray-700 mb-8 relative"
@@ -485,7 +495,7 @@ const ProductDetails = () => {
                 <option value='{"super":"Bags","subcat":"School bags","cat":"3 in 1 trolley bag"}'>3 in 1 Trolley bag</option>
                 <option value='{"super":"Bags","subcat":"School bags","cat":"3 in 1 back pack"}'>3 in 1 Back pack</option>
                 <option value='{"super":"Bags","subcat":"School bags","cat":"2 in 1 back pack"}'>2 in 1 Back pack</option>
-                <option value="single back pack">Sinle Back pack</option>
+                <option value='{"super":"Bags","subcat":"School bags","cat":"single back pack"}'>Single Back pack</option>
                 <option value="" disabled style={{ color: "cyan", fontWeight: "bold" }}><b>Travelling bags</b></option>
                 <option value='{"super":"Bags","subcat":"Travelling bags","cat":"3 in 1 suitcase"}'>3 in suitcase</option>
                 <option value='{"super":"Bags","subcat":"Travelling bags","cat":"single suitcase"}'>Single suitcase</option>

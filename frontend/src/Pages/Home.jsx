@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
-
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useDispatch();
@@ -20,7 +19,6 @@ const Home = () => {
   const [size, setSize] = useState("");
   const [rating, setRating] = useState("");
   const [sortBy, setSortBy] = useState("");
-
   const categories = [
     "Outfits",
     "Bags",
@@ -29,7 +27,6 @@ const Home = () => {
     "Kids Accessories",
     "Others",
   ];
-
   useEffect(() => {
     const fetchFilteredProducts = async () => {
       try {
@@ -59,7 +56,6 @@ const Home = () => {
             apiUrl = "/api/products/newest";
           }
         }
-
         const fullUrl = `${apiUrl}?${queryParams.toString()}`;
         const response = await fetch(fullUrl);
         if (!response.ok) throw new Error("Failed to fetch products");
@@ -107,7 +103,6 @@ const Home = () => {
       console.error("Error fetching products:", error);
     }
   };
-
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);

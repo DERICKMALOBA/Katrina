@@ -89,8 +89,9 @@ router.put("/edit-product/:id", (req, res) => {
   const { id } = req.params;
   const { name, description, price, stock, category, discount, image } =
     req.body;
-
-  const query = `UPDATE products SET name=?, description=?, price=?, stock=?, category=?, discount=?, image=? WHERE id=?`;
+    var categorisation=JSON.parse(category);
+    console.log("edit"+categorisation);
+  const query = `UPDATE products SET name=?, description=?, price=?, stock=?, category=?,super=?,subcat=?,discount=?, image=? WHERE id=?`;
 
   db.query(
     query,
@@ -99,7 +100,9 @@ router.put("/edit-product/:id", (req, res) => {
       description,
       price,
       stock,
-      category,
+      categorisation.cat,
+      categorisation.super,
+      categorisation.subcat,
       discount,
       JSON.stringify(image),
       id,
