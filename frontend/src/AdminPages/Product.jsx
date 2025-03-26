@@ -1,5 +1,5 @@
-import {  ShoppingBag, Users, Zap } from "lucide-react";
-import  { useState, useEffect } from 'react';
+import { ShoppingBag, Users, Zap } from "lucide-react";
+import { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
 import StatCard from "../SharedComponent/StatCard";
 import EditProduct from "../Product/Edit";
@@ -10,65 +10,46 @@ function ProductPage() {
   const [productCount, setProductCount] = useState(null);
   const [userCount, setUserCount] = useState(null);  
   const [sales, setSales] = useState(null); 
+  
   useEffect(() => {
-    // Simulate fetching the product count (replace with an actual API call)
     const fetchSales = async () => {
       try {
-        // Example fetch call (replace with your actual API)
         const response = await fetch('/api/sales/totalsales');
         const data = await response.json();
-        
-        // Set the fetched product count to state
-        setSales(data.Totalsales);  // Assume data.count contains the product count
+        setSales(data.Totalsales);
       } catch (error) {
         console.error('Error fetching product count:', error);
       }
     };
-
     fetchSales();
   }, []);
 
   useEffect(() => {
-    // Simulate fetching the product count (replace with an actual API call)
     const fetchProductCount = async () => {
       try {
-        // Example fetch call (replace with your actual API)
         const response = await fetch('/api/products/products/count');
         const data = await response.json();
-        
-        // Set the fetched product count to state
-        setProductCount(data.count);  // Assume data.count contains the product count
+        setProductCount(data.count);
       } catch (error) {
         console.error('Error fetching product count:', error);
       }
     };
-
     fetchProductCount();
   }, []);
 
-
-
-
-
-
   const fetchUserCount = async () => {
     try {
-      const response = await fetch('/api/users/userstotal');  // Make a GET request to the endpoint
-      const data = await response.json();  // Parse the JSON response
-      setUserCount(data.size);  // Set the number of users in the state
+      const response = await fetch('/api/users/userstotal');
+      const data = await response.json();
+      setUserCount(data.size);
     } catch (error) {
       console.error('Error fetching user count:', error);
     }
   };
 
   useEffect(() => {
-    // Fetch the user count when the component mounts
     fetchUserCount();
   }, []);
-
-
-
-
 
   const colors = {
     primaryOrange: "#fc8414",
@@ -76,49 +57,49 @@ function ProductPage() {
     primaryGreen: "#68ad00",
     primaryRed: "#ff2121",
   };
+
   return (
-    <div className="bg-primaryBlack">
-      
+    <div className="bg-primaryBlack relative"> {/* Added relative positioning here */}
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
         {/* STATS */}
         <h1>Product</h1>
        
         <motion.div
-  className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 1 }}
->
-  <StatCard
-    name="Total Sales"
-    icon={Zap}
-    value={sales}
-    color={colors.primaryOrange}
-  />
-  <StatCard
-    name="Customers"
-    icon={Users}
-    value={userCount}
-    color={colors.primaryBlue}
-  />
-  <StatCard
-    name="Total Products"
-    icon={ShoppingBag}
-    value={productCount}
-    color={colors.primaryGreen}
-  />
-</motion.div>
+          className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <StatCard
+            name="Total Sales"
+            icon={Zap}
+            value={sales}
+            color={colors.primaryOrange}
+          />
+          <StatCard
+            name="Customers"
+            icon={Users}
+            value={userCount}
+            color={colors.primaryBlue}
+          />
+          <StatCard
+            name="Total Products"
+            icon={ShoppingBag}
+            value={productCount}
+            color={colors.primaryGreen}
+          />
+        </motion.div>
 
-
-        <EditProduct/>
+        {/* EditProduct now appears above other content */}
+        <div className="relative z-50"> {/* Wrapper with high z-index */}
+          <EditProduct />
+        </div>
 
         {/* CHARTS */}
         <motion.div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
           <SalesTrendChart/>
           <DistributionChart/>
-					
-				</motion.div>
-
+        </motion.div>
       </main>
     </div>
   );

@@ -36,84 +36,6 @@ const CheckoutPage = () => {
   };
 
 
-  // const handleSubmit = async () => {
-  //   if (
-  //     !formData.firstName ||
-  //     !formData.lastName ||
-  //     !formData.phoneNumber ||
-  //     !formData.address ||
-  //     !formData.county ||
-  //     !formData.city ||
-  //     !formData.deliveryVehicle ||
-  //     !formData.deliveryFee ||
-  //     !formData.paymentMethod
-  //   ) {
-  //     alert("Please fill all required fields.");
-  //     return;
-  //   }
-
-  //   // Handle Mpesa payment if selected
-  //   if (formData.paymentMethod === "mpesa") {
-  //     const paymentSuccess = await handleMpesaPayment();
-  //     if (!paymentSuccess) return; // Stop if payment fails
-  //   }
-
-  //   // Submit order to the database
-  //   try {
-  //     const response = await fetch("/api/checkout", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         ...formData,
-  //         totalPrice: parseFloat(totalPrice),
-  //         totalAmount: parseFloat(totalPrice) + parseFloat(formData.deliveryFee || 0),
-  //       }),
-  //     });
-
-  //     const data = await response.json();
-  //     if (data.success) {
-  //       alert("Order submitted successfully!");
-  //       // Reset form or redirect to a success page
-  //     } else {
-  //       alert("Failed to submit order. Please try again.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error submitting order:", error);
-  //     alert("An error occurred while submitting your order.");
-  //   }
-  // };
-
-
-  // const handleMpesaPayment = async () => {
-  //   if (!formData.mpesaNumber) {
-  //     alert("Please enter your Mpesa number.");
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await fetch("/api/mpesa/payment", {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         phoneNumber: formData.mpesaNumber,
-  //         amount: parseFloat(totalPrice) + parseFloat(formData.deliveryFee || 0),
-  //       }),
-  //     });
-
-  //     const data = await response.json();
-  //     if (data.success) {
-  //       alert("Mpesa payment initiated successfully!");
-  //       return true; // Payment successful
-  //     } else {
-  //       alert("Mpesa payment failed. Please try again.");
-  //       return false; // Payment failed
-  //     }
-  //   } catch (error) {
-  //     console.error("Error initiating Mpesa payment:", error);
-  //     alert("An error occurred while processing your payment.");
-  //     return false; // Payment failed
-  //   }
-  // };
 
   const handleSubmit = async () => {
     // Validate all required fields
@@ -230,44 +152,7 @@ const CheckoutPage = () => {
     );
   };
 
-  // const handlePaymentMethodChange = (event) => {
-  //   const { value } = event.target;
-  //   setFormData((prevData) => ({
-  //     ...prevData,
-  //     paymentMethod: value,
-  //   }));
-  // };
 
-  // const handleSubmit = () => {
-  //   if (
-  //     !formData.firstName ||
-  //     !formData.lastName ||
-  //     !formData.phoneNumber ||
-  //     !formData.address ||
-  //     !formData.county ||
-  //     !formData.city ||
-  //     !formData.deliveryVehicle ||
-  //     !formData.deliveryFee ||
-  //     !formData.paymentMethod
-  //   ) {
-  //     alert("Please fill all required fields.");
-  //     return;
-  //   }
-
-  //   fetch("/api/checkout", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(formData),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("Order submitted:", data);
-  //       alert("Order submitted successfully!");
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error submitting order:", error);
-  //     });
-  // };
 
   const useFetchDeliveryData = () => {
     const [deliveryData, setDeliveryData] = useState({

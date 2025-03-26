@@ -546,7 +546,7 @@ const ProductDetails = () => {
 
       {/* Add Product Form Modal */}
       {showAddForm && (
-        <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
+        <motion.div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-[9999]">
           <motion.div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96">
             <div className="flex justify-between mb-4">
               <h3 className="text-white text-lg font-semibold">Add Product</h3>

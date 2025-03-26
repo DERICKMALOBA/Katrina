@@ -1,23 +1,22 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate,useParams } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
-import { addViewedProduct } from '../Redux/viewedProductsSlice';
+import { addViewedProduct } from "../Redux/viewedProductsSlice";
+import ProductCategories from "./ProductsCategory";
 
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
- 
   const dispatch = useDispatch();
+    const { category } = useParams();
   const wishlist = useSelector((state) => state.cart.wishlist);
-  
-
+  const [categoryProducts, setCategoryProducts] = useState({}); 
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const [wishlist, setWishlist] = useState({});
   const [page, setPage] = useState(1);
   const limit = 40;
   const [priceRange, setPriceRange] = useState({ min: "", max: "" });
@@ -36,17 +35,16 @@ const Home = () => {
   ];
 
   const handleProductClick = (product) => {
-    // Save the product details in Redux
     dispatch(addViewedProduct(product));
-    console.log('Product added to viewed products:', product); // Debug: Log the product being added
+    console.log("Product added to viewed products:", product);
   };
 
   const handleWishlistClick = (product) => {
-    const isInWishlist = (wishlist || []).some((item) => item.id === product.id); // Fallback for wishlist
+    const isInWishlist = (wishlist || []).some((item) => item.id === product.id);
     if (isInWishlist) {
-      dispatch(removeFromWishlist(product.id)); // Remove from wishlist
+      dispatch(removeFromWishlist(product.id));
     } else {
-      dispatch(addToWishlist(product)); // Add to wishlist
+      dispatch(addToWishlist(product));
     }
   };
 
@@ -172,12 +170,29 @@ const Home = () => {
     fetchOffers();
   }, []);
 
+  // Fixed: Separated the nested useEffect into its own hook
+  useEffect(() => {
+    if (category) {
+      fetch(`/api/products/super/${category}`)
+        .then((res) => res.json())
+        .then((data) => {
+          // Store category products separately without affecting main products
+          setCategoryProducts(prev => ({
+            ...prev,
+            [category]: data.super || []
+          }));
+        })
+        .catch((err) => console.error("Error fetching category products:", err));
+    }
+  }, [category]);
+
+  // Carousel effect for offers
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) =>
         prev === offers.length / 2 - 1 ? 0 : prev + 1
       );
-    }, 5000); // Transition every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [offers.length]);
@@ -328,334 +343,242 @@ const Home = () => {
 
         {/* Products Grid */}
         <main className="w-full sm:w-3/4 p-6">
-          {/* Offers Section */}
-
+          {/* Offers/Products Section */}
           <div className="mb-8">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold">Special Offers</h2>
-            </div>
-            <div className="relative w-full h-96 overflow-hidden rounded-lg">
-              {/* Carousel Container */}
-              <div
-                className="flex transition-transform duration-1000 ease-in-out"
-                style={{ transform: `translateX(-${currentIndex * 50}%)` }} // Adjust for two offers at a time
-              >
-                {offers.map((product, index) => (
+            {/* Always display Special Offers section if offers exist */}
+            {offers.length > 0 && (
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-semibold text-purple-700 text-center w-full">
+                    Special Offers
+                  </h2>
+                </div>
+                <div className="relative w-full h-96 overflow-hidden rounded-lg">
+                  {/* Carousel Container */}
                   <div
-                    key={product.id || product._id}
-                    className="w-1/2 flex-shrink-0 p-2" // Each offer takes half the width
+                    className="flex transition-transform duration-1000 ease-in-out"
+                    style={{ transform: `translateX(-${currentIndex * 50}%)` }}
                   >
-                    <div className="bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200 h-full">
-                      <Link
-                        to={`/product/${product.id || product._id}`}
-                        className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
+                    {offers.map((product) => (
+                      <div
+                        key={product.id || product._id}
+                        className="w-1/2 flex-shrink-0 p-2"
                       >
-                        {product.discount > 0 && (
-                          <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
-                            -{Math.round(product.discount)}% OFF
-                          </span>
-                        )}
+                        <div className="bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200 h-full">
+                          <Link
+                            to={`/product/${product.id || product._id}`}
+                            className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
+                          >
+                            {product.discount > 0 && (
+                              <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+                                -{Math.round(product.discount)}% OFF
+                              </span>
+                            )}
 
-                        {product.imageUrls?.length > 0 ? (
-                          <img
-                            src={`http://localhost:5000${product.imageUrls[0]}`}
-                            alt={product.name}
-                            className="w-full h-64 object-cover rounded-lg" // Larger image
-                          />
-                        ) : (
-                          <img
-                            src="/default-image.jpg"
-                            alt="default"
-                            className="w-full h-64 object-cover rounded-lg"
-                          />
-                        )}
-                      </Link>
-
-                      <div className="mt-2">
-                        <h2 className="text-lg font-semibold truncate w-5/6">
-                          {product.name}
-                        </h2>
-                      </div>
-
-                      {product.discount > 0 ? (
-                        <div className="text-primaryBlack font-semibold text-sm mt-2">
-                          <span className="line-through text-gray-500">
-                            Kshs. {product.originalPrice}
-                          </span>{" "}
-                          Kshs. {product.discountedPrice}
-                        </div>
-                      ) : (
-                        <p className="text-gray-600 font-semibold mt-1">
-                          Kshs. {product.price}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Navigation Buttons */}
-              <button
-                onClick={() =>
-                  setCurrentIndex((prev) =>
-                    prev === 0 ? offers.length / 2 - 1 : prev - 1
-                  )
-                }
-                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-2 rounded-full shadow-md hover:bg-opacity-100 transition"
-              >
-                &lt;
-              </button>
-              <button
-                onClick={() =>
-                  setCurrentIndex((prev) =>
-                    prev === offers.length / 2 - 1 ? 0 : prev + 1
-                  )
-                }
-                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-2 rounded-full shadow-md hover:bg-opacity-100 transition"
-              >
-                &gt;
-              </button>
-            </div>
-          </div>
-
-          {/* Horizontally Scrollable Products */}
-          <div className="overflow-x-auto whitespace-nowrap mb-8">
-            <div className="inline-flex space-x-4">
-              {products.map((product) => {
-               const isInWishlist = (wishlist || []).some((item) => item.id === product.id); // Check if product is in wishlist
-                return (
-                  <div
-                    key={product.id || product._id}
-                    className="w-48 bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
-                  >
-                    <Link
-                      to={`/product/${product.id || product._id}`}
-                      onClick={() => handleProductClick(product)}
-                      className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
-                    >
-                      {product.discount > 0 && (
-                        <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
-                          -{Math.round(product.discount)}% OFF
-                        </span>
-                      )}
-
-                      {product.imageUrls?.length > 0 ? (
-                        <img
-                          src={`http://localhost:5000${product.imageUrls[0]}`}
-                          alt={product.name}
-                          className="w-full h-40 object-cover rounded-lg"
-                        />
-                      ) : (
-                        <img
-                          src="/default-image.jpg"
-                          alt="default"
-                          className="w-full h-40 object-cover rounded-lg"
-                        />
-                      )}
-                    </Link>
-
-                    <div className="mt-2 relative">
-                      <h2 className="text-lg font-semibold truncate w-5/6">
-                        {product.name}
-                      </h2>
-                      <button
-                        onClick={() => handleWishlistClick(product)} // Pass the product to the handler
-                        className={`absolute right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg ${
-                          isInWishlist
-                            ? "bg-purple-800 text-white"
-                            : "border border-purple-800 text-purple-800"
-                        } hover:shadow-purple-600`}
-                      >
-                        <FaHeart />
-                      </button>
-                    </div>
-
-                    {product.discount > 0 ? (
-                      <div className="text-primaryBlack font-semibold text-sm mt-2">
-                        <span className="line-through text-gray-500">
-                          Kshs. {product.originalPrice}
-                        </span>{" "}
-                        Kshs. {product.discountedPrice}
-                      </div>
-                    ) : (
-                      <p className="text-gray-600 font-semibold mt-1">
-                        Kshs. {product.price}
-                      </p>
-                    )}
-
-                    <p className="text-purple-800 mt-1">
-                      {product.stock <= 5 ? (
-                        <span className="text-red-500 font-semibold">
-                          {product.stock} {product.stock === 1 ? "unit" : "units"}{" "}
-                          left
-                        </span>
-                      ) : (
-                        <>{product.stock} units left</>
-                      )}
-                    </p>
-                    <div className="flex items-center mt-2">
-                      {[...Array(5)].map((_, index) => (
-                        <span key={index}>
-                          {product.ratings > 0 ? (
-                            product.ratings >= index + 1 ? (
-                              <FaStar className="text-yellow-500" />
-                            ) : product.rating > index &&
-                              product.rating < index + 1 ? (
-                              <FaStarHalfAlt className="text-yellow-500" />
+                            {product.imageUrls?.length > 0 ? (
+                              <img
+                                src={`http://localhost:5000${product.imageUrls[0]}`}
+                                alt={product.name}
+                                className="w-full h-68 object-cover rounded-lg"
+                              />
                             ) : (
-                              <FaStar className="text-gray-300" />
-                            )
-                          ) : (
-                            <FaStar className="text-gray-300" />
-                          )}
-                        </span>
-                      ))}
-                    </div>
+                              <img
+                                src="/default-image.jpg"
+                                alt="default"
+                                className="w-full h-64 object-cover rounded-lg"
+                              />
+                            )}
+                          </Link>
 
-                    <button
-                      onClick={() => dispatch(addItem(product))}
-                      className="bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
-                    >
-                      Add to Cart
-                    </button>
+                          <div className="mt-2">
+                            <h2 className="text-lg font-semibold truncate w-5/6">
+                              {product.name}
+                            </h2>
+                          </div>
+
+                          {product.discount > 0 ? (
+                            <div className="text-primaryBlack font-semibold text-sm mt-2">
+                              <span className="line-through text-gray-500">
+                                Kshs. {product.originalPrice}
+                              </span>{" "}
+                              Kshs. {product.discountedPrice}
+                            </div>
+                          ) : (
+                            <p className="text-gray-600 font-semibold mt-1">
+                              Kshs. {product.price}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                );
-              })}
+
+                  {/* Navigation Buttons */}
+                  <button
+                    onClick={() =>
+                      setCurrentIndex((prev) =>
+                        prev === 0 ? Math.ceil(offers.length / 2) - 1 : prev - 1
+                      )
+                    }
+                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-2 rounded-full shadow-md hover:bg-opacity-100 transition"
+                  >
+                    &lt;
+                  </button>
+                  <button
+                    onClick={() =>
+                      setCurrentIndex((prev) =>
+                        prev === Math.ceil(offers.length / 2) - 1 ? 0 : prev + 1
+                      )
+                    }
+                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-2 rounded-full shadow-md hover:bg-opacity-100 transition"
+                  >
+                    &gt;
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/*  Our Products section */}
+            <div className="mb-8">
+              <h2 className="text-xl font-semibold mb-4 text-center text-purple-800">
+                Our Products
+              </h2>
+              <div className="overflow-x-auto whitespace-nowrap">
+                <div className="inline-flex space-x-4">
+                  {products
+                    .filter((product) => {
+                      // Get all offer product IDs
+                      const offerIds = offers.map(
+                        (offer) => offer.id || offer._id
+                      );
+                      // Only include products not in offers
+                      return !offerIds.includes(product.id || product._id);
+                    })
+                    .map((product) => {
+                      const isInWishlist = (wishlist || []).some(
+                        (item) => item.id === product.id
+                      );
+                      return (
+                        <div
+                          key={product.id || product._id}
+                          className="w-48 bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
+                        >
+                          <Link
+                            to={`/product/${product.id || product._id}`}
+                            onClick={() => handleProductClick(product)}
+                            className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
+                          >
+                            {product.discount > 0 && (
+                              <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+                                -{Math.round(product.discount)}% OFF
+                              </span>
+                            )}
+
+                            {product.imageUrls?.length > 0 ? (
+                              <img
+                                src={`http://localhost:5000${product.imageUrls[0]}`}
+                                alt={product.name}
+                                className="w-full h-40 object-cover rounded-lg"
+                              />
+                            ) : (
+                              <img
+                                src="/default-image.jpg"
+                                alt="default"
+                                className="w-full h-40 object-cover rounded-lg"
+                              />
+                            )}
+                          </Link>
+
+                          <div className="mt-2 relative">
+                            <h2 className="text-lg font-semibold truncate w-5/6">
+                              {product.name}
+                            </h2>
+                            <button
+                              onClick={() => handleWishlistClick(product)}
+                              className={`absolute right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg ${
+                                isInWishlist
+                                  ? "bg-purple-800 text-white"
+                                  : "border border-purple-800 text-purple-800"
+                              } hover:shadow-purple-600`}
+                            >
+                              <FaHeart />
+                            </button>
+                          </div>
+
+                          {product.discount > 0 ? (
+                            <div className="text-primaryBlack font-semibold text-sm mt-2">
+                              <span className="line-through text-gray-500">
+                                Kshs. {product.originalPrice}
+                              </span>{" "}
+                              Kshs. {product.discountedPrice}
+                            </div>
+                          ) : (
+                            <p className="text-gray-600 font-semibold mt-1">
+                              Kshs. {product.price}
+                            </p>
+                          )}
+
+                          <p className="text-purple-800 mt-1">
+                            {product.stock <= 5 ? (
+                              <span className="text-red-500 font-semibold">
+                                {product.stock}{" "}
+                                {product.stock === 1 ? "unit" : "units"} left
+                              </span>
+                            ) : (
+                              <>{product.stock} units left</>
+                            )}
+                          </p>
+
+                          <div className="flex items-center mt-2">
+                            {[...Array(5)].map((_, index) => (
+                              <span key={index}>
+                                {product.ratings > 0 ? (
+                                  product.ratings >= index + 1 ? (
+                                    <FaStar className="text-yellow-500" />
+                                  ) : product.rating > index &&
+                                    product.rating < index + 1 ? (
+                                    <FaStarHalfAlt className="text-yellow-500" />
+                                  ) : (
+                                    <FaStar className="text-gray-300" />
+                                  )
+                                ) : (
+                                  <FaStar className="text-gray-300" />
+                                )}
+                              </span>
+                            ))}
+                          </div>
+
+                          <button
+                            onClick={() => dispatch(addItem(product))}
+                            className="bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Shop by Categories */}
           <div className="mb-8">
-      <h2 className="text-2xl font-semibold mb-4">Shop by Categories</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-        {categories.map((category) => (
-          <div
-            key={category}
-            onClick={() => navigate(`/category/${category}`)}
-            className="cursor-pointer bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300"
-          >
-            <h3 className="text-lg font-semibold">{category}</h3>
-          </div>
-        ))}
-      </div>
-    </div>
-
-          {/* Horizontally Scrollable Category Items */}
-          {categories.map((category) => (
-            <div key={category} className="mb-8">
-              <h3 className="text-xl font-semibold mb-4">{category}</h3>
-              <div className="overflow-x-auto whitespace-nowrap">
-                <div className="inline-flex space-x-4">
-                  {products
-                    .filter((product) => product.category === category)
-                    .map((product) => (
-                      <div
-                        key={product.id || product._id}
-                        className="w-48 bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
-                      >
-                        <Link
-                          to={`/product/${product.id || product._id}`}
-                          className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
-                        >
-                          {product.discount > 0 && (
-                            <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
-                              -{Math.round(product.discount)}% OFF
-                            </span>
-                          )}
-
-                          {product.imageUrls?.length > 0 ? (
-                            <img
-                              src={`http://localhost:5000${product.imageUrls[0]}`}
-                              alt={product.name}
-                              className="w-full h-40 object-cover rounded-lg"
-                            />
-                          ) : (
-                            <img
-                              src="/default-image.jpg"
-                              alt="default"
-                              className="w-full h-40 object-cover rounded-lg"
-                            />
-                          )}
-                        </Link>
-
-                        <div className="mt-2 relative">
-                          <h2 className="text-lg font-semibold truncate w-5/6">
-                            {product.name}
-                          </h2>
-                          <button
-                            onClick={() =>
-                              setWishlist((prev) => ({
-                                ...prev,
-                                [product.id || product._id]:
-                                  !prev[product.id || product._id],
-                              }))
-                            }
-                            className={`absolute  right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg
-                ${
-                  wishlist[product.id || product._id]
-                    ? "bg-purple-800 text-purple"
-                    : "border border-purple-800 text-purple-800"
-                }
-                hover:shadow-purple-600`}
-                          >
-                            <FaHeart />
-                          </button>
-                        </div>
-
-                        {product.discount > 0 ? (
-                          <div className="text-primaryBlack font-semibold text-sm mt-2">
-                            <span className="line-through text-gray-500">
-                              Kshs. {product.originalPrice}
-                            </span>{" "}
-                            Kshs. {product.discountedPrice}
-                          </div>
-                        ) : (
-                          <p className="text-gray-600 font-semibold mt-1">
-                            Kshs. {product.price}
-                          </p>
-                        )}
-
-                        <p className="text-purple-800 mt-1">
-                          {product.stock <= 5 ? (
-                            <span className="text-red-500 font-semibold">
-                              {product.stock}{" "}
-                              {product.stock === 1 ? "unit" : "units"} left
-                            </span>
-                          ) : (
-                            <>{product.stock} units left</>
-                          )}
-                        </p>
-                        <div className="flex items-center mt-2">
-                          {[...Array(5)].map((_, index) => (
-                            <span key={index}>
-                              {product.ratings > 0 ? (
-                                product.ratings >= index + 1 ? (
-                                  <FaStar className="text-yellow-500" />
-                                ) : product.rating > index &&
-                                  product.rating < index + 1 ? (
-                                  <FaStarHalfAlt className="text-yellow-500" />
-                                ) : (
-                                  <FaStar className="text-gray-300" />
-                                )
-                              ) : (
-                                <FaStar className="text-gray-300" />
-                              )}
-                            </span>
-                          ))}
-                        </div>
-
-                        <button
-                          onClick={() => dispatch(addItem(product))}
-                          className="bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    ))}
+            <h2 className="text-2xl font-semibold mb-4">Shop by Categories</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              {categories.map((category) => (
+                <div
+                  key={category}
+                  onClick={() => navigate(`/category/${category}`)}
+                  className="cursor-pointer bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition duration-300"
+                >
+                  <h3 className="text-lg font-semibold">{category}</h3>
                 </div>
-              </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+      <ProductCategories/>
 
           {/* Pagination Controls */}
           <div className="flex justify-center mt-6">
