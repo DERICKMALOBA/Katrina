@@ -19,6 +19,7 @@ const Home = () => {
   const [size, setSize] = useState("");
   const [rating, setRating] = useState("");
   const [sortBy, setSortBy] = useState("");
+  const [view,setView]=useState(false);
   const categories = [
     "Outfits",
     "Bags",
@@ -125,7 +126,30 @@ const Home = () => {
     };
     fetchProducts();
   }, [page]);
+  useEffect(() => {
+    if(view==false)
+    {
+    const submitview = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/users/views`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
 
+      }
+     } catch (err) {
+        console.error("Fetch error:", err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    submitview();
+    setView(true);
+  }
+  }, [page]);
   useEffect(() => {
     if (!loading && products.length === 0) {
       navigate("/");
@@ -316,7 +340,7 @@ const Home = () => {
       className="flex transition-transform duration-1000 ease-in-out"
       style={{ transform: `translateX(-${currentIndex * 50}%)` }} // Adjust for two offers at a time
     >
-      {offers.map((product, index) => (
+      {offers.map((product) => (
         <div
           key={product.id || product._id}
           className="w-1/2 flex-shrink-0 p-2" // Each offer takes half the width

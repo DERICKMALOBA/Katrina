@@ -5,32 +5,91 @@ import { DollarSign, Users, ShoppingBag, Eye, ArrowDownRight, ArrowUpRight } fro
 const OverviewCards = () => {
 	const [error, setError] = useState(null);
 	const [revenue,setRevenue]=useState(null);
+	const [revenuechange,setRevenuechange]=useState(null);
 	const [users,setUsers]=useState(null);
+	const [userschange,setUserschange]=useState(null);
+	const [views,setViews]=useState(null);
+	const [viewschange,setViewschange]=useState(null);
+	const [orders,setOrders]=useState(null);
+	const [orderschange,setOrderschange]=useState(null);
 	const overviewData = [
-		{ name: "Revenue", value: "$1,234,567", change: 12.5, icon: DollarSign },
-		{ name: "Users", value: "45,678", change: 8.3, icon: Users },
-		{ name: "Orders", value: "9,876", change: -3.2, icon: ShoppingBag },
-		{ name: "Page Views", value: "1,234,567", change: 15.7, icon: Eye },
+		{ name: "Revenue", value: "Kshs. "+revenue, change:revenuechange, icon: DollarSign },
+		{ name: "Users", value:users, change:userschange, icon: Users },
+		{ name: "Orders", value:orders, change:orderschange, icon: ShoppingBag },
+		{ name: "Page Views", value:views, change: viewschange, icon: Eye },
 	];
 	useEffect(() => {
-		const fetchData = async () => {
+		const fetchRevenue = async () => {
 		  try {
-			const response = await fetch("/api/sales/salesgrowth"); // Change this to your actual API endpoint
+			const response = await fetch("/api/sales/salesrevenueanalysis"); // Change this to your actual API endpoint
 			if (!response.ok) {
 			  throw new Error("Failed to fetch products");
 			}
 			const data = await response.json();
 			console.log("Data is:"+data);
-			setRevenue(data.Jan); 
-			setUsers(data.Feb);
-			setMar(data.Mar); 
+			setRevenue(data.Currentsales); 
+			setRevenuechange(data.Deviation);
 		  } catch (err) {
 			setError(err.message); 
 			console.log(error);
 		  } 
 		};
-		fetchData();
+		fetchRevenue();
 		}, []);
+		useEffect(() => {
+			const fetchUsers = async () => {
+			  try {
+				const response = await fetch("/api/users/analysisusers"); // Change this to your actual API endpoint
+				if (!response.ok) {
+				  throw new Error("Failed to fetch products");
+				}
+				const data = await response.json();
+				console.log("Data is:"+data);
+				setUsers(data.Current); 
+				setUserschange(data.Change);
+			  } catch (err) {
+				setError(err.message); 
+				console.log(error);
+			  } 
+			};
+			fetchUsers();
+			}, []);
+			useEffect(() => {
+				const fetchViews = async () => {
+				  try {
+					const response = await fetch("/api/users/analysisviews"); // Change this to your actual API endpoint
+					if (!response.ok) {
+					  throw new Error("Failed to fetch products");
+					}
+					const data = await response.json();
+					console.log("Data is:"+data);
+					setViews(data.Currentviews); 
+					setViewschange(data.Change);
+				  } catch (err) {
+					setError(err.message); 
+					console.log(error);
+				  } 
+				};
+				fetchViews();
+				}, []);
+				useEffect(() => {
+					const fetchOrders = async () => {
+					  try {
+						const response = await fetch("/api/orders/analysisorders"); // Change this to your actual API endpoint
+						if (!response.ok) {
+						  throw new Error("Failed to fetch products");
+						}
+						const data = await response.json();
+						console.log("Data is:"+data);
+						setOrders(data.Current); 
+						setOrderschange(data.Change);
+					  } catch (err) {
+						setError(err.message); 
+						console.log(error);
+					  } 
+					};
+					fetchOrders();
+					}, []);
 	return (
 		<div className='grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8'>
 			{overviewData.map((item, index) => (
@@ -64,7 +123,7 @@ const OverviewCards = () => {
 					>
 						{item.change >= 0 ? <ArrowUpRight size='20' /> : <ArrowDownRight size='20' />}
 						<span className='ml-1 text-sm font-medium'>{Math.abs(item.change)}%</span>
-						<span className='ml-2 text-sm text-gray-400'>vs last period</span>
+						<span className='ml-2 text-sm text-gray-400'>vs Last year</span>
 					</div>
 				</motion.div>
 			))}
