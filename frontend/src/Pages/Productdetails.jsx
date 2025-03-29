@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../Redux/CartSlice";
+import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
 import { useParams, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaStar, FaStarHalfAlt, FaHeart } from "react-icons/fa";
 import { Navigation, Pagination } from "swiper/modules";
-
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -16,18 +15,36 @@ export default function ProductDetail() {
   const user = useSelector((state) => state.auth.user);
   const cart = useSelector((state) => state.cart);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [wishlist, setWishlist] = useState({});
+  const wishlist = useSelector((state) => state.cart.wishlist);
+  
   const dispatch = useDispatch();
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
   const [isChatVisible, setIsChatVisible] = useState(false); // State to control chat visibility
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsChatVisible(false);
+      }
+    };
+  
+    if (isChatVisible) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+  
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isChatVisible]);
 
-  const toggleWishlist = (productId) => {
-    setWishlist((prev) => ({
-      ...prev,
-      [productId]: !prev[productId],
-    }));
+  const handleWishlistClick = (product) => {
+    const isInWishlist = (wishlist || []).some((item) => item.id === product.id);
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(product.id));
+    } else {
+      dispatch(addToWishlist(product));
+    }
   };
 
   const { id } = useParams();
@@ -73,6 +90,8 @@ export default function ProductDetail() {
     const discountAmount = (discountPercentage / 100) * originalPrice;
     const discountedPrice = originalPrice - discountAmount;
 
+  
+
     return {
       originalPrice: originalPrice.toFixed(2),
       discountedPrice: discountedPrice.toFixed(2),
@@ -90,6 +109,7 @@ export default function ProductDetail() {
   const cartItem = cart.items.find((item) => item.id === product.id); // Use cart.items
   const quantityInCart = cartItem ? cartItem.quantity : 0;
   const remainingStock = product.stock - quantityInCart;
+  const isInWishlist = wishlist.some((item) => item.id === product.id);
 
   const handleReviewSubmit = async () => {
     // Validate rating and review
@@ -129,9 +149,7 @@ export default function ProductDetail() {
     } catch (err) {
         alert(err.message);
     }
-};
-
-  
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
@@ -149,7 +167,7 @@ export default function ProductDetail() {
               modules={[Navigation, Pagination]}
               className="rounded-lg"
             >
-              {product.imageUrls.map((image, index) => (
+              {product.imageUrls?.map((image, index) => (
                 <SwiperSlide key={index}>
                   <img
                     src={`http://localhost:5000${image}`}
@@ -164,14 +182,14 @@ export default function ProductDetail() {
           {/* Product Details - Positioned to the right */}
           <div className="w-full md:w-1/2 flex flex-col justify-center relative px-4">
             {/* Wishlist Button */}
-            <div className="absolute top-0 right-0 p-2">
+            <div className="absolute top-0 right-0 p-2 sm:pt-10 mr-5">
               <button
-                onClick={() => toggleWishlist(product.id || product._id)}
-                className={`absolute right-0 p-2 rounded-full transition-all duration-300 shadow-lg ${
-                  wishlist[product.id || product._id]
-                    ? "bg-primaryOrange text-white"
-                    : "border border-purple-800 text-purple-600"
-                } hover:shadow-primaryOrange/50`}
+                onClick={() => handleWishlistClick(product)}
+                className={`absolute right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg ${
+                  isInWishlist
+                    ? "bg-purple-800 text-white"
+                    : "border border-purple-800 text-purple-800"
+                } hover:shadow-purple-600`}
               >
                 <FaHeart />
               </button>
@@ -182,7 +200,7 @@ export default function ProductDetail() {
 
             {/* Discount Label */}
             {product.discount > 0 && (
-              <span className="absolute top-2 left-0 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+              <span className="absolute top-2 left-0 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full  sm:left-auto sm:right-2 ">
                 -{Math.round(product.discount)}% OFF
               </span>
             )}
@@ -249,7 +267,7 @@ export default function ProductDetail() {
         <div className="mt-6 bg-white shadow-lg rounded-lg p-6">
           <h2 className="text-2xl font-bold mb-3">Product Images</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {product.imageUrls.map((image, index) => (
+            {product.imageUrls?.map((image, index) => (
               <div key={index} className="w-full">
                 <img
                   src={`http://localhost:5000${image}`}
@@ -310,10 +328,10 @@ export default function ProductDetail() {
               <div key={index} className="border-b py-3">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <FaStar key={i} className={product.ratings > i ? "text-yellow-500" : "text-gray-300"} />
+                    <FaStar key={i} className={rev.ratings > i ? "text-yellow-500" : "text-gray-300"} />
                   ))}
                 </div>
-                <p className="text-gray-600">{product.reviews}</p>
+                <p className="text-gray-600">{rev.reviews}</p>
               </div>
             ))
           ) : (
@@ -340,7 +358,16 @@ export default function ProductDetail() {
       </div>
 
       {/* Chat Popup */}
-      {isChatVisible && <MessagePopup />}
+      {isChatVisible && (
+  <div 
+    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    onClick={() => setIsChatVisible(false)}
+  >
+    <div onClick={(e) => e.stopPropagation()}>
+      <MessagePopup />
+    </div>
+  </div>
+)}
     </div>
   );
 }
