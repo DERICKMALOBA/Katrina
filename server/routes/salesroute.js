@@ -26,6 +26,41 @@ router.get('/salesrevenue', (req, res) => {
     res.json({Totalrevenue:total});
   });
 });
+router.get('/salesrevenueanalysis', (req, res) => {
+  const lastyear = new Date().getFullYear()-1;
+  console.log("lastyear :"+lastyear);
+  const currentyear = new Date().getFullYear();
+  console.log("currentyear:"+currentyear);
+  const query = 'SELECT*FROM sales';
+  db.query(query,async (err, results) => {
+    if (err) return res.status(500).json({ message: 'Database error', error: err });
+    const nn = results.length;
+    var ar=JSON.parse(JSON.stringify(results));
+    var i=0;
+    var total=0
+    var lastyearsales=0;
+    var currentyearsales=0;
+    for(i;i<nn;i++)
+    {   
+      if(ar[i].year==lastyear)
+      {
+         lastyearsales=parseFloat(lastyearsales)+parseFloat(ar[i].amount);
+      }
+      if(ar[i].year==currentyear)
+        {
+           currentyearsales=parseFloat(currentyearsales)+parseFloat(ar[i].amount);
+        }
+    
+    }
+    console.log("Last: "+lastyearsales);
+    console.log("Current:  "+currentyearsales);
+    var deviation=parseFloat(currentyearsales)-(lastyearsales)
+    console.log("Deviation is:  "+deviation);
+    var percentage=(deviation*100)/lastyearsales;
+    console.log("Deviation percentage:  "+percentage);
+    res.json({Currentsales:currentyearsales,Deviation:percentage.toFixed(2)});
+  });
+});
 router.get('/weeksales', (req, res) => {
         const y = new Date().getFullYear();
         const required=7;

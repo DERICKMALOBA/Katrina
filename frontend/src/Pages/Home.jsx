@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
 import { addViewedProduct } from "../Redux/viewedProductsSlice";
 import ProductCategories from "./ProductsCategory";
-
+import { useDispatch } from "react-redux";
+import { addItem } from "../Redux/CartSlice";
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ const Home = () => {
   const [size, setSize] = useState("");
   const [rating, setRating] = useState("");
   const [sortBy, setSortBy] = useState("");
-
+  const [view,setView]=useState(false);
   const categories = [
     "Outfits",
     "Bags",
@@ -33,7 +34,6 @@ const Home = () => {
     "Kids Accessories",
     "Others",
   ];
-
   const handleProductClick = (product) => {
     dispatch(addViewedProduct(product));
     console.log("Product added to viewed products:", product);
@@ -47,7 +47,6 @@ const Home = () => {
       dispatch(addToWishlist(product));
     }
   };
-
   useEffect(() => {
     const fetchFilteredProducts = async () => {
       try {
@@ -77,7 +76,6 @@ const Home = () => {
             apiUrl = "/api/products/newest";
           }
         }
-
         const fullUrl = `${apiUrl}?${queryParams.toString()}`;
         const response = await fetch(fullUrl);
         if (!response.ok) throw new Error("Failed to fetch products");
@@ -125,7 +123,6 @@ const Home = () => {
       console.error("Error fetching products:", error);
     }
   };
-
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
@@ -148,7 +145,30 @@ const Home = () => {
     };
     fetchProducts();
   }, [page]);
+  useEffect(() => {
+    if(view==false)
+    {
+    const submitview = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/users/views`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
 
+      }
+     } catch (err) {
+        console.error("Fetch error:", err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    submitview();
+    setView(true);
+  }
+  }, [page]);
   useEffect(() => {
     if (!loading && products.length === 0) {
       navigate("/");
@@ -358,6 +378,101 @@ const Home = () => {
                   <div
                     className="flex transition-transform duration-1000 ease-in-out"
                     style={{ transform: `translateX(-${currentIndex * 50}%)` }}
+          {/* Offers Section */}
+        {/* Offers Section */}
+{/* Offers Section */}
+</div>
+<div className="mb-8">
+  <div className="flex justify-between items-center mb-4">
+    <h2 className="text-2xl font-semibold">Special Offers</h2>
+  </div>
+  <div className="relative w-full h-96 overflow-hidden rounded-lg">
+    {/* Carousel Container */}
+    <div
+      className="flex transition-transform duration-1000 ease-in-out"
+      style={{ transform: `translateX(-${currentIndex * 50}%)` }} // Adjust for two offers at a time
+    >
+      {offers.map((product) => (
+        <div
+          key={product.id || product._id}
+          className="w-1/2 flex-shrink-0 p-2" // Each offer takes half the width
+        >
+          <div className="bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200 h-full">
+            <Link
+              to={`/product/${product.id || product._id}`}
+              className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
+            >
+              {product.discount > 0 && (
+                <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+                  -{Math.round(product.discount)}% OFF
+                </span>
+              )}
+
+              {product.imageUrls?.length > 0 ? (
+                <img
+                  src={`http://localhost:5000${product.imageUrls[0]}`}
+                  alt={product.name}
+                  className="w-full h-64 object-cover rounded-lg" // Larger image
+                />
+              ) : (
+                <img
+                  src="/default-image.jpg"
+                  alt="default"
+                  className="w-full h-64 object-cover rounded-lg"
+                />
+              )}
+            </Link>
+
+            <div className="mt-2">
+              <h2 className="text-lg font-semibold truncate w-5/6">
+                {product.name}
+              </h2>
+            </div>
+
+            {product.discount > 0 ? (
+              <div className="text-primaryBlack font-semibold text-sm mt-2">
+                <span className="line-through text-gray-500">
+                  Kshs. {product.originalPrice}
+                </span>{" "}
+                Kshs. {product.discountedPrice}
+              </div>
+            ) : (
+              <p className="text-gray-600 font-semibold mt-1">
+                Kshs. {product.price}
+              </p>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+    {/* Navigation Buttons */}
+    <button
+      onClick={() => setCurrentIndex((prev) => (prev === 0 ? offers.length / 2 - 1 : prev - 1))}
+      className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-2 rounded-full shadow-md hover:bg-opacity-100 transition"
+    >
+      &lt;
+    </button>
+    <button
+      onClick={() => setCurrentIndex((prev) => (prev === offers.length / 2 - 1 ? 0 : prev + 1))}
+      className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-75 p-2 rounded-full shadow-md hover:bg-opacity-100 transition"
+    >
+      &gt;
+    </button>
+  </div>
+</div>
+
+          {/* Horizontally Scrollable Products */}
+          <div className="overflow-x-auto whitespace-nowrap mb-8">
+            <div className="inline-flex space-x-4">
+              {products.map((product) => (
+                <div
+                  key={product.id || product._id}
+                  className="w-48 bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
+                >
+                  <Link
+                    to={`/product/${product.id || product._id}`}
+                    className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
                   >
                     {offers.map((product) => (
                       <div
