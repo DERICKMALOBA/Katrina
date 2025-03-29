@@ -1,142 +1,188 @@
-import { useState, useEffect } from "react";
-import {useParams,Link } from "react-router-dom";
-import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
+import { addViewedProduct } from "../Redux/viewedProductsSlice";
+import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 export default function Subcategories() {
-  const [category, setCategory] = useState([]);
+  const { sub } = useParams();
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [wishlist, setWishlist] = useState({});
- const {sub}=useParams();
-  const toggleWishlist = (productId) =>{
-    setWishlist((prev) => ({
-      ...prev,
-      [productId]: !prev[productId],
-    }));
-  };
+  const dispatch = useDispatch();
+  const wishlist = useSelector((state) => state.cart.wishlist);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        setLoading(true);
         const response = await fetch(`/api/products/subcategories/${sub}`);
+        
         if (!response.ok) {
-          throw new Error("Failed to fetch products");
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
         const data = await response.json();
-        console.log("Fetched data:", data); // Debugging log
-        console.log(data);
-        // Extract the products array from the response object
-        setCategory(Array.isArray(data.sub) ? data.sub : []);
+        console.log("API Response:", data);
+        
+        // Handle different response structures
+        const productsData = Array.isArray(data.sub) ? data.sub : [];
+        
+        if (!productsData.length) {
+          console.warn("No products found in response");
+        }
+        
+        setProducts(productsData);
       } catch (err) {
-        console.log("Fetch error:", err.message);
+        console.error("Error fetching subcategory products:", err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
-  }, []);
 
-  if (loading) return <div className="text-center text-lg">Loading...</div>;
-  if (error) return <div className="text-center text-red-500">Error: {error}</div>;
+    fetchProducts();
+  }, [sub]);
+
+  const handleProductClick = (product) => {
+    dispatch(addViewedProduct(product));
+  };
+
+  const handleWishlistClick = (product) => {
+    const productId = product.id || product._id;
+    const isInWishlist = wishlist.some((item) => (item.id || item._id) === productId);
+    
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(productId));
+    } else {
+      dispatch(addToWishlist(product));
+    }
+  };
+
+  if (loading) {
+    return <div className="text-center py-8">Loading products...</div>;
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-500">Error: {error}</div>;
+  }
+
+  if (!products.length) {
+    return <div className="text-center py-8">No products found in this subcategory</div>;
+  }
 
   return (
-    <div className="p-4">
-      {category.length === 0 ? (
-        <p className="text-center text-gray-600">No products available.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-6">
-          {category.map((product) => (
+    <div className="mb-8">
+      <h2 className="text-xl font-semibold mb-4 text-center text-purple-700 capitalize">
+        {sub}
+      </h2>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        {products.map((product) => {
+          const productId = product.id || product._id;
+          const isInWishlist = wishlist.some((item) => (item.id || item._id) === productId);
+          
+          return (
             <div
-              key={product.id || product._id}
-              className="relative bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
+              key={productId}
+              className="bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
             >
-              {/* Product Image */}
-              <Link to={`/product/${product.id || product._id}`} className="block">
+              <Link
+                to={`/product/${productId}`}
+                onClick={() => handleProductClick(product)}
+                className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
+              >
+                {product.discount > 0 && (
+                  <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+                    -{Math.round(product.discount)}% OFF
+                  </span>
+                )}
+
                 {product.imageUrls?.length > 0 ? (
                   <img
                     src={`http://localhost:5000${product.imageUrls[0]}`}
                     alt={product.name}
                     className="w-full h-40 object-cover rounded-lg"
+                    onError={(e) => {
+                      e.target.src = "/default-image.jpg";
+                    }}
                   />
                 ) : (
-                  <img src="/default-image.jpg" alt="default" className="w-full h-40 object-cover rounded-lg" />
+                  <img
+                    src="/default-image.jpg"
+                    alt="default"
+                    className="w-full h-40 object-cover rounded-lg"
+                  />
                 )}
               </Link>
 
-              {/* Discount Price */}
-              {product.discount > 0 && (
-                <div className="absolute top-2 right-2 bg-red-400 text-white text-sm font-semibold px-2 py-1 rounded-md">
-                  -{product.discount}% Off
-                </div>
-              )}
-
-              {/* Product Details */}
               <div className="mt-2 relative">
-                {/* Product Name with Ellipsis */}
-                <h2 className="text-lg font-semibold truncate w-5/6">{product.name}</h2>
-
-                {/* Wishlist Icon */}
+                <h2 className="text-lg font-semibold truncate w-5/6">
+                  {product.name}
+                </h2>
                 <button
-                  onClick={() => toggleWishlist(product.id || product._id)}
-                  className={`absolute  right-0 p-2  rounded-full transition-all duration-300 shadow-lg
-                    ${wishlist[product.id || product._id] ? "bg-primaryOrange text-white" : "border border-primaryOrange text-primaryOrange"}
-                    hover:shadow-primaryOrange/50`}
+                  onClick={() => handleWishlistClick(product)}
+                  className={`absolute right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg ${
+                    isInWishlist
+                      ? "bg-purple-800 text-white"
+                      : "border border-purple-800 text-purple-800"
+                  } hover:shadow-purple-600`}
                 >
                   <FaHeart />
                 </button>
               </div>
 
-              {/* Price Display */}
               {product.discount > 0 ? (
                 <div className="text-primaryBlack font-semibold text-sm mt-2">
-                  <span className="line-through text-gray-500">Kshs. {product.originalPrice}</span>{" "}
+                  <span className="line-through text-gray-500">
+                    Kshs. {product.originalPrice}
+                  </span>{" "}
                   Kshs. {product.discountedPrice}
                 </div>
               ) : (
-                <p className="text-gray-600 font-semibold mt-1">Kshs. {product.price}</p>
+                <p className="text-gray-600 font-semibold mt-1">
+                  Kshs. {product.price}
+                </p>
               )}
 
-              {/* Product Description */}
+              <p className="text-purple-800 mt-1">
+                {product.stock <= 5 ? (
+                  <span className="text-red-500 font-semibold">
+                    {product.stock} {product.stock === 1 ? "unit" : "units"} left
+                  </span>
+                ) : (
+                  <>{product.stock} units left</>
+                )}
+              </p>
 
-              <p className="text-primaryOrange mt-1 line-clamp-2">
-  {product.stock <= 5 ? (
-    <span className="text-red-500 font-semibold"> {product.stock} {product.stock === 1 ? "unit" : "units"} left</span>
-  ) : (
-    <>{product.stock} units left</>
-  )}
-</p>
-
-
-     
-             
-
-              {/* Ratings */}
-              {product.rating && (
-                <div className="flex items-center mt-2">
-                  {[...Array(5)].map((_, index) => (
-                    <span key={index}>
-                      {product.rating >= index + 1 ? (
+              <div className="flex items-center mt-2">
+                {[...Array(5)].map((_, index) => (
+                  <span key={index}>
+                    {product.ratings > 0 ? (
+                      product.ratings >= index + 1 ? (
                         <FaStar className="text-yellow-500" />
-                      ) : product.rating > index && product.rating < index + 1 ? (
+                      ) : product.ratings > index && product.ratings < index + 1 ? (
                         <FaStarHalfAlt className="text-yellow-500" />
                       ) : (
                         <FaStar className="text-gray-300" />
-                      )}
-                    </span>
-                  ))}
-                </div>
-              )}
+                      )
+                    ) : (
+                      <FaStar className="text-gray-300" />
+                    )}
+                  </span>
+                ))}
+              </div>
 
-              {/* Add to Cart Button */}
-              <button className="bg-primaryOrange text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg">
+              <button
+                onClick={() => dispatch(addItem(product))}
+                className="bg-purple-800 text-white font-semibold px-4 py-2 rounded-lg mt-4 w-full transition duration-300 hover:opacity-80 hover:shadow-lg"
+              >
                 Add to Cart
               </button>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
     </div>
-  
   );
 }

@@ -240,15 +240,15 @@ const CheckoutPage = () => {
   // const totalAmount = parseFloat(formData.totalPrice || 0) + parseFloat(formData.deliveryFee || 0);
 
   return (
-    <div className="mx-auto p-6 bg-gray-100 rounded-lg shadow-md space-y-6 relative">
-   <div className="flex flex-col md:flex-row gap-6">
-    <div className="w-3/4 pr-6 space-y-6">
+<div className="mx-auto p-6 bg-gray-100 rounded-lg shadow-md space-y-6 relative">
+  <div className="flex flex-col md:flex-row gap-6">
+    <div className="w-full md:w-3/4 md:pr-6 space-y-6">
       {/* Customer Details */}
-      <div className={`p-4 border rounded-lg ${customerDetailsCleared ? "bg-green-100" : "bg-white"}`}>
-        <h1 className="text-xl font-semibold text-gray-800">Customer Details</h1>
+      <div className={`p-4 border rounded-lg ${customerDetailsCleared ? "bg-green-100" : "bg-white"} mx-auto md:mx-0`}>
+        <h1 className="text-xl font-semibold text-gray-800 text-center md:text-left">Customer Details</h1>
         {!customerDetailsCleared ? (
           <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 className="p-2 border rounded w-full"
                 type="text"
@@ -268,7 +268,7 @@ const CheckoutPage = () => {
                 required
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <input
                 className="p-2 border rounded w-full"
                 type="text"
@@ -297,7 +297,7 @@ const CheckoutPage = () => {
               onChange={handleInputChange}
               required
             />
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* County Dropdown */}
               <select
                 className="p-2 border rounded w-full"
@@ -342,7 +342,7 @@ const CheckoutPage = () => {
               />
             </div>
 
-            <div className="flex justify-end space-x-4 mt-4">
+            <div className="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4 mt-4">
               <button className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">
                 Cancel
               </button>
@@ -384,8 +384,8 @@ const CheckoutPage = () => {
 
       {/* Delivery Details */}
       {customerDetailsCleared && (
-        <div className={`p-4 border rounded-lg ${deliveryDetailsCleared ? "bg-green-100" : "bg-white"}`}>
-          <h1 className="text-xl font-semibold text-gray-800">Delivery Details</h1>
+        <div className={`p-4 border rounded-lg ${deliveryDetailsCleared ? "bg-green-100" : "bg-white"} mx-auto md:mx-0`}>
+          <h1 className="text-xl font-semibold text-gray-800 text-center md:text-left">Delivery Details</h1>
           {!deliveryDetailsCleared ? (
             <div>
               <div className="grid grid-cols-1 gap-4 mt-4">
@@ -397,7 +397,7 @@ const CheckoutPage = () => {
                     <input
                       className="p-2 border rounded w-full bg-gray-100"
                       type="text"
-                      value={selectedCity || ""} // Display the selected city
+                      value={selectedCity || ""}
                       readOnly
                     />
                   </div>
@@ -406,7 +406,7 @@ const CheckoutPage = () => {
                     value={formData.deliveryVehicle}
                     onChange={handleVehicleChange}
                     required
-                    disabled={!selectedCity} // Disable vehicle dropdown if no city is selected
+                    disabled={!selectedCity}
                   >
                     <option value="">Select a vehicle</option>
                     {Array.isArray(deliveryData.deliveryVehicles[selectedCity])
@@ -428,7 +428,7 @@ const CheckoutPage = () => {
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4 mt-4">
+              <div className="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4 mt-4">
                 <button className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">
                   Cancel
                 </button>
@@ -464,8 +464,8 @@ const CheckoutPage = () => {
 
       {/* Payment Details */}
       {deliveryDetailsCleared && (
-        <div className={`p-4 border rounded-lg ${paymentCleared ? "bg-green-100" : "bg-white"}`}>
-          <h1 className="text-xl font-semibold text-gray-800">Payment Details</h1>
+        <div className={`p-4 border rounded-lg ${paymentCleared ? "bg-green-100" : "bg-white"} mx-auto md:mx-0`}>
+          <h1 className="text-xl font-semibold text-gray-800 text-center md:text-left">Payment Details</h1>
           {!paymentCleared ? (
             <div className="space-y-4">
               <select
@@ -478,7 +478,7 @@ const CheckoutPage = () => {
                 <option value="mpesa">Mpesa</option>
               </select>
               {formData.paymentMethod === "mpesa" && <MpesaPayment />}
-              <div className="flex justify-end space-x-4 mt-4">
+              <div className="flex flex-col md:flex-row justify-end space-y-2 md:space-y-0 md:space-x-4 mt-4">
                 <button className="bg-gray-500 text-white p-2 rounded hover:bg-gray-600">
                   Cancel
                 </button>
@@ -514,46 +514,45 @@ const CheckoutPage = () => {
     </div>
 
     {/* Order Summary */}
-  {/* Order Summary */}
-<div className="w-full md:w-1/4 mt-4 md:mt-0">
-  <div className="p-4 border rounded-lg bg-white shadow-md">
-    <h3 className="text-xl font-semibold">Order Summary</h3>
-    <div className="bg-white shadow-md rounded-lg p-4 mt-4">
-      <div className="space-y-4">
-        {/* Item Total */}
-        <div className="flex justify-between border-b pb-2">
-          <span className="font-semibold text-gray-700">Item Total:</span>
-          <span className="text-gray-900">Ksh {parseFloat(totalPrice) || 0}</span>
-        </div>
+    <div className="w-full md:w-1/4 mt-4 md:mt-0 mx-auto md:mx-0">
+      <div className="p-4 border rounded-lg bg-white shadow-md">
+        <h3 className="text-xl font-semibold text-center md:text-left">Order Summary</h3>
+        <div className="bg-white shadow-md rounded-lg p-4 mt-4">
+          <div className="space-y-4">
+            {/* Item Total */}
+            <div className="flex justify-between border-b pb-2">
+              <span className="font-semibold text-gray-700">Item Total:</span>
+              <span className="text-gray-900">Ksh {parseFloat(totalPrice) || 0}</span>
+            </div>
 
-        {/* Delivery Fee */}
-        <div className="flex justify-between border-b pb-2">
-          <span className="font-semibold text-gray-700">Delivery Fee:</span>
-          <span className="text-gray-900">Ksh {parseFloat(formData?.deliveryFee) || 0}</span>
-        </div>
+            {/* Delivery Fee */}
+            <div className="flex justify-between border-b pb-2">
+              <span className="font-semibold text-gray-700">Delivery Fee:</span>
+              <span className="text-gray-900">Ksh {parseFloat(formData?.deliveryFee) || 0}</span>
+            </div>
 
-        {/* Total Cost */}
-        <div className="flex justify-between text-lg font-semibold text-gray-900">
-          <div className="mt-4 font-bold text-lg">
-            <span>Total Cost:</span>
-            <span>
-              Ksh{" "}
-              {parseFloat(totalPrice) + (parseFloat(formData?.deliveryFee) || 0)}
-            </span>
+            {/* Total Cost */}
+            <div className="flex justify-between text-lg font-semibold text-gray-900">
+              <div className="mt-4 font-bold text-lg">
+                <span>Total Cost:</span>
+                <span>
+                  Ksh{" "}
+                  {parseFloat(totalPrice) + (parseFloat(formData?.deliveryFee) || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* Complete Order Button */}
+            <button
+              className="bg-purple-800 text-white p-3 rounded-lg hover:bg-purple-700 w-full transition duration-200"
+              onClick={handleSubmit}
+            >
+              Complete Order
+            </button>
           </div>
         </div>
-
-        {/* Complete Order Button */}
-        <button
-          className="bg-purple-800 text-white p-3 rounded-lg hover:bg-purple-700 w-full transition duration-200"
-          onClick={handleSubmit}
-        >
-          Complete Order
-        </button>
       </div>
     </div>
-  </div>
-</div>
   </div>
 </div>
   );
