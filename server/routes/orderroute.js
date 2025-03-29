@@ -129,4 +129,25 @@ router.get('/weekorders', (req, res) => {
       res.send(results);   
     });
   });
+  router.get('/analysisorders', (req, res) => {
+    var year=new Date().getFullYear();
+    var lastyear=year-1;
+    const query = 'SELECT*FROM orders WHERE year=?';
+    db.query(query,year,async (err, results) => {
+      if (err) return res.status(500).json({ message: 'Database error', error: err });  
+      var lastyearorders=0;
+      var thisyearorders=0;
+      thisyearorders=results.length;
+      console.log("This year orders:  "+thisyearorders);
+      const q='SELECT*FROM orders WHERE year=?';
+      db.query(query,lastyear,async (err, result) => {
+        if (err) return res.status(500).json({ message: 'Database error', error: err });  
+        lastyearorders=result.length;
+        console.log("Last year orders:  "+lastyearorders);
+        var deviation=parseInt(thisyearorders)-parseInt(lastyearorders);
+        var percentage=(deviation*100)/lastyearorders;
+      res.json({Current:thisyearorders,Change:percentage.toFixed(2)});   
+      });
+    });
+  });
 module.exports = router;

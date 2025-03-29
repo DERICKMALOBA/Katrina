@@ -126,4 +126,88 @@ router.post('/deleteusers', (req, res) => {
           res.json({Jan:jan,Feb:feb,Mar:mar,Apr:apr,May:may,Jun:jun,Jul:jul,Aug:aug,Sep:sep,Oct:oct,Nov:nov,Dec:dec});
         });
       });
+      router.get('/views', (req, res) => {
+        const year = new Date().getFullYear();
+       const q="SELECT*FROM views WHERE year=?";
+       db.query(q,year,async(err,results)=>{
+        if (err) return res.status(500).json({ message: 'Database error', error: err });
+        console.log("Views:  "+results[0].view);
+        var value=results[0].view;
+        var currentvalue=value+1;
+        console.log(value);
+        console.log(currentvalue);
+        console.log(results.length);
+        if(results.length>0)
+        {
+        const query = 'UPDATE views SET view=?,year=? WHERE id=?';
+        db.query(query,[currentvalue,results[0].id],async (err, results) => {
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+        });
+      console.log("Current views  :"+currentvalue);
+        }
+        else
+        {
+          var i=1;
+          const query = 'INSERT INTO views (view,year) VALUES(?,?)';
+          db.query(query,[i,year],async (err, results) => {
+            if (err) return res.status(500).json({ message: 'Database error', error: err });
+          });
+        console.log("Current views  :"+i);
+        }
+
+       })
+      });
+      router.get('/analysisviews', (req, res) => {
+        const year = new Date().getFullYear();
+        const lastyear=year-1;
+       const q="SELECT*FROM views";
+       db.query(q,async(err,results)=>{
+        if (err) return res.status(500).json({ message: 'Database error', error: err });
+        console.log("Views:  "+results[0].view);
+        var n=results.length;
+        var i=0;
+        var currentyearviews=0;
+        var lastyearviews=0;
+        for(i;i<n;i++)
+        {
+          if(results[i].year==year)
+          {
+             currentyearviews=results[i].view;
+          }
+          if(results[i].year==lastyear)
+          {
+            lastyearviews=results[i].view;
+          }
+        }
+        console.log("Last year views: "+lastyearviews);
+        console.log("This year views: "+currentyearviews);
+        var deviation=parseInt(currentyearviews)-parseInt(lastyearviews);
+        var percentage=(deviation*100)/lastyearviews;
+        res.json({Currentviews:currentyearviews,Change:percentage.toFixed(2)});
+       })
+      });
+      router.get('/analysisusers', (req, res) => {
+        const year = new Date().getFullYear();
+        const lastyear=year-1;
+       const q="SELECT*FROM customers WHERE year=?";
+       db.query(q,year,async(err,results)=>{
+        if (err) return res.status(500).json({ message: 'Database error', error: err });
+        var n=results.length;
+        var lastyearcustomers=0;
+        var thisyearcustomers=0;
+        thisyearcustomers=n;
+        const query="SELECT*FROM customers WHERE year=?"
+        db.query(q,lastyear,async(err,results)=>{
+          if (err) return res.status(500).json({ message: 'Database error', error: err });
+          lastyearcustomers=results.length;
+          console.log("Last year customers: "+lastyearcustomers);
+          console.log("Ths year customers:  "+thisyearcustomers);
+        var deviation=parseInt(thisyearcustomers)-parseInt(lastyearcustomers);
+        var percentage=(deviation*100)/lastyearcustomers;
+        console.log("Devation is:  "+deviation);
+        console.log("Percentage is:  "+percentage);
+        res.json({Current:thisyearcustomers,Change:percentage.toFixed(2)});
+       })
+      });
+      });
 module.exports = router;

@@ -5,27 +5,19 @@ const COLORS = ["#8884d8", "#82ca9d", "#ffc658", "#ff8042", "#0088FE"];
 
 const SalesByCategoryChart = () => {
 	const [error, setError] = useState(null);
-	const [top, setTop] = useState(null);
-	const [bot, setBot] = useState(null);
-	const [dre, setDre] = useState(null);
 	const [out, setOut] = useState(null);
-	const [sle, setSle] = useState(null);
-	const [und, setUnd] = useState(null);
-	const [foo, setFoo] = useState(null);
-	const [acc, setAcc] = useState(null);
-	const [spe, setSpe] = useState(null);
-	const [spo, setSpo] = useState(null);
+	const [bag, setBag] = useState(null);
+	const [shoe, setShoe] = useState(null);
+	const [hyg, setHyg] = useState(null);
+	const [acce, setAcce] = useState(null);
+	const [others, setOthers] = useState(null);
 	const salesByCategory = [
-		{ name: "Tops", value: top },
-		{ name: "Bottoms", value: bot },
-		{ name: "Dressers", value: dre },
-		{ name: "OuterWear", value: out },
-		{ name: "SleepWear", value: sle },
-		{ name: "UnderWear", value: und },
-		{ name: "FootWear", value: foo },
-		{ name: "Accessories", value: acc },
-		{ name: "SpecialOccassions", value: spe },
-		{ name: "SportWear", value: spo },
+		{ name: "Oufits", value: out },
+		{ name: "Bags", value: bag },
+		{ name: "Shoes", value:shoe },
+		{ name: "Kid's hygiene", value: hyg },
+		{ name: "Kid's Accessories", value: acce },
+		{ name: "Others", value: others },
 	];
 	useEffect(() => {
 		const fetchUsers = async () => {
@@ -36,16 +28,12 @@ const SalesByCategoryChart = () => {
 			}
 			const data = await response.json();
 			console.log("Data is:"+data);
-			setTop(data.Top); 
-			setBot(data.Bot);
-			setDre(data.Dre); 
-			setOut(data.Out);
-			setSle(data.Sle); 
-			setUnd(data.Und);
-			setFoo(data.Foo);
-			setAcc(data.Acc);
-			setSpe(data.Spe); 
-			setSpo(data.Spo);
+			setOut(data.Outfits);
+			setBag(data.Bags); 
+			setShoe(data.Shoes);
+			setHyg(data.Hygiene);
+			setAcce(data.Accessories);
+			setOthers(data.Others);
 		  } catch (err) {
 			setError(err.message); // Handle errors
 			console.log(error);
