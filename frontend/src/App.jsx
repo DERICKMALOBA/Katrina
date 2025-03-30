@@ -44,9 +44,9 @@ import Subcategories from "./Pages/Subcategory";
 import Chat from "./Pages/Chat";
 import Itemlist from "./Pages/Itemlist";
 
-import CategoryPage from "./Pages/Categories";
+
 import SearchResults from "./components/SearchResult";
-import ProductCategories from "./Pages/ProductsCategory";
+
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -170,8 +170,7 @@ function App() {
           <Route path="/resetpassword" element={<ResetPassword />} />
           <Route path="/products/search" element={SearchResults} />
       
-          <Route path="/category/:category" element={<CategoryPage />} />
-          <Route path="/productcategory" element={<ProductCategories />} />
+         
         
           <Route path="/profile" element={<Profile/>} />
           <Route path="/subcategories/:sub" element={<Subcategories/>} />

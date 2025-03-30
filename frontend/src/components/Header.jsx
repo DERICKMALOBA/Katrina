@@ -17,32 +17,19 @@ function Header() {
   const menuRef = useRef(null);
   const dispatch = useDispatch();
   const navigate = useNavigate(); // Initialize useNavigate
-
   const handleSearchClick = async () => {
     if (searchTerm.trim()) {
-      // Construct the URL with search parameters
-      const searchParams = new URLSearchParams({ name: searchTerm });
-      const url = `/products/search?${searchParams.toString()}`;
-
-      // Dispatch the thunk to fetch search results
-      // await dispatch(fetchSearchResults({ name: searchTerm }));
-
-      // Navigate to the search results page with the updated URL
-      navigate(url);
+      const encodedTerm = encodeURIComponent(searchTerm.trim());
+      console.log("Navigating to:", `/products/search?name=${encodedTerm}`);
+      navigate(`/products/search?name=${encodedTerm}`);
     }
   };
-
+  
   const handleKeyPress = async (event) => {
     if (event.key === 'Enter' && searchTerm.trim()) {
-      // Construct the URL with search parameters
-      const searchParams = new URLSearchParams({ name: searchTerm });
-      const url = `/products/search?${searchParams.toString()}`;
-
-      // Dispatch the thunk to fetch search results
-      // await dispatch(fetchSearchResults({ name: searchTerm }));
-
-      // Navigate to the search results page with the updated URL
-      navigate(url);
+      const encodedTerm = encodeURIComponent(searchTerm.trim());
+      console.log("Navigating to:", `/products/search?name=${encodedTerm}`);
+      navigate(`/products/search?name=${encodedTerm}`);
     }
   };
 

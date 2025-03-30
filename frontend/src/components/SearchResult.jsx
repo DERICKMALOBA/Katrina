@@ -1,32 +1,40 @@
 import React, { useEffect, useState } from 'react';
-import {  Link } from 'react-router-dom';
+import {  Link,useParams } from 'react-router-dom';
 import { FaHeart, FaStar, FaStarHalfAlt } from 'react-icons/fa';
 import { addItem } from '../Redux/CartSlice';
+import { useSearchParams } from 'react-router-dom';
 
 const SearchResults = () => {
+  const [searchParams] = useSearchParams();
+  const searchTerm = searchParams.get('name');
 const [products,setProducts]=useState([]);
 
   // Wishlist state
   const [wishlist, setWishlist] = useState({});
 
-
-  
+ const {querystring} = useParams();
+  alert(querystring);
   useEffect(() => {
+    console.log("Search term from URL:", searchTerm); // Debug log
+    
     const fetchProducts = async () => {
+      if (!searchTerm) {
+        setLoading(false);
+        return;
+      }
+      
       try {
+        console.log("Fetching products for:", searchTerm);
         const response = await fetch(
-          `/api/products/search?${queryString}`
+          `/api/products/search?name=${encodeURIComponent(searchTerm)}`
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
+        
+        if (!response.ok) throw new Error("Failed to fetch products");
+        
         const data = await response.json();
-        console.log("Fetched data:", data); // Debugging log
-
-        // Extract the products array from the response object
-        setProducts(Array.isArray(data.product) ? data.product: []);
+        setProducts(Array.isArray(data.product) ? data.product : []);
       } catch (err) {
-        console.error("Fetch error:", err.message);
+        console.error("Fetch error:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -34,7 +42,7 @@ const [products,setProducts]=useState([]);
     };
 
     fetchProducts();
-  }, []);
+  }, [searchTerm]);
 
  
 

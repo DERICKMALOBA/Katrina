@@ -10,6 +10,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import MessagePopup from './Chat'; // Adjust the path as necessary
+import ReviewsComponent from "../components/ReviewsComponent";
 
 export default function ProductDetail() {
   const user = useSelector((state) => state.auth.user);
@@ -75,6 +76,23 @@ export default function ProductDetail() {
     };
 
     fetchProduct();
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(`/api/products/reviewsget/${id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch product details");
+        }
+        const data = await response.json();
+        setReviews(data);
+        console.log(data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
   }, [id]);
 
   const calculateDiscountedPrice = (product) => {
@@ -123,13 +141,13 @@ export default function ProductDetail() {
 
     // Include user_id in the request body
     const newReview = { 
-        ratings: Number(rating), // Ensure rating is a number
-        reviews: review, // Ensure review is a string
-        user_id: Number(user.userid) // Ensure user_id is a number
+        ratings: Number(rating), 
+        reviews: review, 
+        name: user.name 
     };
 
     try {
-        const response = await fetch(`/api/products/product/${id}/review`, {
+        const response = await fetch(`/api/products/reviewssubmit/${id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -151,6 +169,9 @@ export default function ProductDetail() {
     }
   };
 
+
+
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
       {/* Left Side - Product Info */}
@@ -225,23 +246,7 @@ export default function ProductDetail() {
             </p>
 
             {/* Rating Section */}
-            <div className="flex items-center mt-2 mb-2">
-              {[...Array(5)].map((_, index) => (
-                <span key={index}>
-                  {product.ratings > 0 ? (
-                    product.ratings >= index + 1 ? (
-                      <FaStar className="text-yellow-500" />
-                    ) : product.rating > index && product.rating < index + 1 ? (
-                      <FaStarHalfAlt className="text-yellow-500" />
-                    ) : (
-                      <FaStar className="text-gray-300" />
-                    )
-                  ) : (
-                    <FaStar className="text-gray-300" />
-                  )}
-                </span>
-              ))}
-            </div>
+              <ReviewsComponent productId={product.id || product._id} />
 
             {/* Add to Cart Button */}
             <button
@@ -325,7 +330,7 @@ export default function ProductDetail() {
           <h2 className="text-2xl font-bold mb-3">Customer Reviews</h2>
           {reviews.length > 0 ? (
             reviews.map((rev, index) => (
-              <div key={index} className="border-b py-3">
+              <div key={index} className="border-b flex flex-row gap-6 py-3">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <FaStar key={i} className={rev.ratings > i ? "text-yellow-500" : "text-gray-300"} />
