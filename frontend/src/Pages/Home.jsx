@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
 import { addViewedProduct } from "../Redux/viewedProductsSlice";
 import ProductCategories from "./ProductsCategory";
+import ReviewsComponent from "../components/ReviewsComponent";
 
 const Home = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -536,25 +537,7 @@ const Home = () => {
                             <>{product.stock} units left</>
                           )}
                         </p>
-
-                        <div className="flex items-center mt-2">
-                          {[...Array(5)].map((_, index) => (
-                            <span key={index}>
-                              {product.ratings > 0 ? (
-                                product.ratings >= index + 1 ? (
-                                  <FaStar className="text-yellow-500" />
-                                ) : product.rating > index &&
-                                  product.rating < index + 1 ? (
-                                  <FaStarHalfAlt className="text-yellow-500" />
-                                ) : (
-                                  <FaStar className="text-gray-300" />
-                                )
-                              ) : (
-                                <FaStar className="text-gray-300" />
-                              )}
-                            </span>
-                          ))}
-                        </div>
+                        <ReviewsComponent productId={product.id || product._id} />
 
                         <button
                           onClick={() => dispatch(addItem(product))}

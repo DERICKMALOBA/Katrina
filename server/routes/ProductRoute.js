@@ -216,13 +216,21 @@ router.get("/productslist", (req, res) => {
         imageUrls: fullImageUrls,
       };
     });
+const q="SELECT*FROM reviews";
+db.query(q,async(err,result)=>{
+if(err)
+{
+  console.log(err+"error occured while fetching reviews");
+}
 
     return res.json({
       products: productsWithDiscount,
       totalDiscountAmount: totalDiscountAmount.toFixed(2), // Total discount for all products
       page,
       limit,
+      reviews:result,
     });
+  });
   });
 });
 
@@ -3833,22 +3841,21 @@ router.post("/product/:id/review", async (req, res) => {
 //search
 router.get('/search', (req, res) => {
   const { name, category, subcategory } = req.query;
-
+  
   let sql = 'SELECT * FROM products WHERE 1=1';
   const params = [];
 
-  // Add conditions based on provided query parameters
   if (name) {
-      sql += ' AND LOWER(category) LIKE ?'; // Search in the `category` column (product name) for partial matches
-      params.push(`%${name.toLowerCase()}%`);
+    sql += ' AND LOWER(name) LIKE ?'; // Changed to search in name column
+    params.push(`%${name.toLowerCase()}%`);
   }
   if (category) {
-      sql += ' AND LOWER(super) LIKE ?'; // Search in the `super` column (main category) for partial matches
-      params.push(`%${category.toLowerCase()}%`);
+    sql += ' AND LOWER(super) LIKE ?';
+    params.push(`%${category.toLowerCase()}%`);
   }
   if (subcategory) {
-      sql += ' AND LOWER(subcat) LIKE ?'; // Search in the `subcat` column (subcategory) for partial matches
-      params.push(`%${subcategory.toLowerCase()}%`);
+    sql += ' AND LOWER(subcat) LIKE ?';
+    params.push(`%${subcategory.toLowerCase()}%`);
   }
 
   // Execute the query using the `db` object
@@ -3973,6 +3980,34 @@ router.get('/search', (req, res) => {
           res.json({ super: [], totalDiscountAmount: "0.00" });
         }
       );
+    });
+
+
+
+
+    router.post("/reviewssubmit/:id", (req, res) => {
+      var {id}=req.params
+     var {ratings,reviews,name}=req.body;
+     const q="INSERT INTO reviews (name,productid,ratings,reviews) VALUES(?,?,?,?)";
+     db.query(q,[name,id,ratings,reviews],async(err,results)=>{
+      if(err)
+      {
+        res.json({Message:"database error"});
+      }
+      console.log("reviews of the product submitted by  "+name);
+     })
+    });
+    router.get("/reviewsget/:id", (req, res) => {
+      var {id}=req.params;
+     const q="SELECT*FROM reviews WHERE productid=?";
+     db.query(q,id,async(err,results)=>{
+      if(err)
+      {
+        res.json({Message:"database error"});
+      }
+      console.log(results);
+      res.json(results);
+     })
     });
 
 module.exports = router;
