@@ -140,7 +140,7 @@ router.post('/deleteusers', (req, res) => {
         if(results.length>0)
         {
         const query = 'UPDATE views SET view=?,year=? WHERE id=?';
-        db.query(query,[currentvalue,results[0].id],async (err, results) => {
+        db.query(query,[currentvalue,year,results[0].id],async (err, results) => {
           if (err) return res.status(500).json({ message: 'Database error', error: err });
         });
       console.log("Current views  :"+currentvalue);
