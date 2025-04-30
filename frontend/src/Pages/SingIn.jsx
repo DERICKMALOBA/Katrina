@@ -125,8 +125,8 @@ function SignIn() {
           maxWidth: '400px',
         }}
       >
-        <h1 className="text-4xl text-center font-bold text-blue-800 my-7">
-          Katrina Children Closets
+        <h1 className="text-4xl text-center font-bold text-purple-800 my-7">
+          Katrina Kids' Closets
         </h1>
         <form onSubmit={handleSubmit} className="space-y-5">
           <input
@@ -145,21 +145,21 @@ function SignIn() {
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-400 transition duration-300"
+            className="w-full bg-purple-600 text-white font-semibold p-3 rounded-lg hover:bg-purple-400 transition duration-300"
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="text-blue-700">Don’t have an account?</p>
+          <p className="text-gray-700">Don’t have an account?</p>
           <Link to="/sign-up">
-            <span className="text-blue-600 font-medium hover:underline cursor-pointer">
+            <span className="text-purple-600 font-medium hover:underline cursor-pointer">
               Create an Account
             </span><br/><br/>
           </Link>
           <Link to="/forgot">
-            <span className="text-blue-600 font-medium hover:underline cursor-pointer">
+            <span className="text-purple-600 font-medium hover:underline cursor-pointer">
               Forgot Password
             </span>
           </Link>

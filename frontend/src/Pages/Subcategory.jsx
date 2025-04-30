@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
 import { addViewedProduct } from "../Redux/viewedProductsSlice";
-import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
+import { FaHeart } from "react-icons/fa";
 import ReviewsComponent from "../components/ReviewsComponent";
 
 export default function Subcategories() {
@@ -19,21 +19,21 @@ export default function Subcategories() {
       try {
         setLoading(true);
         const response = await fetch(`/api/products/subcategories/${sub}`);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         console.log("API Response:", data);
-        
+
         // Handle different response structures
         const productsData = Array.isArray(data.sub) ? data.sub : [];
-        
+
         if (!productsData.length) {
           console.warn("No products found in response");
         }
-        
+
         setProducts(productsData);
       } catch (err) {
         console.error("Error fetching subcategory products:", err);
@@ -52,8 +52,10 @@ export default function Subcategories() {
 
   const handleWishlistClick = (product) => {
     const productId = product.id || product._id;
-    const isInWishlist = wishlist.some((item) => (item.id || item._id) === productId);
-    
+    const isInWishlist = wishlist.some(
+      (item) => (item.id || item._id) === productId
+    );
+
     if (isInWishlist) {
       dispatch(removeFromWishlist(productId));
     } else {
@@ -70,7 +72,11 @@ export default function Subcategories() {
   }
 
   if (!products.length) {
-    return <div className="text-center py-8">No products found in this subcategory</div>;
+    return (
+      <div className="text-center py-8">
+        No products found in this subcategory
+      </div>
+    );
   }
 
   return (
@@ -81,23 +87,25 @@ export default function Subcategories() {
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         {products.map((product) => {
           const productId = product.id || product._id;
-          const isInWishlist = wishlist.some((item) => (item.id || item._id) === productId);
-          
+          const isInWishlist = wishlist.some(
+            (item) => (item.id || item._id) === productId
+          );
+
           return (
             <div
               key={productId}
-              className="bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
+              className="flex-shrink-0 w-48 bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200"
             >
               <Link
                 to={`/product/${productId}`}
                 onClick={() => handleProductClick(product)}
-                className="block relative p-2 border rounded-lg shadow-lg hover:shadow-xl transition"
+                className="block relative p-2  rounded-lg shadow-lg hover:shadow-xl transition"
               >
-                {product.discount > 0 && (
-                  <span className="absolute top-2 right-2 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full">
+                {/* {product.discount > 0 && (
+                  <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full">
                     -{Math.round(product.discount)}% OFF
                   </span>
-                )}
+                )} */}
 
                 {product.imageUrls?.length > 0 ? (
                   <img
@@ -118,23 +126,37 @@ export default function Subcategories() {
               </Link>
 
               <div className="mt-2 relative">
-                <h2 className="text-lg font-semibold truncate w-5/6">
-                  {product.name}
-                </h2>
-                <button
-                  onClick={() => handleWishlistClick(product)}
-                  className={`absolute right-0 p-2 mt-8 rounded-full transition-all duration-300 shadow-lg ${
-                    isInWishlist
-                      ? "bg-purple-800 text-white"
-                      : "border border-purple-800 text-purple-800"
-                  } hover:shadow-purple-600`}
-                >
-                  <FaHeart />
-                </button>
+                <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center w-full">
+                    <h2 className="text-lg font-semibold truncate flex-1 pr-2">
+                      {product.name}
+                    </h2>
+                    {product.discount > 0 && (
+                      <span className="text-green-700 text-xs font-bold px-2 py-1 rounded-full whitespace-nowrap">
+                        -{Math.round(product.discount)}% OFF
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Wishlist Icon and Discount Badge in the same row */}
+                  <div className="flex items-center space-x-2">
+                   
+                    <button
+                      onClick={() => handleWishlistClick(product)}
+                      className={`p-2 pt-2 rounded-full transition-all duration-300 shadow-lg ${
+                        isInWishlist
+                          ? "bg-purple-800 text-white"
+                          : "border border-purple-800 text-purple-800"
+                      } hover:shadow-purple-600`}
+                    >
+                      <FaHeart size={14} />
+                    </button>
+                  </div>
+                </div>
               </div>
 
               {product.discount > 0 ? (
-                <div className="text-primaryBlack font-semibold text-sm mt-2">
+                <div className="text-black font-semibold text-sm mt-2">
                   <span className="line-through text-gray-500">
                     Kshs. {product.originalPrice}
                   </span>{" "}
@@ -149,7 +171,8 @@ export default function Subcategories() {
               <p className="text-purple-800 mt-1">
                 {product.stock <= 5 ? (
                   <span className="text-red-500 font-semibold">
-                    {product.stock} {product.stock === 1 ? "unit" : "units"} left
+                    {product.stock} {product.stock === 1 ? "unit" : "units"}{" "}
+                    left
                   </span>
                 ) : (
                   <>{product.stock} units left</>
@@ -157,7 +180,6 @@ export default function Subcategories() {
               </p>
 
               <ReviewsComponent productId={product.id || product._id} />
-
 
               <button
                 onClick={() => dispatch(addItem(product))}

@@ -1,3 +1,22 @@
+@import "tailwindcss";
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+
+@layer components {
+    .primary-orange-bg {
+      background-color: #fc8414;
+    }
+    .primary-blue-text {
+      color: #307bb5;
+    }
+    .primary-green-border {
+      border-color: #68ad00;
+    }
+    /* Add others as needed */
+  }

@@ -387,7 +387,7 @@ const ProductDetails = () => {
           <div className="mt-4 items-center">
             <button
               onClick={handleShowAll}
-              className="text-primaryGreen font-bold hover:text-indigo-400"
+              className="text-green-600 font-bold hover:text-indigo-400"
             >
               {showAll ? "Show Less" : "Show All Products"}
             </button>

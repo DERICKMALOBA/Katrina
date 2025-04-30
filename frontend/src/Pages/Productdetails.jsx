@@ -193,7 +193,7 @@ export default function ProductDetail() {
                   <img
                     src={`http://localhost:5000${image}`}
                     alt={`Product ${index}`}
-                    className="w-full h-80 object-cover rounded-lg"
+                    className="w-full h-full object-cover rounded-lg"
                   />
                 </SwiperSlide>
               ))}
@@ -221,21 +221,21 @@ export default function ProductDetail() {
 
             {/* Discount Label */}
             {product.discount > 0 && (
-              <span className="absolute top-2 left-0 bg-primaryGreen text-white text-xs font-bold px-2 py-1 rounded-full  sm:left-auto sm:right-2 ">
+              <span className="absolute top-2 left-0 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full  sm:left-auto sm:right-2 ">
                 -{Math.round(product.discount)}% OFF
               </span>
             )}
 
             {/* Price Details */}
             {product.discount > 0 && (
-              <div className="text-primaryBlack font-semibold text-sm mt-2">
+              <div className="text-primaryBlack font-semibold text-sm mt-3">
                 <span className="line-through text-gray-500">Kshs. {originalPrice}</span>{" "}
                 Kshs. {discountedPrice}
               </div>
             )}
 
             {/* Stock Info */}
-            <p className="text-primaryOrange mt-1 line-clamp-2">
+            <p className="text-primaryOrange mt-3 line-clamp-2 ">
               {product.stock <= 5 ? (
                 <span className="text-red-500 font-semibold">
                   {product.stock} {product.stock === 1 ? "item" : "items"} left
@@ -252,7 +252,7 @@ export default function ProductDetail() {
             <button
               onClick={() => dispatch(addItem(product))}
               disabled={remainingStock === 0}
-              className={`px-4 py-2 g-4 ${
+              className={`px-4 py-2 g-4 mt-3 ${
                 remainingStock === 0
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-purple-800 hover:bg-purple-600"
@@ -277,7 +277,7 @@ export default function ProductDetail() {
                 <img
                   src={`http://localhost:5000${image}`}
                   alt={`Product image ${index}`}
-                  className="w-full h-32 object-cover rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105"
+                  className="w-full h-full object-cover rounded-lg cursor-pointer transition-transform duration-300 hover:scale-105"
                   onClick={() =>
                     setSelectedImage(`http://localhost:5000${image}`)
                   }
@@ -302,7 +302,7 @@ export default function ProductDetail() {
         </div>
 
         {/* Customer Reviews & Ratings */}
-        <div className="bg-white shadow-lg rounded-lg p-6">
+        <div className="bg-white shadow-lg rounded-lg p-6 mt-3">
           <h2 className="text-2xl font-bold mb-3">Rate & Review</h2>
           <div className="flex items-center mb-3">
             {[...Array(5)].map((_, index) => (
@@ -355,7 +355,7 @@ export default function ProductDetail() {
           </p>
           <button 
             onClick={() => setIsChatVisible(!isChatVisible)} 
-            className="mt-4 bg-primaryGreen text-white px-6 py-2 rounded-lg hover:bg-green-700 transition"
+            className="mt-4 bg-purple-900 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
           >
             Send Message
           </button>
@@ -365,7 +365,7 @@ export default function ProductDetail() {
       {/* Chat Popup */}
       {isChatVisible && (
   <div 
-    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50"
     onClick={() => setIsChatVisible(false)}
   >
     <div onClick={(e) => e.stopPropagation()}>

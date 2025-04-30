@@ -59,10 +59,9 @@ function ProductPage() {
   };
 
   return (
-    <div className="bg-primaryBlack relative"> {/* Added relative positioning here */}
+    <div className="bg-[#1f2121] relative"> {/* Added relative positioning here */}
       <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
         {/* STATS */}
-        <h1>Product</h1>
        
         <motion.div
           className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8"

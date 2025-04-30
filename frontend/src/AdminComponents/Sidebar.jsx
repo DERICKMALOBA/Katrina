@@ -7,6 +7,7 @@ import {
 	TrendingUp,
 	Users,
 	Tag,
+	Truck,
   } from "lucide-react";
   import { useState } from "react";
   import { motion } from "framer-motion";
@@ -20,8 +21,14 @@ import {
 	{ name: "Orders", icon: ShoppingCart, href: "/orders" },
 	{ name: "Analytics", icon: TrendingUp, href: "/analytics" },
 	{ name: "Offers", icon: Tag, href: "/offers" },
-	
   ];
+  
+  const DELIVERY_VEHICLE_ITEM = {
+	name: "Delivery Vehicle",
+	icon: Truck,
+	href: "/edit-delivery",
+	isButton: true,
+  };
   
   const Sidebar = () => {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -34,7 +41,7 @@ import {
 		}`}
 		animate={{ width: isSidebarOpen ? 256 : 80 }}
 	  >
-		<div className="h-full bg-primaryBlack p-4 flex flex-col border-r border-gray-700">
+		<div className="h-full bg-[#1f2121] p-4 pt-10 flex flex-col border-r border-gray-700">
 		  {/* Sidebar Toggle Button */}
 		  <motion.button
 			whileHover={{ scale: 1.1 }}
@@ -46,31 +53,63 @@ import {
 		  </motion.button>
   
 		  {/* Logo */}
-		  <div className="flex items-center space-x-2 mb-8 mt-4">
+		  <div className="flex items-center space-x-2 mb-4 mt-4">
 			<img src="/path-to-logo.png" alt="Logo" className="w-8 h-8" />
 			{isSidebarOpen && (
-			  <span className="text-lg font-semibold text-white">
-				Admin Panel
-			  </span>
+			  <span className="font-semibold text-white">Admin Panel</span>
 			)}
 		  </div>
   
 		  {/* Navigation Items */}
 		  <nav className="mt-8 flex-grow">
+			{/* Delivery Vehicle Button - Positioned at the top */}
+			<motion.div className="relative group mb-6">
+			  <Link to={DELIVERY_VEHICLE_ITEM.href}>
+				<motion.div
+				  className={`flex items-center p-4 text-sm font-medium rounded-lg transition-colors ${
+					location.pathname === DELIVERY_VEHICLE_ITEM.href
+					  ? "bg-black text-white border border-gray-600" // Black background when active
+					  : "bg-[#307bb5] hover:bg-blue-400 text-white"
+				  } ${isSidebarOpen ? "justify-start" : "justify-center"}`}
+				  whileHover={{ scale: 1.02 }}
+				  whileTap={{ scale: 0.98 }}
+				>
+				  <DELIVERY_VEHICLE_ITEM.icon
+					size={24}
+					className="text-white"
+				  />
+				  {isSidebarOpen && (
+					<motion.span
+					  className="ml-4 whitespace-nowrap"
+					  initial={{ opacity: 0, width: 0 }}
+					  animate={{ opacity: 1, width: "auto" }}
+					  exit={{ opacity: 0, width: 0 }}
+					  transition={{ duration: 0.2, delay: 0.3 }}
+					>
+					  {DELIVERY_VEHICLE_ITEM.name}
+					</motion.span>
+				  )}
+				</motion.div>
+			  </Link>
+			  {!isSidebarOpen && (
+				<motion.div className="absolute left-16 bg-[#1f2121] text-gray-100 px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
+				  {DELIVERY_VEHICLE_ITEM.name}
+				</motion.div>
+			  )}
+			</motion.div>
+  
+			{/* Regular Navigation Items */}
 			{SIDEBAR_ITEMS.map((item) => (
 			  <motion.div key={item.href} className="relative group">
 				<Link to={item.href}>
 				  <motion.div
 					className={`flex items-center p-4 text-sm font-medium rounded-lg mb-2 transition-colors ${
 					  location.pathname === item.href
-						? "bg-primaryBlue text-white"
-						: "hover:bg-primaryBlue text-gray-300"
+						? "bg-black text-white border border-gray-600" // Black background when active
+						: "hover:bg-[#2d2f2f] text-gray-300" // Darker hover state
 					}`}
 				  >
-					<item.icon
-					  size={24} // Larger icon size
-					  className="text-white" // Set icon color to white
-					/>
+					<item.icon size={24} className="text-white" />
 					{isSidebarOpen && (
 					  <motion.span
 						className="ml-4 whitespace-nowrap"
@@ -84,11 +123,8 @@ import {
 					)}
 				  </motion.div>
 				</Link>
-				{/* Tooltip for Collapsed Sidebar */}
 				{!isSidebarOpen && (
-				  <motion.div
-					className="absolute left-16 bg-primaryBlue text-gray-100 px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-				  >
+				  <motion.div className="absolute left-16 bg-[#1f2121] text-gray-100 px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity">
 					{item.name}
 				  </motion.div>
 				)}
@@ -101,4 +137,3 @@ import {
   };
   
   export default Sidebar;
-  

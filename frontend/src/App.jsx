@@ -43,9 +43,12 @@ import Subcategories from "./Pages/Subcategory";
 
 import Chat from "./Pages/Chat";
 import Itemlist from "./Pages/Itemlist";
+import Search from "./components/SearchResult.jsx";
+import ProductCategories from "./Pages/ProductsCategory.jsx";
+import CategoryPage from "./Pages/Categories.jsx";
+import FilteredProducts from "./Pages/FillteredProducts.jsx";
 
 
-import SearchResults from "./components/SearchResult";
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
@@ -168,9 +171,12 @@ function App() {
           <Route path="/message/:email" element={<Admin />} />
           <Route path="/forgot" element={<ForgotPassword />} />
           <Route path="/resetpassword" element={<ResetPassword />} />
-          <Route path="/products/search" element={SearchResults} />
-      
-         
+          <Route path="/search/:searchTerm" element={<Search/>} />
+          <Route path="/category/:category" element={<CategoryPage />} />
+
+          <Route path="/productcategory" element={<ProductCategories/>} />
+          
+          <Route path="/filtered-products" element={<FilteredProducts />} />
         
           <Route path="/profile" element={<Profile/>} />
           <Route path="/subcategories/:sub" element={<Subcategories/>} />

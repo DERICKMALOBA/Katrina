@@ -88,6 +88,11 @@ const EditDeliveryFee = () => {
     setCityVehicles({ ...cityVehicles, [city]: newVehicle });
   };
 
+  const getVehicleDisplayValue = (vehicle) => {
+    if (!vehicle || vehicle === '[]') return '';
+    return vehicle.replace(/["\\]/g, '').trim();
+  };
+
   const handleUpdateData = async () => {
     try {
       const response = await fetch("/api/delivery/update-data", {
@@ -106,51 +111,81 @@ const EditDeliveryFee = () => {
       alert("Error updating data");
     }
   };
-  // const cleanedText = cityVehicles[city]?.replace(/["\\]/g, '').trim() || "";
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold text-center mb-8 text-primaryOrange">Edit Delivery Data</h1>
-      <select
-        value={county}
-        onChange={(e) => setCounty(e.target.value)}
-        className="border border-gray-300 p-2 rounded-md w-1/3"
-      >
-        <option value="">Select a county</option>
-        {deliveryData.counties.map((countyItem, index) => (
-          <option key={index} value={countyItem}>{countyItem}</option>
-        ))}
-      </select>
-      {county && (
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold mb-4 text-white">Cities in {county}</h2>
-          {Object.keys(cityFees).map((city, index) => (
-            <div key={index} className="mb-4">
-              <div className="flex items-center mb-2">
-                <span className="w-1/3 text-white">{city}</span>
-                <input
-                  type="number"
-                  value={cityFees[city]}
-                  onChange={(e) => handleFeeChange(city, e.target.value)}
-                  className="border border-gray-300 p-2 rounded-md w-1/3"
-                />
-              </div>
-              <div className="flex items-center mb-4">
-                <span className="w-1/3 text-white">Vehicles</span>
-                <input
-                  type="text"
-                  value={cityVehicles[city]?.replace(/["\\]/g, '').trim() || ""} 
-
-                  onChange={(e) => handleVehicleChange(city, e.target.value)}
-                  className="border border-gray-300 p-2 rounded-md w-1/3"
-                  placeholder="e.g., Bikes, Vans"
-                />
-              </div>
-            </div>
+    <div className="p-4 max-w-4xl mx-auto bg-[#1f2121] w-full text-white">
+      <h1 className="text-2xl font-bold text-center mb-8">Edit Delivery Data</h1>
+      <div className="mb-6">
+        <label htmlFor="county-select" className="block mb-2 font-medium">
+          Select County:
+        </label>
+        <select
+          id="county-select"
+          value={county}
+          onChange={(e) => setCounty(e.target.value)}
+          className="border border-gray-500 p-2 rounded-md w-full md:w-1/3 bg-gray-800 text-white"
+        >
+          <option value="">Select a county</option>
+          {deliveryData.counties.map((countyItem, index) => (
+            <option key={index} value={countyItem} className="bg-gray-800">
+              {countyItem}
+            </option>
           ))}
+        </select>
+      </div>
+      
+      {county && (
+        <div className="mt-6 bg-gray-800 p-6 rounded-lg">
+          <h2 className="text-xl font-semibold mb-6 pb-2 border-b border-gray-700">
+            Cities in {county}
+          </h2>
+          <div className="space-y-6">
+            {Object.keys(cityFees).map((city, index) => (
+              <div key={index} className="bg-gray-900 p-4 rounded-lg">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <label className="block mb-2 font-medium">City:</label>
+                    <div className="p-2 bg-gray-800 rounded">{city}</div>
+                  </div>
+                  <div>
+                    <label htmlFor={`fee-${index}`} className="block mb-2 font-medium">
+                      Delivery Fee:
+                    </label>
+                    <input
+                      id={`fee-${index}`}
+                      type="number"
+                      value={cityFees[city]}
+                      onChange={(e) => handleFeeChange(city, e.target.value)}
+                      className="border border-gray-600 p-2 rounded-md w-full bg-gray-800"
+                      min="0"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor={`vehicle-${index}`} className="block mb-2 font-medium">
+                      Vehicles:
+                    </label>
+                    <input
+                      id={`vehicle-${index}`}
+                      type="text"
+                      value={getVehicleDisplayValue(cityVehicles[city])}
+                      onChange={(e) => handleVehicleChange(city, e.target.value)}
+                      className="border border-gray-600 p-2 rounded-md w-full bg-gray-800"
+                      placeholder="e.g., North Rift, Kangaroo shuttle"
+                    />
+                    {!getVehicleDisplayValue(cityVehicles[city]) && (
+                      <p className="text-gray-400 text-sm mt-1">
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
           <button
             onClick={handleUpdateData}
-            className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600"
+            className="mt-6 bg-[#307bb5] text-white py-2 px-6 rounded-md hover:bg-blue-600 transition-colors"
           >
             Update Data
           </button>
