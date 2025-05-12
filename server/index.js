@@ -162,6 +162,7 @@ io.on("connection", (socket) => {
   db.query(q,10,(err, result) => {
     if (err) return res.status(500).json({ message: 'Database error', error: err });
     console.log(result);
+    console.log(dat);
     var d=result.length;
     /*var ar=JSON.parse(JSON.stringify(result));
         var i=0;

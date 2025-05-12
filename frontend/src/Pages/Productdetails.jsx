@@ -123,13 +123,13 @@ export default function ProductDetail() {
 
     // Include user_id in the request body
     const newReview = { 
-        ratings: Number(rating), // Ensure rating is a number
-        reviews: review, // Ensure review is a string
-        user_id: Number(user.userid) // Ensure user_id is a number
+        ratings: Number(rating), 
+        reviews: review, 
+        name: user.name 
     };
 
     try {
-        const response = await fetch(`/api/products/product/${id}/review`, {
+        const response = await fetch(`/api/products/reviews/${id}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

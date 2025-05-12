@@ -3902,18 +3902,6 @@ router.get('/search', (req, res) => {
   });
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
   router.get("/super/:sup", (req, res) => {
     const { sup } = req.params;
     console.log(sup);
@@ -3976,3 +3964,27 @@ router.get('/search', (req, res) => {
     });
 
 module.exports = router;
+router.post("/reviewssubmit/:id", (req, res) => {
+  var {id}=req.params
+ var {ratings,reviews,name}=req.body;
+ const q="INSERT INTO reviews (name,productid,ratings,reviews) VALUES(?,?,?,?)";
+ db.query(q,[name,id,ratings,reviews],async(err,results)=>{
+  if(err)
+  {
+    res.json({Message:"database error"});
+  }
+  console.log("reviews of the product submitted by  "+name);
+ })
+});
+router.get("/reviewsget/:id", (req, res) => {
+  var {id}=req.params;
+ const q="SELECT*FROM reviews WHERE productid=?";
+ db.query(q,id,async(err,results)=>{
+  if(err)
+  {
+    res.json({Message:"database error"});
+  }
+  console.log(results);
+  res.json(results);
+ })
+});
