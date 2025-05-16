@@ -87,6 +87,7 @@ router.post("/add-product", upload.array("images", 10), (req, res) => {
   });
 });
 
+
 // Edit product
 router.put("/edit-product/:id", (req, res) => {
   const { id } = req.params;
@@ -266,11 +267,9 @@ router.get("/offers", (req, res) => {
       });
     }
 
-    res.json({ offer: [], totalDiscountAmount: "0.00" });
+    res.json({ offer:[], totalDiscountAmount: "0.00" });
   });
 });
-
-// Get products by category
 router.get("/productscategory", (req, res) => {
   const query = "SELECT * FROM products";
   db.query(query, (err, results) => {
@@ -508,7 +507,7 @@ router.get("/rating", (req, res) => {
 });
 
 // Get newest products
-router.get("/newest", (req, res) => {
+/*router.get("/newest", (req, res) => {
   const query = "SELECT * FROM products ORDER BY created_at DESC";
 
   db.query(query, (err, results) => {
@@ -518,7 +517,7 @@ router.get("/newest", (req, res) => {
     }
     res.json(processProducts(results));
   });
-});
+});*/
 
 // Get products by size
 router.get("/size", (req, res) => {
@@ -619,15 +618,12 @@ router.get("/super/:sup", (req, res) => {
     const totalDiscountAmount = productsWithDiscount.reduce((sum, product) => {
       return sum + parseFloat(product.discountAmount);
     }, 0);
-
     res.json({
       super: productsWithDiscount,
       totalDiscountAmount: totalDiscountAmount.toFixed(2),
     });
   });
 });
-
-// Submit review with name
 router.post("/reviewssubmit/:id", (req, res) => {
   const { id } = req.params;
   const { ratings, reviews, name } = req.body;
@@ -641,8 +637,6 @@ router.post("/reviewssubmit/:id", (req, res) => {
     res.json({ message: "Review submitted successfully" });
   });
 });
-
-// Get reviews for a product
 router.get("/reviewsget/:id", (req, res) => {
   const { id } = req.params;
   const q = "SELECT * FROM reviews WHERE productid = ?";

@@ -3,6 +3,7 @@ const db = require("../config/db.js");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
+const nodemailer=require("nodemailer");
 
 // Set up static file serving
 const app = express();
@@ -34,6 +35,42 @@ router.post("/add-offer", upload.array("images", 5), async (req, res) => {
     validTo,
     offerdescription,
   } = req.body;
+  const transporter = nodemailer.createTransport({
+  service: "gmail", 
+  auth: {
+    user: "mateilimo1@gmail.com",
+    pass: "rkxd qgnq kscn wfpk",
+  },
+});
+  try {
+  const qry = "SELECT * FROM subscribers";
+  db.query(qry, async(err, results) => {
+    if (err) {
+      console.log("failed to fetch subscribers:"+err);
+      return;
+    }
+    else
+    {
+
+     var i=0;
+     console.log(results);
+     for(i;i<results.length;i++)
+      { 
+    const mailOptions = {
+      from: "mateilimo1@gmail.com",
+      to:results[i].email,
+      subject:"Katrina children closets New offers",
+      text: "Item: "+name+", "+description+", "+"Valid from: "+validFrom+" to "+validTo+". It has "+discount+" discount",
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.response);
+  }
+  }
+});
+  } catch (error) {
+    console.error("Error sending email:", error);
+  }
   // const imageUrls = req.files.map((file) => file.filename);
 
   if (!name || !price || !stock || !category) {
@@ -41,16 +78,17 @@ router.post("/add-offer", upload.array("images", 5), async (req, res) => {
   }
 
   const fileNames = req.files.map((file) => file.filename);
-
+const categorisation = JSON.parse(category);
   try {
-    const sql = `INSERT INTO products (name, description, price, stock, category, discount, validFrom, validTo, image,offer,offerdescription) 
-                 VALUES (?,?,?,?,?,?,?,?,?,?,?)`;
+    const sql =  "INSERT INTO products (description, name, price, stock, category, super, subcat, discount, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     const values = [
       name,
       description,
       price,
       stock,
-      category,
+     categorisation.cat,
+    categorisation.super,
+    categorisation.subcat,
       discount,
       validFrom,
       validTo,

@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
 import { addViewedProduct } from "../Redux/viewedProductsSlice";
 import ReviewsComponent from "../components/ReviewsComponent";
-
+import { Helmet } from 'react-helmet-async';
 const NewArrivals = ({ filters }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-  const wishlist = useSelector((state) => state.cart.wishlist);
+const wishlist = useSelector((state) => state.cart?.wishlist || []);
 
   useEffect(() => {
     const fetchNewArrivals = async () => {
@@ -56,6 +56,12 @@ const NewArrivals = ({ filters }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden my-4">
+        <Helmet>
+                    <title>Katrina children clothes and items new arrivals</title>
+                    <meta name="description" content="You can search products by items names"/>
+                    <meta name='keywords' content="children,bags,shirts,trousers,shirt,shirts,trouser,bag,child,shoes,school,travelling,katrina,Katrina,closet,skirt,skirts,dress,dresses,swim,swimming,boxer,
+        boxers,panties,boob,boobs,top,tops,vests,vest,suitcase,back,pack,handbag,handbags,girl,girls,boys,boy,sneaker,sneakers,converse,heel,heels,open,doll,lotions,make up,accessories,poaches,raincoats,watches,trolley,leggings,set,tshirts"/>
+                  </Helmet>
       <div className="p-4 border-b">
         <h2 className="text-xl font-semibold text-purple-800 text-left">
           New Arrivals

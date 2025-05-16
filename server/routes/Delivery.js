@@ -39,8 +39,6 @@ deliverRouter.put('/update/:id',  (req, res) => {
     res.status(200).json({ message: 'Delivery fee updated successfully' });
   });
 });
-
-
 deliverRouter.put("/update-data", (req, res) => {
   const { county, cityFees, cityVehicles } = req.body;
 

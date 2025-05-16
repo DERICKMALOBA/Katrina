@@ -210,4 +210,31 @@ router.post('/deleteusers', (req, res) => {
        })
       });
       });
+         router.post('/subscribe', (req, res) => {
+        const {Email}=req.body;
+        console.log("Customer email for subscription: "+Email);
+        var check=0;
+       const q="SELECT*FROM subscribers WHERE email=?";
+       db.query(q,Email,async(err,results)=>{
+        if (err) return res.status(500).json({ message: 'Database error', error: err });
+        console.log(results);
+        if(results.length>0)
+        {
+         check++;
+         res.json({Message:check});
+        }
+        else
+        {
+        const query="INSERT INTO subscribers (email) VALUES(?)"
+        db.query(query,Email,async(err,results)=>{
+          if (err) return res.status(500).json({ Message: 'Database error', error: err });
+          console.log(results); 
+            console.log("hello matei");
+            console.log("check value:"+check);
+        res.json({Message:check});
+
+               })
+        }
+      });
+      });
 module.exports = router;

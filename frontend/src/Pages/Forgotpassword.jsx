@@ -77,7 +77,7 @@ function ForgotPassword() {
           maxWidth: '400px',
         }}
       >
-        <h1 className="text-2xl text-center font-bold text-blue-800 my-7">
+        <h1 className="text-2xl text-center font-bold text-purple-800 my-7">
           Reset your password
         </h1>
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -90,7 +90,7 @@ function ForgotPassword() {
           />
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-400 transition duration-300"
+            className="w-full bg-purple-600 text-white font-semibold p-3 rounded-lg hover:bg-purple-400 transition duration-300"
           >
             {loading?'Sending email...':'Send'}
           </button>

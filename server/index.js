@@ -122,7 +122,7 @@ io.on("connection", (socket) => {
           var i=0;
           for(i;i<ar.length;i++)
           {
-            io.to(users[ar[i].role]).emit("receiverbyadmin",({msg:text}));
+            io.to(users[ar[i].email]).emit("receiverbyadmin",({msg:text}));
           }
         });
     });

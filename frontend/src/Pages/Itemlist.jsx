@@ -5,7 +5,7 @@ import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
 import { addViewedProduct } from "../Redux/viewedProductsSlice";
 import { FaHeart} from "react-icons/fa";
 import ReviewsComponent from "../components/ReviewsComponent";
-
+import { Helmet } from 'react-helmet-async';
 export default function Itemlist() {
   const { item } = useParams();
   const [products, setProducts] = useState([]);
@@ -75,6 +75,12 @@ export default function Itemlist() {
 
   return (
     <div className="mb-8">
+      <Helmet>
+                    <title>Katrina children clothes items</title>
+                    <meta name="description" content="You can search products by items names"/>
+                    <meta name='keywords' content="children,bags,shirts,trousers,shirt,shirts,trouser,bag,child,shoes,school,travelling,katrina,Katrina,closet,skirt,skirts,dress,dresses,swim,swimming,boxer,
+        boxers,panties,boob,boobs,top,tops,vests,vest,suitcase,back,pack,handbag,handbags,girl,girls,boys,boy,sneaker,sneakers,converse,heel,heels,open,doll,lotions,make up,accessories,poaches,raincoats,watches,trolley,leggings,set,tshirts"/>
+                  </Helmet>
       <h2 className="text-xl font-semibold mb-4 text-center text-purple-700 capitalize">
         {item}
       </h2>

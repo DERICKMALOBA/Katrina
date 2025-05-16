@@ -4,6 +4,7 @@ import {
   Routes,
   useLocation,
 } from "react-router-dom";
+import { HelmetProvider } from 'react-helmet-async';
 import { ToastContainer } from "react-toastify";
 import Sidebar from "./AdminComponents/Sidebar";
 import OverviewPage from "./AdminPages/OverviewPage";
@@ -145,6 +146,7 @@ const AdminLayout = ({ children }) => {
 
 function App() {
   return (
+    <HelmetProvider>
     <Router>
       <ToastContainer />
       <Layout>
@@ -277,6 +279,7 @@ function App() {
       </Layout>
       
     </Router>
+    </HelmetProvider>
   );
 }
 

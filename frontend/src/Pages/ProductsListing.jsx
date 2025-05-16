@@ -4,7 +4,7 @@ import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa"; // Icons
 import { useDispatch } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
 import io from "socket.io-client";
-
+import { Helmet } from 'react-helmet-async';
 const socket = io("http://localhost:5000");
 
 export default function ProductList() {
@@ -50,6 +50,12 @@ export default function ProductList() {
 
   return (
     <div className="p-4">
+      <Helmet>
+        <title>Katrina children clothes</title>
+        <meta name="description" content="You can buy children clothes from Katrina such as outfits,bags ,swimming costumes,children accessories and body scents"/>
+        <meta name='keywords' content="children,bags,shirts,trousers,shirt,shirts,trouser,bag,child,shoes,school,travelling,katrina,Katrina,closet,skirt,skirts,dress,dresses,swim,swimming,boxer,
+        boxers,panties,boob,boobs,top,tops,vests,vest,suitcase,back,pack,handbag,handbags,girl,girls,boys,boy,sneaker,sneakers,converse,heel,heels,open,doll,lotions,make up,accessories,poaches,raincoats,watches,trolley,leggings,set,tshirts"/>
+      </Helmet>
       {products.length === 0 ? (
         <p className="text-center text-gray-600">No products available.</p>
       ) : (

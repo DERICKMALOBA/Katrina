@@ -60,7 +60,7 @@ function Header() {
           {/* Logo Section - Center */}
           <Link to="/" className="flex-grow text-center">
             <h1 className="font-bold text-lg sm:text-xl">
-              <span className="text-white">Katrina Kid's Closet</span>
+              <span className="text-white">Katrina Kid's Closet </span>
             </h1>
           </Link>
 

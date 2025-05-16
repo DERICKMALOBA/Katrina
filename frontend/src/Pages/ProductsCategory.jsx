@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { FaHeart, FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../Redux/CartSlice";
-
+import { Helmet } from 'react-helmet-async';
 const ProductCategories = () => {
   const dispatch = useDispatch();
   // Safely access wishlist and offers with fallbacks
@@ -54,6 +54,11 @@ const ProductCategories = () => {
 
   return (
     <div className="space-y-12">
+          <Helmet>
+              <title>Katrina children clothes categories</title>
+              <meta name="description" content="You can search products by categories"/>
+              <meta name='keywords' content="outfits,bags,shoes,hygiene,accessories,others"/>
+            </Helmet>
       {categories.map((category) => (
         <div key={category} className="mb-8">
           <h2 className="text-xl font-semibold mb-4 text-center text-purple-800">

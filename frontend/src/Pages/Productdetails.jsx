@@ -5,11 +5,11 @@ import { useParams, useLocation } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaStar, FaStarHalfAlt, FaHeart } from "react-icons/fa";
 import { Navigation, Pagination } from "swiper/modules";
-
+import { useNavigate } from 'react-router-dom';
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import MessagePopup from './Chat'; // Adjust the path as necessary
+import MessagePopup from "./Chat"; // Adjust the path as necessary
 import ReviewsComponent from "../components/ReviewsComponent";
 
 export default function ProductDetail() {
@@ -17,7 +17,7 @@ export default function ProductDetail() {
   const cart = useSelector((state) => state.cart);
   const [selectedImage, setSelectedImage] = useState(null);
   const wishlist = useSelector((state) => state.cart.wishlist);
-  
+const navigate = useNavigate();
   const dispatch = useDispatch();
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
@@ -25,22 +25,24 @@ export default function ProductDetail() {
   const [isChatVisible, setIsChatVisible] = useState(false); // State to control chat visibility
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setIsChatVisible(false);
       }
     };
-  
+
     if (isChatVisible) {
-      document.addEventListener('keydown', handleKeyDown);
+      document.addEventListener("keydown", handleKeyDown);
     }
-  
+
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [isChatVisible]);
 
   const handleWishlistClick = (product) => {
-    const isInWishlist = (wishlist || []).some((item) => item.id === product.id);
+    const isInWishlist = (wishlist || []).some(
+      (item) => item.id === product.id
+    );
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id));
     } else {
@@ -108,8 +110,6 @@ export default function ProductDetail() {
     const discountAmount = (discountPercentage / 100) * originalPrice;
     const discountedPrice = originalPrice - discountAmount;
 
-  
-
     return {
       originalPrice: originalPrice.toFixed(2),
       discountedPrice: discountedPrice.toFixed(2),
@@ -131,47 +131,56 @@ export default function ProductDetail() {
 
   const handleReviewSubmit = async () => {
     // Validate rating and review
-    if (typeof rating !== 'number' || typeof review !== 'string') {
-        return alert("Please provide a valid rating (number) and review (text)");
+    if (typeof rating !== "number" || typeof review !== "string") {
+      return alert("Please provide a valid rating (number) and review (text)");
     }
 
     if (rating < 1 || rating > 5) {
-        return alert("Rating must be between 1 and 5");
+      return alert("Rating must be between 1 and 5");
     }
 
     // Include user_id in the request body
-    const newReview = { 
-        ratings: Number(rating), 
-        reviews: review, 
-        name: user.name 
+    const newReview = {
+      ratings: Number(rating),
+      reviews: review,
+      name: user.name,
     };
 
     try {
-        const response = await fetch(`/api/products/reviewssubmit/${id}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newReview),
-        });
+      const response = await fetch(`/api/products/reviewssubmit/${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newReview),
+      });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || "Failed to submit review");
-        }
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to submit review");
+      }
 
-        // Update the local state with the new review
-        setReviews([...reviews, newReview]);
-        setRating(0);
-        setReview("");
+      // Update the local state with the new review
+      setReviews([...reviews, newReview]);
+      setRating(0);
+      setReview("");
     } catch (err) {
-        alert(err.message);
+      alert(err.message);
     }
   };
-
-
-
-  
+const handleChatClick = () => {
+  if (!user) {
+    // Store the current product URL to return after login
+    navigate("/sign-in", { 
+      state: { 
+        from: `/product/${id}`,  // Current product page URL
+        message: "Please log in to send a message to the seller" 
+      } 
+    });
+  } else {
+    setIsChatVisible(true);
+  }
+};
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
       {/* Left Side - Product Info */}
@@ -221,7 +230,7 @@ export default function ProductDetail() {
 
             {/* Discount Label */}
             {product.discount > 0 && (
-              <span className="absolute top-2 left-0 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full  sm:left-auto sm:right-2 ">
+              <span className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full z-20 sm:right-auto sm:left-3 sm:top-3">
                 -{Math.round(product.discount)}% OFF
               </span>
             )}
@@ -229,7 +238,9 @@ export default function ProductDetail() {
             {/* Price Details */}
             {product.discount > 0 && (
               <div className="text-primaryBlack font-semibold text-sm mt-3">
-                <span className="line-through text-gray-500">Kshs. {originalPrice}</span>{" "}
+                <span className="line-through text-gray-500">
+                  Kshs. {originalPrice}
+                </span>{" "}
                 Kshs. {discountedPrice}
               </div>
             )}
@@ -246,7 +257,7 @@ export default function ProductDetail() {
             </p>
 
             {/* Rating Section */}
-              <ReviewsComponent productId={product.id || product._id} />
+            <ReviewsComponent productId={product.id || product._id} />
 
             {/* Add to Cart Button */}
             <button
@@ -308,7 +319,9 @@ export default function ProductDetail() {
             {[...Array(5)].map((_, index) => (
               <FaStar
                 key={index}
-                className={`cursor-pointer ${rating >= index + 1 ? "text-yellow-500" : "text-gray-300"}`}
+                className={`cursor-pointer ${
+                  rating >= index + 1 ? "text-yellow-500" : "text-gray-300"
+                }`}
                 onClick={() => setRating(index + 1)}
               />
             ))}
@@ -320,7 +333,10 @@ export default function ProductDetail() {
             value={review}
             onChange={(e) => setReview(e.target.value)}
           ></textarea>
-          <button className="mt-3 px-4 py-2 bg-purple-800 text-white rounded" onClick={handleReviewSubmit}>
+          <button
+            className="mt-3 px-4 py-2 bg-purple-800 text-white rounded"
+            onClick={handleReviewSubmit}
+          >
             Submit Review
           </button>
         </div>
@@ -333,39 +349,45 @@ export default function ProductDetail() {
               <div key={index} className="border-b flex flex-row gap-6 py-3">
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <FaStar key={i} className={rev.ratings > i ? "text-yellow-500" : "text-gray-300"} />
+                    <FaStar
+                      key={i}
+                      className={
+                        rev.ratings > i ? "text-yellow-500" : "text-gray-300"
+                      }
+                    />
                   ))}
                 </div>
                 <p className="text-gray-600">{rev.reviews}</p>
               </div>
             ))
           ) : (
-            <p className="text-gray-500">No reviews yet.</p>
+            <p className="text-gray-500">No reviews yet</p>
           )}
         </div>
       </div>
 
       {/* Right Side - Delivery & Chat */}
-      <div className="md:col-span-1 space-y-6">
-        {/* Chat Section */}
-        <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-300">
-          <h2 className="text-2xl font-bold mb-3">Need Help?</h2>
-          <p className="text-gray-600 mb-4">
-            Ask questions about this product:
-          </p>
-          <button 
-            onClick={() => setIsChatVisible(!isChatVisible)} 
-            className="mt-4 bg-purple-900 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
-          >
-            Send Message
-          </button>
-        </div>
-      </div>
+    {/* Right Side - Delivery & Chat */}
+<div className="md:col-span-1 space-y-6">
+  {/* Chat Section */}
+  <div className="bg-white shadow-lg rounded-lg p-6 border border-gray-300">
+    <h2 className="text-2xl font-bold mb-3">Need Help?</h2>
+    <p className="text-gray-600 mb-4">
+      Ask questions about this product:
+    </p>
+    <button
+      onClick={handleChatClick}
+      className="mt-4 bg-purple-900 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition"
+    >
+      Send Message
+    </button>
+  </div>
+</div>
 
-      {/* Chat Popup */}
-      {isChatVisible && (
-  <div 
-    className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50"
+{/* Chat Popup - Only show if user is logged in */}
+{isChatVisible && user && (
+  <div
+    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     onClick={() => setIsChatVisible(false)}
   >
     <div onClick={(e) => e.stopPropagation()}>
@@ -373,6 +395,18 @@ export default function ProductDetail() {
     </div>
   </div>
 )}
+
+      {/* Chat Popup */}
+      {isChatVisible && (
+        <div
+          className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50"
+          onClick={() => setIsChatVisible(false)}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <MessagePopup />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

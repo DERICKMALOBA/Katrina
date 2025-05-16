@@ -18,7 +18,7 @@ const cartSlice = createSlice({
     items: [],
     totalQuantity: 0,
     totalPrice: 0,
-    wishlist: [], // Ensure wishlist is initialized as an array
+    wishlist:[], // Ensure wishlist is initialized as an array
   },
   reducers: {
     addItem: (state, action) => {

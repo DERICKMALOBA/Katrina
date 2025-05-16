@@ -60,7 +60,7 @@ const CheckoutPage = () => {
         alert("Please enter your Mpesa number.");
         return;
       }
-  
+      const totalAmount = parseFloat(totalPrice) + parseFloat(formData.deliveryFee || 0);
       try {
         // Initiate Mpesa payment
         const paymentResponse = await fetch("/api/mpesa/payment", {
@@ -68,14 +68,13 @@ const CheckoutPage = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             phoneNumber: formData.phoneNumber,
-            amount: parseFloat(totalPrice) + parseFloat(formData.deliveryFee || 0),
-          }),
+            amount: totalAmount.toFixed(2)          }),
         });
   
         const paymentData = await paymentResponse.json();
   
         if (!paymentData.success) {
-          alert("Mpesa payment failed. Please try again.");
+          
           return; // Stop if payment fails
         }
   

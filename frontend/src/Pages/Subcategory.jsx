@@ -5,7 +5,7 @@ import { addItem, addToWishlist, removeFromWishlist } from "../Redux/CartSlice";
 import { addViewedProduct } from "../Redux/viewedProductsSlice";
 import { FaHeart } from "react-icons/fa";
 import ReviewsComponent from "../components/ReviewsComponent";
-
+import { Helmet } from 'react-helmet-async';
 export default function Subcategories() {
   const { sub } = useParams();
   const [products, setProducts] = useState([]);
@@ -81,6 +81,11 @@ export default function Subcategories() {
 
   return (
     <div className="mb-8">
+        <Helmet>
+                    <title>Katrina children clothes subcategories</title>
+                    <meta name="description" content="You can search products by subcategories"/>
+                    <meta name='keywords' content="boys outfits,girls outfits,swimming wear,inner wears,school bags,travelling bags,girls handbags,monkey bags,lunch bags"/>
+                  </Helmet>
       <h2 className="text-xl font-semibold mb-4 text-center text-purple-700 capitalize">
         {sub}
       </h2>

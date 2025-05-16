@@ -1,22 +1,42 @@
 import { FaFacebook, FaInstagram, FaWhatsapp, FaTiktok } from 'react-icons/fa';
 import { useState } from 'react';
-import Chat from '../Pages/Chat'; // Import the Chat component
 
 function Footer() {
   const [email, setEmail] = useState('');
-  const [showChat, setShowChat] = useState(false); // State to control chat visibility
 
-  const handleEmailSubmit = (e) => {
+
+  
+var dat={Email:email}
+  const handleEmailSubmit = async(e) => {
+
     e.preventDefault();
     if (email) {
-      alert(`Subscribed with email: ${email}`);
+          const res = await fetch('/api/users/subscribe', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dat),
+        });
+        const data = await res.json();
+        if(data.Message==0)
+        {     
+      alert(`Successfully subscribed with email: ${email}`);
       setEmail('');
+        }
+        else
+        {
+          alert(`You have already subcribed`);
+      setEmail('');
+        }
+      }
+    else
+    {
+      alert("Kindly enter email in order to subscribe");
     }
   };
 
-  const toggleChat = () => {
-    setShowChat(!showChat); // Toggle chat visibility
-  };
+
 
   return (
     <footer className="bg-gray-700 text-white py-12 relative">
@@ -29,9 +49,7 @@ function Footer() {
             <h3 className="font-semibold">Need Help?</h3>
             <ul className="mt-2 space-y-2">
               <li>
-                <button onClick={toggleChat} className="hover:text-green-400">
-                  Chat with Us
-                </button>
+               
               </li>
               <li><a href="/contact" className="hover:text-green-400">Contact Us</a></li>
               <li><a href="/help-center" className="hover:text-green-400">Help Center</a></li>
@@ -86,8 +104,7 @@ function Footer() {
         </div>
       </div>
 
-      {/* Conditionally render the Chat component */}
-      {showChat && <Chat />}
+    
     </footer>
   );
 }

@@ -68,53 +68,30 @@ const callback = (req, res) => {
 // Mock database
 const transactions = [];
 
-// const stkpush = async (req, res) => {
-//     try {
-//         const phone = req.body.phone.substring(1);
-//         const amount = req.body.amount;
-
-//         const date = new Date();
-//         const timestamp = date.toISOString().replace(/[^0-9]/g, "").slice(0, -3);
-//         const password = Buffer.from(`${shortCode}${passkey}${timestamp}`).toString("base64");
-
-//         const { data } = await axios.post(
-//             "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest",
-//             {
-//                 BusinessShortCode: shortCode,
-//                 Password: password,
-//                 Timestamp: timestamp,
-//                 TransactionType: "CustomerPayBillOnline",
-//                 Amount: amount,
-//                 PartyA: `254${phone}`,
-//                 PartyB: shortCode,
-//                 PhoneNumber: `254${phone}`,
-//                 CallBackURL: "https://mydomain.com/api/callback",
-//                 AccountReference: `254${phone}`,
-//                 TransactionDesc: "test",
-//             },
-//             {
-//                 headers: {
-//                     Authorization: `Bearer ${req.token}`,
-//                 },
-//             }
-//         );
-
-//         res.json(data);
-//     } catch (error) {
-//         console.error("Error in STK Push request:", error.response ? error.response.data : error.message);
-//         res.status(500).json({ error: error.response ? error.response.data : error.message });
-//     }
-// };
 
 const stkpush = async (req, res) => {
     try {
-        const { phoneNumber, amount } = req.body; // Fix: Use phoneNumber
+        const { phoneNumber, amount } = req.body;
 
         if (!phoneNumber || !amount) {
             return res.status(400).json({ error: "Phone number and amount are required" });
         }
 
-        const phone = phoneNumber.startsWith("0") ? `254${phoneNumber.substring(1)}` : phoneNumber; // Ensure valid format
+        // Validate and format amount
+        const formattedAmount = Math.ceil(Number(amount)); // Round up to nearest integer
+        if (isNaN(formattedAmount)) {  // Added missing parenthesis here
+            return res.status(400).json({ error: "Invalid amount provided" });
+        }
+
+        // Format phone number (accepts 07..., 7..., or 254...)
+        let phone = phoneNumber;
+        if (phoneNumber.startsWith("0")) {
+            phone = `254${phoneNumber.substring(1)}`;
+        } else if (phoneNumber.startsWith("7")) {
+            phone = `254${phoneNumber}`;
+        } else if (!phoneNumber.startsWith("254")) {
+            return res.status(400).json({ error: "Invalid phone number format" });
+        }
 
         const date = new Date();
         const timestamp = date.toISOString().replace(/[^0-9]/g, "").slice(0, -3);
@@ -127,13 +104,13 @@ const stkpush = async (req, res) => {
                 Password: password,
                 Timestamp: timestamp,
                 TransactionType: "CustomerPayBillOnline",
-                Amount: amount,
+                Amount: formattedAmount.toString(), // Convert to string
                 PartyA: phone,
                 PartyB: shortCode,
                 PhoneNumber: phone,
                 CallBackURL: "https://mydomain.com/api/callback",
                 AccountReference: phone,
-                TransactionDesc: "test",
+                TransactionDesc: "Payment for goods",
             },
             {
                 headers: {
@@ -145,10 +122,12 @@ const stkpush = async (req, res) => {
         res.json(data);
     } catch (error) {
         console.error("Error in STK Push request:", error.response ? error.response.data : error.message);
-        res.status(500).json({ error: error.response ? error.response.data : error.message });
+        res.status(500).json({ 
+            error: "Payment request failed",
+            details: error.response ? error.response.data : error.message 
+        });
     }
 };
-
 
 // Export using CommonJS
 module.exports = { generateToken, callback, stkpush };

@@ -67,9 +67,9 @@ function OverviewPage() {
       fetchUserCount();
     }, []);
   return (
-    <div className="bg-[#1f2121]">
+    <div className="bg-gray-700">
       
-      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8">
+      <main className="max-w-7xl mx-auto py-6 px-4 lg:px-8 bg-gray-800">
         {/* STATS */}
         <motion.div
   className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 mb-8"
