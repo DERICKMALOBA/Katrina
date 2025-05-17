@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import StatCard from "../SharedComponent/StatCard";
 import SalesOverviewChart from "../overview/SalesOverviewChart";
 import CategoryDistributionChart from "../overview/CategoryDistributionChart";
-import SalesChannelChart from "../overview/SalesChannelChart";
 function OverviewPage() {
    const [productCount, setProductCount] = useState(null);
     const [userCount, setUserCount] = useState(null);  
@@ -102,7 +101,7 @@ function OverviewPage() {
         <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
 					<SalesOverviewChart />
 					<CategoryDistributionChart />
-					<SalesChannelChart />
+				
 				</div>
 
       </main>

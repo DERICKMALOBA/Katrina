@@ -68,7 +68,7 @@ const SalesOverviewChart = () => {
 		>
 			<div className='flex items-center justify-between mb-6'>
 				<h2 className='text-xl font-semibold text-gray-100'>Sales Overview</h2>
-
+{/* 
 				<select
 					className='bg-gray-700 text-white rounded-md px-3 py-1 focus:outline-none focus:ring-2 
           focus:ring-blue-500
@@ -80,7 +80,7 @@ const SalesOverviewChart = () => {
 					<option>This Month</option>
 					<option>This Quarter</option>
 					<option>This Year</option>
-				</select>
+				</select> */}
 			</div>
 
 			<div className='w-full h-80'>

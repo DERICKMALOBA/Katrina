@@ -65,9 +65,10 @@ const Layout = ({ children }) => {
     "/offers",
     "/analytics",
     "/edit-delivery",
-    "/adminmessages",
+  
     "/message/:email",
-    "/notify"
+    "/notify",
+    "/adminmessages",
   ];
 
   // Routes where Footer should not be displayed

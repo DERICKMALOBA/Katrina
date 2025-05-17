@@ -8,6 +8,7 @@ router.get("/messageslist", (req, res) => {
       console.error("Error fetching messages:", err);
       return res.status(500).json({ error: "Error fetching messages" });
     }
+    console.log(results)
     res.json(results);
   });
 });

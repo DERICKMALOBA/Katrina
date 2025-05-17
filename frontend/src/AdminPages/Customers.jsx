@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useState,useEffect} from "react";
 import StatCard from "../SharedComponent/StatCard";
 import UserGrowthChart from "../users/UserGrowthChart";
-import UserActivityHeatmap from "../users/UserActivityHeatmap";
+// import UserActivityHeatmap from "../users/UserActivityHeatmap";
 import UsersTable from "../users/UsersTable";
 const Customers = () => {
  const [error, setError] = useState(null);
@@ -49,7 +49,7 @@ fetchNew();
 			<main className='max-w-7xl mx-auto py-6 px-4 lg:px-8'>
 				{/* STATS */}
 				<motion.div
-  className='grid grid-cols-1 sm:grid-cols-3 gap-5 mb-8'
+  className='grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8'
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 1 }}
@@ -66,21 +66,16 @@ fetchNew();
     value={n}
     color='#10B981'
   />
-  <StatCard
-    name='Active Users'
-    icon={UserCheck}
-    value={"coming soon"}
-    color='#F59E0B'
-  />
+ 
 </motion.div>
 
 
 				<UsersTable/>
 
 				{/* USER CHARTS */}
-				<div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8'>
+				<div className='grid grid-cols-1 lg:grid-cols-1 gap-6 mt-8'>
 					<UserGrowthChart />
-					<UserActivityHeatmap />
+					{/* <UserActivityHeatmap /> */}
 				
 				</div>
 			</main>

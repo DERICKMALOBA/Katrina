@@ -85,7 +85,7 @@ io.on("connection", (socket) => {
   socket.on("registeradmin",(data)=>{
     const { Useremail, Email } = data;
     users[Email] = socket.id; 
-    const query = 'SELECT email,msg FROM chats WHERE email=?||receiver=? ORDER BY time';
+    const query = 'SELECT email,msg,time FROM chats WHERE email=?||receiver=? ORDER BY time';
     db.query(query,[Useremail,Useremail],(err, results) => {
         if (err) return res.status(500).json({ message: 'Database error', error: err });
         socket.emit("useradmin",results)
@@ -112,7 +112,7 @@ io.on("connection", (socket) => {
   });
 socket.on("sendtoadmin", (data) => {
     const {text,sender,Email,Role} = data;
-        const q="SELECT*FROM chats WHERE role=?";
+        const q="SELECT*FROM customers WHERE role=?";
         db.query(q,"admin",(err, result) => {
           if (err) return res.status(500).json({ message: 'Database error', error: err });
           var ar=JSON.parse(JSON.stringify(result));

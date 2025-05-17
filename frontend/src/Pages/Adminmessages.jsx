@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSelector } from 'react-redux';
 import io from "socket.io-client";
-import { useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:5000");
 
@@ -10,7 +9,6 @@ const AdminMessagePanel = () => {
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [conversations, setConversations] = useState([]);
   const user = useSelector((state) => state.auth.user);
-  const navigate = useNavigate();
 
   // Fetch all messages
   useEffect(() => {
@@ -82,10 +80,7 @@ const AdminMessagePanel = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <button
-                      onClick={() => {
-                        setSelectedMessage(conversation.email);
-                        navigate(`/message/${conversation.email}`);
-                      }}
+                      onClick={() => setSelectedMessage(conversation.email)}
                       className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                     >
                       View Conversation
@@ -165,7 +160,7 @@ const MessageConversation = ({ email, onBack, userName }) => {
   };
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-4">
+    <div className="p-6 max-w-6xl mx-auto">
       <div className="flex items-center mb-4">
         <button 
           onClick={onBack}
@@ -195,7 +190,7 @@ const MessageConversation = ({ email, onBack, userName }) => {
                 <div className="font-semibold">{isAdmin ? "You" : msg.name}</div>
                 <div>{msg.msg}</div>
                 <div className="text-xs text-gray-500 mt-1">
-                  {new Date(msg.timestamp || Date.now()).toLocaleString()}
+                  {new Date(msg.time|| new Date()).toLocaleString()}
                 </div>
               </div>
             </div>

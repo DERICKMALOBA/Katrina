@@ -69,7 +69,7 @@ const Sidebar = () => {
                 className={`flex items-center p-3 text-sm font-medium rounded-lg transition-colors ${
                   location.pathname === DELIVERY_VEHICLE_ITEM.href
                     ? "bg-black text-white border border-gray-600"
-                    : "bg-[#307bb5] hover:bg-blue-400 text-white"
+                    : " hover:bg-blue-400 text-white"
                 } justify-center`} // Always center icon
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
