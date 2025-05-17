@@ -1,9 +1,13 @@
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../Redux/AuthSlice';
 function ForgotPassword() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(false); 
+   useSelector((state) => state.user);
+   const dispatch = useDispatch();
   const handleChange = (e) => {
    setFormData(e.target.value);
   };
@@ -22,6 +26,8 @@ function ForgotPassword() {
         const data=await res.json();
         if(data.message==1)
         {
+           dispatch(setUser({ forgotpasswordemail: data.Email}));
+      
             setLoading(false);
         toast.success('Email sent successful!', {
             position: "top-right",
@@ -77,7 +83,7 @@ function ForgotPassword() {
           maxWidth: '400px',
         }}
       >
-        <h1 className="text-2xl text-center font-bold text-purple-800 my-7">
+        <h1 className="text-2xl text-center font-bold text-blue-800 my-7">
           Reset your password
         </h1>
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -90,7 +96,7 @@ function ForgotPassword() {
           />
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white font-semibold p-3 rounded-lg hover:bg-purple-400 transition duration-300"
+            className="w-full bg-blue-600 text-white font-semibold p-3 rounded-lg hover:bg-blue-400 transition duration-300"
           >
             {loading?'Sending email...':'Send'}
           </button>

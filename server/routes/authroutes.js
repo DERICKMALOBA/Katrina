@@ -125,10 +125,9 @@ const transporter = nodemailer.createTransport({
       subject:"Sending mails to customers",
       text: "Dear customer reset your password by clicking this link:http://localhost:5173/resetpassword",
     };
-
     const info = await transporter.sendMail(mailOptions);
     console.log("Email sent: " + info.response);
-    res.json({message:1})
+    res.json({message:1,Email:Email});
   } catch (error) {
     console.error("Error sending email:", error);
   }
@@ -191,6 +190,26 @@ router.delete('/delete-account', (req, res) => {
     console.error('Token verification failed:', error);
     return res.status(401).json({ message: 'Unauthorized: Invalid token' });
   }
+});
+
+
+router.post('/passwordreset',async(req, res) => {
+  const {Newpassword,Email} = req.body;
+console.log(Email);
+console.log(Newpassword);
+  if (!Email ||!Newpassword) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+ var hashed = await bcrypt.hash(Newpassword, 10)
+  const query = 'UPDATE customers SET password=? WHERE email = ?';
+  db.query(query, [hashed,Email], async (err, results) => {
+    if (err){
+       return res.status(500).json({ message: 'Database error', error: err });
+    }else{
+    console.log("password has been successfully reseted");
+    res.json({Message:1});
+    }
+  });
 });
 
 module.exports = router;

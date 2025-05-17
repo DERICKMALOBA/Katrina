@@ -2,20 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  signInStart,
-  signInSuccess,
-  signInFailure,
-} from '../Redux/UserSlice';
-
+import {useSelector } from 'react-redux';
 function ResetPassword() {
- useSelector((state) => state.user);
-  const [loading,setLoading]=useState(false); 
+  var [loading,setLoading]=useState(false); 
   const [newpassword,setNewpassword]=useState({});
   const [confirmpassword,setConfirmpassword]=useState({});
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  var user = useSelector((state) => state.auth.user);
   const handlenew = (e) => {
        setNewpassword(e.target.value);
   };
@@ -24,9 +17,11 @@ function ResetPassword() {
 };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(signInStart());
     setLoading(true);
-    const  form={new:newpassword,confirm:confirmpassword}
+    
+  var email=user.forgotpasswordemail;
+    var form={Newpassword:newpassword,confirm:confirmpassword,Email:email};
+   
     if(newpassword!=confirmpassword)
     {
         toast.error("Kindly ensure that new password and Confirm password match", {
@@ -42,7 +37,7 @@ function ResetPassword() {
        return;  
     }
     try {
-        const res = await fetch('/api/auth/resetpassword', {
+        const res = await fetch('/api/auth/passwordreset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -51,22 +46,13 @@ function ResetPassword() {
         });
 
         const data = await res.json();
-        setLoading(false);
         // Check if the response is valid and contains token and role
-        if (!data.success || !data.user || !data.user.token || !data.user.role) {
+        if (data.Message!=1){
             throw new Error(data.message || 'Invalid response from server');
         }
-
-        // Store token and role in localStorage
-        localStorage.setItem('accessToken', data.user.token);
-        localStorage.setItem('userRole', data.user.role);
-
-        console.log('Access Token:', data.user.token);
-        console.log('User Role:', data.user.role);
-
-        dispatch(signInSuccess(data.user));
-
-        toast.success('Sign-in successful!', {
+        else{
+ setLoading(false);
+       toast.success('Password have been changed successfully!', {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,
@@ -76,14 +62,10 @@ function ResetPassword() {
             progress: undefined,
             style: { backgroundColor: 'green', color: 'white' }
         });
-
-        // Navigate based on the user role
-        if (data.user.role === 'admin') {
-            navigate('/overview'); // Admin Dashboard
-        } else {
-            navigate('/'); // Home page for normal users
-        }
+            navigate('/sign-in'); 
+      }
     } catch (error) {
+     
         dispatch(signInFailure(error.message));
         console.error(error.message);
         setLoading(false);
@@ -154,5 +136,4 @@ function ResetPassword() {
     </div>
   );
 }
-
 export default ResetPassword;

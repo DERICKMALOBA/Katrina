@@ -2,10 +2,6 @@
 
 import OverviewCards from "../analytics/OverviewCards";
 import RevenueChart from "../analytics/RevenueChart";
-import ChannelPerformance from "../analytics/ChannelPerformance";
-import ProductPerformance from "../analytics/ProductPerformance";
-import UserRetention from "../analytics/UserRetention";
-import CustomerSegmentation from "../analytics/CustomerSegmentation";
 
 
 const AnalyticsPage = () => {
@@ -17,12 +13,7 @@ const AnalyticsPage = () => {
 				<OverviewCards />
 				<RevenueChart />
 
-				<div className='grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8'>
-					<ChannelPerformance />
-					<ProductPerformance />
-					<UserRetention />
-					<CustomerSegmentation />
-				</div>
+
 
 				
 			</main>

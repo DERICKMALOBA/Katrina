@@ -3,7 +3,7 @@ const db = require("../config/db.js");
 const router = express.Router();
 const multer = require("multer");
 const path = require("path");
-
+const fs = require("fs");
 // Set up static file serving
 const app = express();
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
@@ -89,35 +89,181 @@ router.post("/add-product", upload.array("images", 10), (req, res) => {
 
 
 // Edit product
-router.put("/edit-product/:id", (req, res) => {
-  const { id } = req.params;
-  const { name, description, price, stock, category, discount, image } = req.body;
-  const categorisation = JSON.parse(category);
+router.put(
+  "/edit-product/:id",
+  upload.array("images", 10),
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, description, price, stock, category, discount } = req.body;
 
-  const query = `UPDATE products SET name=?, description=?, price=?, stock=?, category=?, super=?, subcat=?, discount=?, image=? WHERE id=?`;
+    try {
+      // Debug: Log incoming request
+      console.log('Request files:', req.files);
+      console.log('Request body:', req.body);
 
-  db.query(
-    query,
-    [
-      name,
-      description,
-      price,
-      stock,
-      categorisation.cat,
-      categorisation.super,
-      categorisation.subcat,
-      discount,
-      JSON.stringify(image),
-      id,
-    ],
-    (err) => {
-      if (err) {
-        console.error("Error updating product:", err);
-        return res.status(500).json({ error: "Database error" });
+      // 1. Parse category
+      let categorisation;
+      try {
+        categorisation = JSON.parse(category);
+      } catch (e) {
+        categorisation = { cat: category, super: "", subcat: "" };
       }
-      res.status(200).json({ message: "Product updated successfully" });
+
+      // 2. Fetch existing product with detailed logging
+      const [product] = await db.promise().query(
+        "SELECT * FROM products WHERE id = ?",
+        [id]
+      );
+      
+      if (!product[0]) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+
+      const existingProduct = product[0];
+      const oldImages = existingProduct.image ? JSON.parse(existingProduct.image) : [];
+      console.log('Existing images:', oldImages);
+
+      // 3. Handle image updates
+      let finalImages = [];
+      
+      if (req.files?.length > 0) {
+        // Verify upload directory exists
+        const uploadDir = path.join(__dirname, "../uploads");
+        console.log('Upload directory:', uploadDir);
+        
+        if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+        }
+
+        // Delete old images with detailed logging
+        console.log('Attempting to delete old images...');
+        await Promise.all(
+          oldImages.map(img => {
+            const filePath = path.join(uploadDir, img);
+            console.log('Checking file:', filePath);
+            
+            return new Promise((resolve) => {
+              if (fs.existsSync(filePath)) {
+                console.log('Deleting file:', filePath);
+                fs.unlink(filePath, (err) => {
+                  if (err) {
+                    console.error(`Failed to delete ${filePath}:`, err);
+                  } else {
+                    console.log(`Successfully deleted ${filePath}`);
+                  }
+                  resolve();
+                });
+              } else {
+                console.warn(`File not found: ${filePath}`);
+                resolve();
+              }
+            });
+          })
+        );
+
+        // Process new images with verification
+        console.log('Processing new files...');
+        finalImages = req.files.map(file => {
+          const filePath = path.join(uploadDir, file.filename);
+          console.log('Checking new file:', filePath);
+          
+          if (!fs.existsSync(filePath)) {
+            throw new Error(`File ${file.filename} not saved properly at ${filePath}`);
+          }
+          console.log('Verified new file:', filePath);
+          return file.filename;
+        });
+      } else {
+        // Keep old images if no new ones uploaded
+        console.log('No new files uploaded, keeping old images');
+        finalImages = oldImages;
+      }
+
+      // Debug: Show what will be saved to DB
+      console.log('Final images to save:', finalImages);
+
+      // 4. Update product with explicit field setting
+      const query = `
+        UPDATE products 
+        SET 
+          name = ?,
+          description = ?,
+          price = ?,
+          stock = ?,
+          category = ?,
+          super = ?,
+          subcat = ?,
+          discount = ?,
+          image = ?
+        WHERE id = ?
+      `;
+
+      const updateValues = [
+        name || existingProduct.name,
+        description || existingProduct.description,
+        price || existingProduct.price,
+        stock || existingProduct.stock,
+        categorisation.cat || existingProduct.category,
+        categorisation.super || existingProduct.super,
+        categorisation.subcat || existingProduct.subcat,
+        discount || existingProduct.discount,
+        JSON.stringify(finalImages), // Force update this field
+        id
+      ];
+
+      console.log('Update values:', updateValues);
+
+      const [updateResult] = await db.promise().query(query, updateValues);
+      console.log('Update result:', updateResult);
+
+      // Verify update by fetching fresh data
+      const [updatedProduct] = await db.promise().query(
+        "SELECT * FROM products WHERE id = ?",
+        [id]
+      );
+      
+      console.log('Updated product:', updatedProduct[0]);
+
+      res.status(200).json({ 
+        success: true,
+        message: "Product updated successfully!",
+        product: updatedProduct[0],
+        images: JSON.parse(updatedProduct[0].image), // Return parsed images for verification
+        debug: {
+          oldImages,
+          newImages: req.files?.map(f => f.filename),
+          finalImages
+        }
+      });
+
+    } catch (error) {
+      console.error("Error updating product:", error);
+      res.status(500).json({ 
+        success: false,
+        error: "Internal server error",
+        details: error.message,
+        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      });
     }
-  );
+  }
+);
+
+
+// In your products API routes
+router.put('/set-offer/:id', async (req, res) => {
+  const { id } = req.params;
+  const { offer } = req.body;
+
+  try {
+    await db.promise().query(
+      'UPDATE products SET offer = ? WHERE id = ?',
+      [offer, id]
+    );
+    res.status(200).json({ message: 'Offer status updated' });
+  } catch (error) {
+    console.error('Error updating offer status:', error);
+    res.status(500).json({ error: 'Database error' });
+  }
 });
 
 // Get products list with pagination
@@ -267,9 +413,11 @@ router.get("/offers", (req, res) => {
       });
     }
 
-    res.json({ offer:[], totalDiscountAmount: "0.00" });
+    res.json({ offer: [], totalDiscountAmount: "0.00" });
   });
 });
+
+// Get products by category
 router.get("/productscategory", (req, res) => {
   const query = "SELECT * FROM products";
   db.query(query, (err, results) => {
@@ -507,7 +655,7 @@ router.get("/rating", (req, res) => {
 });
 
 // Get newest products
-/*router.get("/newest", (req, res) => {
+router.get("/newest", (req, res) => {
   const query = "SELECT * FROM products ORDER BY created_at DESC";
 
   db.query(query, (err, results) => {
@@ -517,7 +665,7 @@ router.get("/rating", (req, res) => {
     }
     res.json(processProducts(results));
   });
-});*/
+});
 
 // Get products by size
 router.get("/size", (req, res) => {
@@ -618,12 +766,15 @@ router.get("/super/:sup", (req, res) => {
     const totalDiscountAmount = productsWithDiscount.reduce((sum, product) => {
       return sum + parseFloat(product.discountAmount);
     }, 0);
+
     res.json({
       super: productsWithDiscount,
       totalDiscountAmount: totalDiscountAmount.toFixed(2),
     });
   });
 });
+
+// Submit review with name
 router.post("/reviewssubmit/:id", (req, res) => {
   const { id } = req.params;
   const { ratings, reviews, name } = req.body;
@@ -637,6 +788,8 @@ router.post("/reviewssubmit/:id", (req, res) => {
     res.json({ message: "Review submitted successfully" });
   });
 });
+
+// Get reviews for a product
 router.get("/reviewsget/:id", (req, res) => {
   const { id } = req.params;
   const q = "SELECT * FROM reviews WHERE productid = ?";

@@ -366,7 +366,7 @@ const handleChatClick = () => {
         </div>
       </div>
 
-      {/* Right Side - Delivery & Chat */}
+      
     {/* Right Side - Delivery & Chat */}
 <div className="md:col-span-1 space-y-6">
   {/* Chat Section */}
@@ -387,7 +387,7 @@ const handleChatClick = () => {
 {/* Chat Popup - Only show if user is logged in */}
 {isChatVisible && user && (
   <div
-    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50"
     onClick={() => setIsChatVisible(false)}
   >
     <div onClick={(e) => e.stopPropagation()}>

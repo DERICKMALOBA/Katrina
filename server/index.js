@@ -110,11 +110,8 @@ io.on("connection", (socket) => {
   });
   socket.emit("sendbacktoadmin",({msg:text,email:Email}));
   });
-  socket.on("sendtoadmin", (data) => {
+socket.on("sendtoadmin", (data) => {
     const {text,sender,Email,Role} = data;
-    const query = 'INSERT INTO chats (email,name,msg,receiver,role) VALUES(?,?,?,?,?)';
-    db.query(query,[Email,sender,text,"adminone@gmail.com",Role],(err, results) => {
-        if (err) return res.status(500).json({ message: 'Database error', error: err }); 
         const q="SELECT*FROM chats WHERE role=?";
         db.query(q,"admin",(err, result) => {
           if (err) return res.status(500).json({ message: 'Database error', error: err });
@@ -122,25 +119,17 @@ io.on("connection", (socket) => {
           var i=0;
           for(i;i<ar.length;i++)
           {
+            const query = 'INSERT INTO chats (email,name,msg,receiver,role) VALUES(?,?,?,?,?)';
+    db.query(query,[Email,sender,text,ar[i].email,Role],(err, results) => {
+        if (err) return res.status(500).json({ message: 'Database error', error: err }); 
+    });
             io.to(users[ar[i].email]).emit("receiverbyadmin",({msg:text}));
           }
         });
     });
-    socket.emit("sendbacktouser",({msg:text,email:Email}));
-    const q="SELECT*FROM chats WHERE replied=?";
-    db.query(q,0,(err, result) => {
-          if (err) return res.status(500).json({ message: 'Database error', error: err });
-          var a=0;
-          var total=0;
-          var ar=JSON.parse(JSON.stringify(result));
-          for(a;a<ar.length;a++)
-          {
-            total=total+1;
-          }
-          io.emit("adminnotifications",({Total:total}));
-          console.log(total);
-    });
-  });
+
+
+
   socket.once("checkstock",(dat)=>{
     const q="SELECT*FROM products WHERE stock<=?";
     db.query(q,10,(err, results) => {

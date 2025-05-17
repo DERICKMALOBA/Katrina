@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 const OffersCarousel = () => {
   const [offers, setOffers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const fetchOffers = async () => {
@@ -21,41 +20,26 @@ const OffersCarousel = () => {
   }, []);
 
   useEffect(() => {
-    // Check if mobile on mount and resize
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
-
-  useEffect(() => {
     if (offers.length > 0) {
-      const slidesCount = isMobile ? offers.length : Math.ceil(offers.length / 2);
       const interval = setInterval(() => {
         setCurrentIndex((prev) =>
-          prev >= slidesCount - 1 ? 0 : prev + 1
+          prev >= Math.ceil(offers.length / 2) - 1 ? 0 : prev + 1
         );
       }, 5000);
 
       return () => clearInterval(interval);
     }
-  }, [offers, isMobile]);
+  }, [offers]);
 
   const prevSlide = () => {
-    const slidesCount = isMobile ? offers.length : Math.ceil(offers.length / 2);
     setCurrentIndex((prev) =>
-      prev <= 0 ? slidesCount - 1 : prev - 1
+      prev <= 0 ? Math.ceil(offers.length / 2) - 1 : prev - 1
     );
   };
 
   const nextSlide = () => {
-    const slidesCount = isMobile ? offers.length : Math.ceil(offers.length / 2);
     setCurrentIndex((prev) =>
-      prev >= slidesCount - 1 ? 0 : prev + 1
+      prev >= Math.ceil(offers.length / 2) - 1 ? 0 : prev + 1
     );
   };
 
@@ -68,38 +52,35 @@ const OffersCarousel = () => {
             boxers,panties,boob,boobs,top,tops,vests,vest,suitcase,back,pack,handbag,handbags,girl,girls,boys,boy,sneaker,sneakers,converse,heel,heels,open,doll,lotions,make up,accessories,poaches,raincoats,watches,trolley,leggings,set,tshirts,offer,offers"/>
                       </Helmet>
       {offers.length > 0 && (
-        <div className="mb-8 px-2 sm:px-4">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-center text-purple-800 text-xl md:text-2xl">
+        <div className="mb-8">
+          <div className="flex justify-between items-center mb-4 px-2">
+            <h3 className=" text-center text-purple-800">
               Special Offers
             </h3>
           </div>
 
-          <div className="relative w-full h-[320px] sm:h-[360px] md:h-[400px] overflow-hidden rounded-lg">
+          <div className="relative w-full h-96 overflow-hidden rounded-lg">
             {/* Carousel Container */}
             <div
-              className="flex transition-transform duration-1000 ease-in-out h-full"
-              style={{ 
-                transform: `translateX(-${currentIndex * (isMobile ? 100 : 50)}%)`,
-                width: isMobile ? `${offers.length * 100}%` : `${Math.ceil(offers.length / 2) * 100}%`
-              }}
+              className="flex transition-transform duration-1000 ease-in-out"
+              style={{ transform: `translateX(-${currentIndex * 50}%)` }}
             >
               {offers.map((product) => (
                 <div
                   key={product._id || product.id}
-                  className={`${isMobile ? 'w-full' : 'w-1/2'} flex-shrink-0 p-1 sm:p-2 h-full`}
+                  className="w-1/2 flex-shrink-0 p-2"
                 >
-                  <div className="bg-white shadow-md p-2 sm:p-3 md:p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200 h-full group relative overflow-hidden flex flex-col">
+                  <div className="bg-white shadow-md p-4 rounded-xl hover:shadow-lg transition duration-300 border border-gray-200 h-full group relative overflow-hidden">
                     <Link
                       to={`/product/${product._id || product.id}`}
-                      className="block flex-grow"
+                      className="block"
                     >
                       {product.discount > 0 && (
-                        <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full z-20">
+                        <span className="absolute top-3 left-3 bg-green-600 text-white text-xs font-bold px-2 py-1 rounded-full z-20">
                           -{Math.round(product.discount)}% OFF
                         </span>
                       )}
-                      <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative flex-grow">
+                      <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
                         {product.imageUrls?.[0] ? (
                           <>
                             <img
@@ -109,17 +90,17 @@ const OffersCarousel = () => {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
 
-                            {/* Price tag - adjusted for mobile */}
-                            <div className={`absolute ${isMobile ? 'top-1 right-1 px-1 py-0.5 text-xs' : 'top-2 right-2 px-2 py-1 text-sm'} bg-white/90 rounded font-semibold text-purple-800 z-20 shadow-md`}>
+                            {/* 🔼 Price tag moved to top */}
+                            <div className="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-sm font-semibold text-purple-800 z-20 shadow-md">
                               {product.discount > 0 ? (
                                 <>
-                                  <span className="line-through text-gray-500 text-xxs sm:text-xs">
+                                  <span className="line-through text-gray-500 text-xs">
                                     Kshs. {product.originalPrice}
                                   </span>
-                                  <br className="hidden sm:block" />
+                                  <br />
                                 </>
                               ) : null}
-                              <span className="font-bold text-purple-800">
+                              <span className="font-bold text-purple-800 text-sm">
                                 Kshs. {product.discount > 0 ? product.discountedPrice : product.price}
                               </span>
                             </div>
@@ -131,15 +112,15 @@ const OffersCarousel = () => {
                         )}
                       </div>
 
-                      <div className="p-1 sm:p-2">
-                        <h3 className="font-medium text-gray-800 text-sm sm:text-base truncate">
+                      <div className="p-2">
+                        <h3 className="font-medium text-gray-800 truncate">
                           {product.name}
                         </h3>
 
-                        <div className="mt-1 text-xs sm:text-sm">
+                        <div className="mt-1">
                           {product.discount > 0 ? (
                             <>
-                              <span className="text-gray-500 line-through">
+                              <span className="text-gray-500 line-through text-sm">
                                 Kshs. {product.originalPrice}
                               </span>
                               <span className="ml-2 font-bold text-purple-800">
@@ -159,18 +140,16 @@ const OffersCarousel = () => {
               ))}
             </div>
 
-            {/* Arrows - made slightly larger on mobile for better touch */}
+            {/* Arrows */}
             <button
               onClick={prevSlide}
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-purple-100 z-20 w-8 h-8 flex items-center justify-center"
-              aria-label="Previous slide"
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-purple-100 z-20"
             >
               &lt;
             </button>
             <button
               onClick={nextSlide}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-purple-100 z-20 w-8 h-8 flex items-center justify-center"
-              aria-label="Next slide"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-2 rounded-full shadow-md hover:bg-purple-100 z-20"
             >
               &gt;
             </button>
